@@ -30,6 +30,9 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     /// <summary>이 씬의 스테이지 식별자입니다. 클리어 기록 저장 및 다음 스테이지 해금에 사용됩니다.</summary>
     [SerializeField] private string _stageId;
 
+    [Tooltip("이 스테이지를 클리어하면 로비에서 엔딩 다이얼로그를 재생합니다.")]
+    [SerializeField] private bool _triggerEndingDialogueOnWin;
+
     private LoopStateMachine            _loopSM;
     private Dictionary<int, CharacterView> _characterViews;
 
@@ -219,6 +222,9 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
             string idToRecord = !string.IsNullOrEmpty(NewGameConfig.StageId) ? NewGameConfig.StageId : _stageId;
             if (!string.IsNullOrEmpty(idToRecord))
                 StageClearRepository.Instance.RecordClear(idToRecord);
+
+            if (_triggerEndingDialogueOnWin)
+                LobbyDialogueManager.PendingEndingDialogue = true;
         }
         SceneManager.LoadScene(_lobbySceneName);
     }

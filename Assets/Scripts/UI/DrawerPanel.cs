@@ -2,6 +2,7 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 /// <summary>
 /// UI 패널을 X축 드래그로 꺼내고 집어넣는 Drawer 컴포넌트.
@@ -43,6 +44,10 @@ public class DrawerPanel : MonoBehaviour,
     [SerializeField] private Ease  _showEase     = Ease.OutCubic;
     [SerializeField] private Ease  _hideEase     = Ease.InCubic;
 
+    [Header("드로어 버튼 목록")]
+    [Tooltip("펼쳐졌을 때 활성화되는 버튼들. 누르면 드로어가 닫힙니다.")]
+    [SerializeField] private Button[] _drawerButtons;
+
     // ── 이벤트 ───────────────────────────────────────────────────────────────
 
     /// <summary>Show 애니메이션이 완전히 끝났을 때 발생합니다.</summary>
@@ -80,12 +85,24 @@ public class DrawerPanel : MonoBehaviour,
         _rect                = GetComponent<RectTransform>();
         _hiddenAnchoredX     = _rect.anchoredPosition.x;
         _hiddenLocalRotation = _rect.localRotation;
+
+        SetButtonsActive(false);
+
+        if (_drawerButtons != null)
+            foreach (var btn in _drawerButtons)
+                if (btn != null)
+                    btn.onClick.AddListener(() => Hide());
     }
 
     private void OnDestroy()
     {
         _moveTween?.Kill();
         _rotateTween?.Kill();
+
+        if (_drawerButtons != null)
+            foreach (var btn in _drawerButtons)
+                if (btn != null)
+                    btn.onClick.RemoveAllListeners();
     }
 
     // ── 외부 API ─────────────────────────────────────────────────────────────
@@ -194,8 +211,17 @@ public class DrawerPanel : MonoBehaviour,
 
     private void NotifyComplete(bool isShowing)
     {
+        SetButtonsActive(isShowing);
         if (isShowing) OnShown?.Invoke();
         else           OnHidden?.Invoke();
+    }
+
+    private void SetButtonsActive(bool active)
+    {
+        if (_drawerButtons == null) return;
+        foreach (var btn in _drawerButtons)
+            if (btn != null)
+                btn.gameObject.SetActive(active);
     }
 
     // ── Editor 방어 ──────────────────────────────────────────────────────────

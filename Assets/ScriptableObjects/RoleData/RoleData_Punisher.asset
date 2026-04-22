@@ -16,4 +16,4 @@ MonoBehaviour:
   roleName: Punisher
   description: 
   roleIcon: {fileID: 0}
-  abilityConfig: {fileID: 0}
+  abilityConfig: {fileID: 11400000, guid: 63b4f3923c493a5418aa995b98368de9, type: 2}

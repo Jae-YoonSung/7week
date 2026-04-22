@@ -57,6 +57,7 @@ public class TitleBookAnimator : MonoBehaviour
     private LobbyUI        _lobbyUI;
     private bool           _opened;
     private bool           _turning;
+    private bool           _inputReady = true;
 
     // ── Unity ─────────────────────────────────────────────────────────────────
 
@@ -66,9 +67,12 @@ public class TitleBookAnimator : MonoBehaviour
         _lobbyUI   = FindObjectOfType<LobbyUI>();
     }
 
+    /// <summary>LobbyDialogueManager가 다이얼로그 완료 후 true로 설정해 책 열기를 허용합니다.</summary>
+    public void SetInputReady(bool ready) => _inputReady = ready;
+
     private void Update()
     {
-        if (_opened || !Input.anyKeyDown) return;
+        if (_opened || !_inputReady || !Input.anyKeyDown) return;
         PlayOpen();
     }
 

@@ -294,17 +294,31 @@ public class PlayerTurnInputHandler : MonoBehaviour
     }
 
     /// <summary>
-    /// 턴 시작 시 파도 구역 등 외부 효과로 변경된 CurrentZone을 _assignedZones와 ZoneLayout._slotMap에 반영합니다.
+    /// 턴 시작 시 파도 구역 등 외부 효과로 변경된 CurrentZone을 _assignedZones, ZoneLayout._slotMap,
+    /// 그리고 CharacterView 트랜스폼까지 반영합니다.
     /// </summary>
     private void SyncAssignedZonesFromGameState()
     {
         var gs = GameFlowController.Instance?.GameState;
         if (gs == null) return;
+
         foreach (var charId in _characterViews.Keys)
             _assignedZones[charId] = gs.GetZone(charId);
 
-        if (_zoneLayout != null)
-            _zoneLayout.InitSlots(_assignedZones);
+        if (_zoneLayout == null) return;
+
+        _zoneLayout.InitSlots(_assignedZones);
+
+        var positions = _zoneLayout.ComputeSlotPositions(_assignedZones);
+        var rotations = _zoneLayout.ComputeSlotRotations(_assignedZones);
+        foreach (var kv in _characterViews)
+        {
+            if (!positions.TryGetValue(kv.Key, out var pos)) continue;
+            var rot  = rotations.TryGetValue(kv.Key, out var r) ? r : kv.Value.transform.rotation;
+            var anim = kv.Value.GetComponent<CharacterPickupAnimator>();
+            if (anim != null) anim.ReplaceTo(pos, rot);
+            else              kv.Value.SnapToPosition(pos);
+        }
     }
 
     private void HandleCharacterSelected(int characterId)

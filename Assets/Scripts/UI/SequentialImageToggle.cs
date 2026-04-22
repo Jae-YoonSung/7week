@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -12,7 +11,7 @@ using UnityEngine.UI;
 ///   └── Image    ← TargetImage 연결
 ///
 /// - _sprites 배열에 표시할 Sprite를 순서대로 연결합니다.
-/// - 좌클릭 시 다음 Sprite로, 우클릭 시 이전 Sprite로 교체됩니다.
+/// - 버튼 클릭 시 다음 Sprite로 교체되며, 마지막 이후에는 첫 번째로 돌아옵니다.
 /// </summary>
 public class SequentialImageToggle : MonoBehaviour
 {
@@ -38,15 +37,7 @@ public class SequentialImageToggle : MonoBehaviour
     private void Start()
     {
         if (_toggleButton != null)
-        {
-            _toggleButton.onClick.AddListener(OnLeftClick);
-
-            var trigger = _toggleButton.gameObject.GetComponent<EventTrigger>()
-                       ?? _toggleButton.gameObject.AddComponent<EventTrigger>();
-            var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
-            entry.callback.AddListener(OnPointerClick);
-            trigger.triggers.Add(entry);
-        }
+            _toggleButton.onClick.AddListener(OnToggleClicked);
 
         ApplySprite(_currentIndex);
     }
@@ -54,7 +45,7 @@ public class SequentialImageToggle : MonoBehaviour
     private void OnDestroy()
     {
         if (_toggleButton != null)
-            _toggleButton.onClick.RemoveListener(OnLeftClick);
+            _toggleButton.onClick.RemoveListener(OnToggleClicked);
     }
 
     // ── 공개 API ──────────────────────────────────────────────────────────────
@@ -67,34 +58,16 @@ public class SequentialImageToggle : MonoBehaviour
         ApplySprite(_currentIndex);
     }
 
-    /// <summary>인덱스를 0으로 되돌리고 첫 번째 Sprite를 표시합니다. 이벤트는 발생하지 않습니다.</summary>
-    public void ResetImage()
-    {
-        _currentIndex = 0;
-        ApplySprite(_currentIndex);
-    }
-
     // ── 버튼 콜백 ─────────────────────────────────────────────────────────────
 
-    private void OnLeftClick()
+    private void OnToggleClicked()
     {
-        Advance(1);
-    }
-
-    private void OnPointerClick(BaseEventData data)
-    {
-        if (data is PointerEventData pointerData && pointerData.button == PointerEventData.InputButton.Right)
-            Advance(-1);
-    }
-
-    // ── Private ──────────────────────────────────────────────────────────────
-
-    private void Advance(int direction)
-    {
-        _currentIndex = (_currentIndex + direction + _sprites.Length) % _sprites.Length;
+        _currentIndex = (_currentIndex + 1) % _sprites.Length;
         ApplySprite(_currentIndex);
         OnIndexChanged?.Invoke(_currentIndex);
     }
+
+    // ── Private ──────────────────────────────────────────────────────────────
 
     private void ApplySprite(int index)
     {

@@ -114,7 +114,7 @@ public class GameState : IGameState
 
         bool deputySubstituted = false;
 
-        // 응징자 패시브: 자신을 타겟팅한 캐릭터 전원 반격 마킹
+        // 응징자 패시브: 자신을 타겟팅한 캐릭터 전원 반격 마킹 후 자신의 사망 마크 제거 (응징자 생존)
         var punisherStatus = GetCharacterByRole(RoleType.Punisher);
         if (punisherStatus != null && IsMarkedForDeath(punisherStatus.CharacterId))
         {
@@ -126,6 +126,19 @@ public class GameState : IGameState
                 if (mark.SourceCharacterId >= 0)
                     MarkForDeath(mark.SourceCharacterId, RoleType.Punisher, punisherId);
             }
+            ClearDeathMark(punisherId);
+        }
+
+        // 순교자 사망 지연: MartyrAbility가 자기희생 마크를 남긴 경우 Phase 1에서 즉시 죽이지 않고
+        // 모든 처리가 끝난 뒤 맨 마지막에 사망 확정합니다 (Phase 2 체인에서도 스킬 사용 가능).
+        bool martyrDeathDeferred = false;
+        int  martyrDeferredId    = -1;
+        var  martyrStatusCheck   = GetCharacterByRole(RoleType.Martyr);
+        if (martyrStatusCheck != null && IsMarkedForDeath(martyrStatusCheck.CharacterId))
+        {
+            martyrDeferredId    = martyrStatusCheck.CharacterId;
+            martyrDeathDeferred = true;
+            ClearDeathMark(martyrDeferredId); // Phase 1에서 즉시 사망 방지
         }
 
         // Phase 1: 마크된 사망 확정, 연쇄·대리 대상 수집
@@ -186,9 +199,19 @@ public class GameState : IGameState
         }
 
         // Phase 2: 연쇄·대리 사망 확정 + _deathMarks에 추가 (사망 카운트 포함)
+        // 순교자가 Phase 1 희생을 아직 사용하지 않은 경우에만 체인 대상 구조 가능.
         foreach (var (character, causeRole, sourceId) in chainDeaths)
         {
             if (!character.IsAlive) continue;
+
+            // 순교자 패시브: 이번 턴 아직 희생을 쓰지 않았고, 같은 구역이면 체인 대상 구조
+            if (!martyrDeathDeferred && TryMartyrSubstituteChain(character, out int chainMartyrId))
+            {
+                martyrDeathDeferred = true;
+                martyrDeferredId    = chainMartyrId;
+                continue; // 원래 대상 생존
+            }
+
             character.Die();
             TotalDeathsThisLoop++;
             DeathsThisTurn++;
@@ -203,6 +226,39 @@ public class GameState : IGameState
                     RegisterDelayedDeath(loverCStatus.CharacterId, RoleType.LoverD, character.CharacterId);
             }
         }
+
+        // 최종: 순교자 사망 확정 (모든 사망 처리가 끝난 뒤 마지막으로 사망)
+        if (martyrDeathDeferred && martyrDeferredId >= 0)
+        {
+            var martyr = GetCharacterInternal(martyrDeferredId);
+            if (martyr != null && martyr.IsAlive)
+            {
+                martyr.Die();
+                TotalDeathsThisLoop++;
+                DeathsThisTurn++;
+                AddLog($"{martyr.CharacterName} 사망");
+                _deathMarks.Add(new DeathRecord(martyrDeferredId, RoleType.Martyr, martyrDeferredId));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 체인 사망(Phase 2) 대상과 같은 구역에 살아있는 순교자가 있으면 대상을 구하고
+    /// 순교자 ID를 반환합니다. 순교자는 즉시 죽이지 않고 호출부에서 지연 사망 처리합니다.
+    /// </summary>
+    private bool TryMartyrSubstituteChain(CharacterState target, out int martyrId)
+    {
+        martyrId = -1;
+        var martyrStatus = GetCharacterByRole(RoleType.Martyr);
+        if (martyrStatus == null) return false;
+
+        var martyr = GetCharacterInternal(martyrStatus.CharacterId);
+        if (martyr == null || !martyr.IsAlive) return false;
+        if (martyr.CharacterId == target.CharacterId) return false;
+        if (martyr.CurrentZone != target.CurrentZone) return false;
+
+        martyrId = martyr.CharacterId;
+        return true;
     }
 
     /// <summary>

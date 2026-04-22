@@ -12,12 +12,15 @@ public class MartyrAbility : AbilityConfig
 {
     public override void Execute(int ownerId, IGameState gameState)
     {
+        // 자신이 이미 사망 마크된 경우: 아무도 구하지 않고 그냥 사망
+        if (gameState.IsMarkedForDeath(ownerId)) return;
+
         int zone       = gameState.GetZone(ownerId);
         var candidates = new List<int>();
 
         foreach (var mark in gameState.GetAllDeathMarks())
         {
-            if (mark.TargetCharacterId == ownerId) continue;
+            if (mark.TargetCharacterId == ownerId) continue; // 자신은 구하지 않음
             var c = gameState.GetCharacter(mark.TargetCharacterId);
             if (c == null || !c.IsAlive) continue;
             if (gameState.GetZone(mark.TargetCharacterId) == zone)

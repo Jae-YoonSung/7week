@@ -21,6 +21,17 @@ public class PauseManager : MonoBehaviour
 
     public bool IsPaused { get; private set; }
 
+    // ── Unity ────────────────────────────────────────────────────────────────
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (IsPaused) Resume();
+            else          Pause();
+        }
+    }
+
     // ── 외부 API ──────────────────────────────────────────────────────────────
 
     public void Pause()
