@@ -7584,6 +7584,7 @@ MonoBehaviour:
   _setupConfig: {fileID: 11400000, guid: 83fbc0862a127a0488ecce7f2ca05c03, type: 2}
   _characterSpawner: {fileID: 1589347838}
   _stageVisualConfig: {fileID: 0}
+  _epilogueVisualConfig: {fileID: 11400000, guid: 14403c8a5fbeb344b812b5bf77377150, type: 2}
   _lobbySceneName: LobbyScene
   _stageId: 
   _triggerEndingDialogueOnWin: 1
@@ -23828,7 +23829,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1742176679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27686,7 +27687,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2098580460
 RectTransform:
   m_ObjectHideFlags: 0

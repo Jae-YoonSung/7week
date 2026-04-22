@@ -4898,7 +4898,7 @@ MonoBehaviour:
   _seed: 26044171
   _stageId: 2_2
   _gameSceneName: Stage_3
-  _isEpilogue: 0
+  _isEpilogue: 1
   _label: {fileID: 0}
 --- !u!114 &1129571362
 MonoBehaviour:
@@ -5918,7 +5918,7 @@ MonoBehaviour:
   _seed: 52635548
   _stageId: 1_3
   _gameSceneName: Stage_1
-  _isEpilogue: 1
+  _isEpilogue: 0
   _label: {fileID: 0}
 --- !u!1 &1404257371
 GameObject:

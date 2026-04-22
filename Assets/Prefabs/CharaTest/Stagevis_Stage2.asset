@@ -10,15 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e1add48c2affdc54c96638ea8b9b391a, type: 3}
-  m_Name: Stagevis_Stage1
+  m_Name: Stagevis_Stage2
   m_EditorClassIdentifier: Assembly-CSharp::StageCharacterVisualConfig
   _entries:
-  - characterId: 0
-    aliveModelPrefab: {fileID: 5191012150201188301, guid: 8b8f311a1a5a1ec4391465af07f7290e, type: 3}
-    deadModelPrefab: {fileID: 5191012150201188301, guid: 4c9ad35eaa3c29644ba33adec36e0b24, type: 3}
   - characterId: 1
-    aliveModelPrefab: {fileID: 5191012150201188301, guid: 8b8f311a1a5a1ec4391465af07f7290e, type: 3}
-    deadModelPrefab: {fileID: 5191012150201188301, guid: 4c9ad35eaa3c29644ba33adec36e0b24, type: 3}
+    aliveModelPrefab: {fileID: 4653659072959956811, guid: 00d44ad72f72738458d90ff0c5c3e5df, type: 3}
+    deadModelPrefab: {fileID: 4653659072959956811, guid: 9aac9507a5172fc46a952b3f92cbba16, type: 3}
   - characterId: 2
     aliveModelPrefab: {fileID: 5191012150201188301, guid: 8b8f311a1a5a1ec4391465af07f7290e, type: 3}
     deadModelPrefab: {fileID: 5191012150201188301, guid: 4c9ad35eaa3c29644ba33adec36e0b24, type: 3}
@@ -32,5 +29,8 @@ MonoBehaviour:
     aliveModelPrefab: {fileID: 5191012150201188301, guid: 8b8f311a1a5a1ec4391465af07f7290e, type: 3}
     deadModelPrefab: {fileID: 5191012150201188301, guid: 4c9ad35eaa3c29644ba33adec36e0b24, type: 3}
   - characterId: 6
+    aliveModelPrefab: {fileID: 5191012150201188301, guid: 8b8f311a1a5a1ec4391465af07f7290e, type: 3}
+    deadModelPrefab: {fileID: 5191012150201188301, guid: 4c9ad35eaa3c29644ba33adec36e0b24, type: 3}
+  - characterId: 7
     aliveModelPrefab: {fileID: 5191012150201188301, guid: 8b8f311a1a5a1ec4391465af07f7290e, type: 3}
     deadModelPrefab: {fileID: 5191012150201188301, guid: 4c9ad35eaa3c29644ba33adec36e0b24, type: 3}
