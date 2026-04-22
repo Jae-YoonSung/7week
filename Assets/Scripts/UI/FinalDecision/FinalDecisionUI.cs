@@ -40,6 +40,7 @@ public class FinalDecisionUI : MonoBehaviour
 
     private CanvasGroup _canvasGroup;
     private bool        _awaitingContinueClick;
+    private StageClearSequenceController _stageClearSequence;
 
     // ── Unity ────────────────────────────────────────────────────────────────
 
@@ -48,6 +49,8 @@ public class FinalDecisionUI : MonoBehaviour
         _canvasGroup = GetComponent<CanvasGroup>();
         if (_canvasGroup == null)
             _canvasGroup = gameObject.AddComponent<CanvasGroup>();
+
+        _stageClearSequence = FindObjectOfType<StageClearSequenceController>();
 
         var gfc = GameFlowController.Instance;
         if (gfc != null)
@@ -155,6 +158,16 @@ public class FinalDecisionUI : MonoBehaviour
 
     private void HandleGameEndDialogueComplete(bool isWin)
     {
+        if (isWin && _stageClearSequence != null && _stageClearSequence.CanHandleWinSequence)
+        {
+            if (_preDialogueObject != null) _preDialogueObject.SetActive(false);
+            HideText(_winText);
+            HideText(_loseText);
+            HideText(_continueText);
+            _awaitingContinueClick = false;
+            return;
+        }
+
         var resultText = isWin ? _winText : _loseText;
         if (resultText != null) resultText.gameObject.SetActive(true);
 
