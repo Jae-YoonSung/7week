@@ -47,9 +47,10 @@ public class CharacterSpawner : MonoBehaviour
 
     /// <summary>
     /// 모든 캐릭터 프리팹을 스폰하고 초기 구역 슬롯 위치에 배치합니다.
+    /// visualConfig가 있으면 각 캐릭터의 생존/사망 모델을 스테이지 외형으로 교체합니다.
     /// </summary>
     /// <returns>characterId → CharacterView 딕셔너리</returns>
-    public Dictionary<int, CharacterView> SpawnAll(GameState gameState)
+    public Dictionary<int, CharacterView> SpawnAll(GameState gameState, StageCharacterVisualConfig visualConfig = null)
     {
         var views = new Dictionary<int, CharacterView>();
 
@@ -81,6 +82,14 @@ public class CharacterSpawner : MonoBehaviour
             }
 
             view.Init(characterState);
+
+            if (visualConfig != null)
+            {
+                var entry = visualConfig.GetEntry(data.CharacterId);
+                if (entry != null)
+                    view.OverrideVisuals(entry.aliveModelPrefab, entry.deadModelPrefab);
+            }
+
             views[data.CharacterId] = view;
         }
 

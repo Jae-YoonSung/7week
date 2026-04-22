@@ -12,6 +12,8 @@ public class LobbyPresetSeedButton : MonoBehaviour
     [SerializeField] private int    _seed;
     [SerializeField] private string _stageId;
     [SerializeField] private string _gameSceneName = "Stage_1";
+    [Tooltip("이 버튼이 에필로그 진입용이면 체크하세요.")]
+    [SerializeField] private bool   _isEpilogue;
 
     [Header("클리어 취소선")]
     [SerializeField] private TMP_Text _label;
@@ -36,7 +38,7 @@ public class LobbyPresetSeedButton : MonoBehaviour
     private void OnClicked()
     {
         TurnHistoryRepository.Instance.ClearAll();
-        NewGameConfig.SetSeed(_seed, _stageId);
+        NewGameConfig.SetSeed(_seed, _stageId, _isEpilogue);
         UnityEngine.SceneManagement.SceneManager.LoadScene(_gameSceneName);
     }
 

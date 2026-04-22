@@ -20,12 +20,15 @@ using UnityEngine.SceneManagement;
 [DisallowMultipleComponent]
 public class GameFlowController : SingletonMonobehaviour<GameFlowController>
 {
-    [SerializeField] private RoleActivationOrderConfig _orderConfig;
-    [SerializeField] private CharacterRegistry         _characterRegistry;
-    [SerializeField] private StageRoleConfig           _stageRoleConfig;
-    [SerializeField] private StageSetupConfig          _setupConfig;
-    [SerializeField] private CharacterSpawner          _characterSpawner;
-    [SerializeField] private string                    _lobbySceneName = "LobbyScene";
+    [SerializeField] private RoleActivationOrderConfig  _orderConfig;
+    [SerializeField] private CharacterRegistry          _characterRegistry;
+    [SerializeField] private StageRoleConfig            _stageRoleConfig;
+    [SerializeField] private StageSetupConfig           _setupConfig;
+    [SerializeField] private CharacterSpawner           _characterSpawner;
+    [SerializeField] private StageCharacterVisualConfig _stageVisualConfig;
+    [Tooltip("에필로그 모드(IsEpilogue)로 진입했을 때 사용할 캐릭터 외형입니다.")]
+    [SerializeField] private StageCharacterVisualConfig _epilogueVisualConfig;
+    [SerializeField] private string                     _lobbySceneName = "LobbyScene";
 
     /// <summary>이 씬의 스테이지 식별자입니다. 클리어 기록 저장 및 다음 스테이지 해금에 사용됩니다.</summary>
     [SerializeField] private string _stageId;
@@ -33,8 +36,9 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     [Tooltip("이 스테이지를 클리어하면 로비에서 엔딩 다이얼로그를 재생합니다.")]
     [SerializeField] private bool _triggerEndingDialogueOnWin;
 
-    private LoopStateMachine            _loopSM;
+    private LoopStateMachine               _loopSM;
     private Dictionary<int, CharacterView> _characterViews;
+    private bool                           _isEpilogue;
 
     /// <summary>characterId → CharacterView. SpawnAll 이후 유효합니다.</summary>
     public IReadOnlyDictionary<int, CharacterView> CharacterViews => _characterViews;
@@ -95,6 +99,8 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     protected override void Awake()
     {
         base.Awake();
+        // NewGameConfig는 StartGame() 내부에서 Clear()되므로 Awake에서 먼저 읽어둡니다.
+        _isEpilogue = NewGameConfig.IsEpilogue;
         ValidateInspectorRefs();
         _loopSM = new LoopStateMachine(_orderConfig, _characterRegistry, _stageRoleConfig, _setupConfig);
     }
@@ -264,7 +270,10 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
             return;
         }
 
-        _characterViews = _characterSpawner.SpawnAll(gameState);
+        var visualConfig = (_isEpilogue && _epilogueVisualConfig != null)
+            ? _epilogueVisualConfig
+            : _stageVisualConfig;
+        _characterViews = _characterSpawner.SpawnAll(gameState, visualConfig);
         _characterSpawner.ApplyZoneRulesToGameState(gameState);
     }
 

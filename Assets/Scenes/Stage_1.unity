@@ -8088,6 +8088,8 @@ MonoBehaviour:
   _stageRoleConfig: {fileID: 11400000, guid: f536feeb255a1c3459efb3a912ac6cba, type: 2}
   _setupConfig: {fileID: 11400000, guid: c8b4f5edc20791e46b21e19fb9387ca5, type: 2}
   _characterSpawner: {fileID: 1589347838}
+  _stageVisualConfig: {fileID: 0}
+  _epilogueVisualConfig: {fileID: 11400000, guid: 14403c8a5fbeb344b812b5bf77377150, type: 2}
   _lobbySceneName: LobbyScene
   _stageId: 
   _triggerEndingDialogueOnWin: 0

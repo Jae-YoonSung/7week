@@ -9,9 +9,11 @@ public static class NewGameConfig
     public static int    Seed       { get; private set; }
     public static bool   IsTutorial { get; private set; }
     public static string StageId    { get; private set; }
+    /// <summary>에필로그 모드로 시작할 때 true. GameFlowController.Awake()에서 읽고 StartGame() 전에 소비됩니다.</summary>
+    public static bool   IsEpilogue { get; private set; }
 
-    public static void SetRandom(string stageId = null) { IsSet = true; UseRandom = true; StageId = stageId; }
-    public static void SetSeed(int seed, string stageId = null) { IsSet = true; UseRandom = false; Seed = seed; StageId = stageId; }
+    public static void SetRandom(string stageId = null, bool isEpilogue = false) { IsSet = true; UseRandom = true; StageId = stageId; IsEpilogue = isEpilogue; }
+    public static void SetSeed(int seed, string stageId = null, bool isEpilogue = false) { IsSet = true; UseRandom = false; Seed = seed; StageId = stageId; IsEpilogue = isEpilogue; }
     public static void SetTutorial(int fixedSeed)
     {
         IsSet      = true;
@@ -19,5 +21,5 @@ public static class NewGameConfig
         Seed       = fixedSeed;
         IsTutorial = true;
     }
-    public static void Clear()           { IsSet = false; UseRandom = false; Seed = 0; IsTutorial = false; StageId = null; }
+    public static void Clear() { IsSet = false; UseRandom = false; Seed = 0; IsTutorial = false; StageId = null; IsEpilogue = false; }
 }

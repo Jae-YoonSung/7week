@@ -45,6 +45,25 @@ public class CharacterView : MonoBehaviour, IPointerClickHandler
         if (_deadModel  != null) _deadModel.SetActive(!alive);
     }
 
+    /// <summary>
+    /// 스테이지 외형 설정에 따라 생존/사망 모델을 런타임에 교체합니다.
+    /// CharacterSpawner.SpawnAll() 직후 호출됩니다.
+    /// </summary>
+    public void OverrideVisuals(GameObject aliveModelPrefab, GameObject deadModelPrefab)
+    {
+        if (_aliveModel != null) Destroy(_aliveModel);
+        if (_deadModel  != null) Destroy(_deadModel);
+
+        _aliveModel = aliveModelPrefab != null
+            ? Instantiate(aliveModelPrefab, transform, false)
+            : null;
+        _deadModel = deadModelPrefab != null
+            ? Instantiate(deadModelPrefab, transform, false)
+            : null;
+
+        RefreshView();
+    }
+
     /// <summary>선택/비선택 하이라이트를 설정합니다.</summary>
     public void SetSelected(bool selected)
     {
