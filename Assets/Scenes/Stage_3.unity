@@ -2283,13 +2283,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawerPanel
   _shownAnchoredX: -650
-  _distanceThreshold: 100
-  _velocityThreshold: 600
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
-  _drawerButtons:
-  - {fileID: 1273171413}
 --- !u!1 &159965541
 GameObject:
   m_ObjectHideFlags: 0
@@ -8409,13 +8405,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawerPanel
   _shownAnchoredX: -750
-  _distanceThreshold: 100
-  _velocityThreshold: 600
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
-  _drawerButtons:
-  - {fileID: 1273171413}
 --- !u!114 &606856859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13290,13 +13282,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawerPanel
   _shownAnchoredX: 750
-  _distanceThreshold: 100
-  _velocityThreshold: 600
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
-  _drawerButtons:
-  - {fileID: 1273171413}
 --- !u!4 &936340411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8873565996176904294, guid: 4a36ecbe406017c44bbc8c34c72c49cc, type: 3}
@@ -20103,7 +20091,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1413792012
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20200,8 +20188,6 @@ MonoBehaviour:
   _submitButton: {fileID: 412150635}
   _fadeInDuration: 0.6
   _continueDelay: 2
-  _wrongAnswerBlockDuration: 2
-  _wrongTextColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1424682372
 GameObject:
   m_ObjectHideFlags: 0

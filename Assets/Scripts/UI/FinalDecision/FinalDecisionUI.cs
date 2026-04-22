@@ -9,7 +9,7 @@ using UnityEngine.UI;
 /// 최종 결정 UI입니다. 씬에 미리 배치된 슬롯·카드를 사용합니다.
 ///
 /// 흐름:
-///   Submit 클릭 → (오답 시) 정답 카드 표시 → 클릭 대기 → PreDialogueObject 활성화 → SubmitFinalDecision()
+///   Submit 클릭 → PreDialogueObject 활성화 → SubmitFinalDecision(정답 여부)
 ///   → 게임 종료 다이얼로그(DialogueManager)
 ///   → OnGameEndDialogueComplete → PreDialogueObject 비활성화 → Win/Lose 텍스트 활성화
 ///   → _continueDelay 후 Continue 텍스트 활성화
@@ -38,16 +38,9 @@ public class FinalDecisionUI : MonoBehaviour
     [SerializeField] private float _fadeInDuration = 0.6f;
     [SerializeField] private float _continueDelay  = 2f;
 
-    [Header("오답 정답 표시")]
-    [Tooltip("정답 카드 표시 후 입력을 막을 시간(초)")]
-    [SerializeField] private float _wrongAnswerBlockDuration = 2f;
-    [Tooltip("틀린 슬롯 자식 텍스트에 적용할 색상")]
-    [SerializeField] private Color _wrongTextColor = Color.red;
-
     private CanvasGroup _canvasGroup;
     private bool        _awaitingContinueClick;
-    private bool        _awaitingWrongAnswerClick;
-    private Coroutine   _wrongAnswerCo;
+    private StageClearSequenceController _stageClearSequence;
 
     // ── Unity ────────────────────────────────────────────────────────────────
 
@@ -56,6 +49,8 @@ public class FinalDecisionUI : MonoBehaviour
         _canvasGroup = GetComponent<CanvasGroup>();
         if (_canvasGroup == null)
             _canvasGroup = gameObject.AddComponent<CanvasGroup>();
+
+        _stageClearSequence = FindObjectOfType<StageClearSequenceController>();
 
         var gfc = GameFlowController.Instance;
         if (gfc != null)
@@ -87,17 +82,6 @@ public class FinalDecisionUI : MonoBehaviour
 
     private void Update()
     {
-        if (_awaitingWrongAnswerClick)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                _awaitingWrongAnswerClick = false;
-                if (_preDialogueObject != null) _preDialogueObject.SetActive(true);
-                GameFlowController.Instance?.SubmitFinalDecision(false);
-            }
-            return;
-        }
-
         if (!_awaitingContinueClick) return;
         if (Input.GetMouseButtonDown(0))
         {
@@ -129,9 +113,7 @@ public class FinalDecisionUI : MonoBehaviour
 
     private void Hide()
     {
-        _awaitingContinueClick    = false;
-        _awaitingWrongAnswerClick = false;
-        if (_wrongAnswerCo != null) { StopCoroutine(_wrongAnswerCo); _wrongAnswerCo = null; }
+        _awaitingContinueClick = false;
         DOTween.Kill(gameObject);
         foreach (var slot in _roleSlots) slot?.ForceRelease();
         foreach (var card in _roleCards) card?.ReturnHomeInstant();
@@ -166,59 +148,26 @@ public class FinalDecisionUI : MonoBehaviour
 
         _submitButton.interactable = false;
 
-        if (wrongSlots.Count > 0)
-        {
-            ShowCorrectAnswers(wrongSlots);
-            if (_wrongAnswerCo != null) StopCoroutine(_wrongAnswerCo);
-            _wrongAnswerCo = StartCoroutine(WaitThenAllowDialogue());
-        }
-        else
-        {
-            if (_preDialogueObject != null) _preDialogueObject.SetActive(true);
-            gfc.SubmitFinalDecision(true);
-        }
-    }
-
-    private void ShowCorrectAnswers(List<RoleSlot> wrongSlots)
-    {
-        var gfc = GameFlowController.Instance;
-        if (gfc == null) return;
-
-        // 틀린 슬롯의 현재 카드를 홈으로 돌려보냄
-        foreach (var slot in wrongSlots)
-            if (slot.AssignedCard != null) slot.AssignedCard.ReturnHome();
-
-        // 모든 슬롯에 정답 카드 스냅, 틀린 슬롯에 붙은 카드 텍스트는 빨간색
-        var wrongSet = new HashSet<RoleSlot>(wrongSlots);
-        foreach (var slot in _roleSlots)
-        {
-            if (slot == null) continue;
-            var actualRole = gfc.GetActualRole(slot.CharacterId);
-            foreach (var card in _roleCards)
-            {
-                if (card == null || card.RoleType != actualRole) continue;
-                card.SnapToSlot(slot);
-                if (wrongSet.Contains(slot))
-                {
-                    foreach (var text in card.GetComponentsInChildren<TMP_Text>())
-                        text.color = _wrongTextColor;
-                }
-                break;
-            }
-        }
-    }
-
-    private IEnumerator WaitThenAllowDialogue()
-    {
-        yield return new WaitForSeconds(_wrongAnswerBlockDuration);
-        _awaitingWrongAnswerClick = true;
-        _wrongAnswerCo = null;
+        // 정답 여부에 상관없이 바로 제출 로직 진행 (정답 표시 생략)
+        bool isCorrect = wrongSlots.Count == 0;
+        if (_preDialogueObject != null) _preDialogueObject.SetActive(true);
+        gfc.SubmitFinalDecision(isCorrect);
     }
 
     // ── 게임 종료 결과 텍스트 ────────────────────────────────────────────────
 
     private void HandleGameEndDialogueComplete(bool isWin)
     {
+        if (isWin && _stageClearSequence != null && _stageClearSequence.CanHandleWinSequence)
+        {
+            if (_preDialogueObject != null) _preDialogueObject.SetActive(false);
+            HideText(_winText);
+            HideText(_loseText);
+            HideText(_continueText);
+            _awaitingContinueClick = false;
+            return;
+        }
+
         var resultText = isWin ? _winText : _loseText;
         if (resultText != null) resultText.gameObject.SetActive(true);
 
