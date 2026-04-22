@@ -403,6 +403,8 @@ MonoBehaviour:
   _impactDuration: 0.09
   _settleUpHeight: 0.28
   _settleDuration: 0.14
+  _landEffect: {fileID: 0}
+  _landEffectDuration: 0.5
 --- !u!114 &7346644055445421678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,6 +430,8 @@ MonoBehaviour:
   _impactDuration: 0.09
   _settleUpHeight: 0.28
   _settleDuration: 0.14
+  _landEffect: {fileID: 0}
+  _landEffectDuration: 0.5
 --- !u!1 &1904812960803822703
 GameObject:
   m_ObjectHideFlags: 0
