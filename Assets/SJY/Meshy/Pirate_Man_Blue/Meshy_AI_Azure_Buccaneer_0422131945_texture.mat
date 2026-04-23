@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Meshy_AI_Azure_Buccaneer_0422131945_texture
-  m_Shader: {fileID: 4800000, guid: a4c8f68acf7c9844e97a36914026acb1, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0dde7f0097aeb2541aea684ca0ad0e3c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -40,7 +40,7 @@ Material:
   - _MATCAPBLENDMODE_MULTIPLY
   - _MATCAP_ON
   - _NORMAL_MAP_ON
-  - _OUTLINETYPE_SIMPLE
+  - _OUTLINETYPE_NONE
   - _POSTERIZE_ON
   - _RECEIVEDSHADOWSTYPE_CLASSIC
   - _RECEIVE_SHADOWS_ON
@@ -361,7 +361,7 @@ Material:
     - _OcclusionStrength: 0.3
     - _OutlineMode: 8
     - _OutlineThickness: 3
-    - _OutlineType: 1
+    - _OutlineType: 0
     - _Parallax: 0.005
     - _Pixelate: 0
     - _PixelateSize: 32
@@ -465,7 +465,7 @@ Material:
     - _HitColor: {r: 1, g: 1, b: 1, a: 1}
     - _HologramColor: {r: 1.25, g: 2.8, b: 6.8, a: 1}
     - _HologramLineDirection: {r: 0, g: 1, b: 0, a: 0}
-    - _OutlineColor: {r: 0.39215687, g: 0.39215687, b: 0.39215687, a: 1}
+    - _OutlineColor: {r: 0.122641504, g: 0.122641504, b: 0.122641504, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimOffset: {r: 0, g: 0, b: 0, a: 0}
     - _SSSColor: {r: 1, g: 1, b: 1, a: 1}
