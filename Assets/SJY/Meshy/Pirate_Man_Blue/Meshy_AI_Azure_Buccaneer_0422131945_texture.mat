@@ -339,7 +339,7 @@ Material:
     - _LightModel: 2
     - _LightmapColorCorrection: 1
     - _Matcap: 1
-    - _MatcapBlend: 1
+    - _MatcapBlend: 0.75
     - _MatcapBlendMode: 0
     - _MatcapIntensity: 1
     - _MaxCameraDistance: 1000

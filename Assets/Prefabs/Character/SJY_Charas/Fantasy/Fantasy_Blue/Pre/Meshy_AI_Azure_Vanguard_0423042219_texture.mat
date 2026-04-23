@@ -334,7 +334,7 @@ Material:
     - _LightModel: 2
     - _LightmapColorCorrection: 0
     - _Matcap: 1
-    - _MatcapBlend: 1
+    - _MatcapBlend: 0.75
     - _MatcapBlendMode: 0
     - _MatcapIntensity: 1
     - _MaxCameraDistance: 1000
@@ -362,7 +362,7 @@ Material:
     - _PixelateSize: 32
     - _Posterize: 1
     - _PosterizeGamma: 0.75
-    - _PosterizeNumColors: 8
+    - _PosterizeNumColors: 32
     - _QueueOffset: 0
     - _RecalculateNormals: 0
     - _ReceiveShadows: 1
