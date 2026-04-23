@@ -10,6 +10,8 @@ public class LobbyRandomSeedButton : MonoBehaviour
 {
     [SerializeField] private string _stageId;
     [SerializeField] private string _gameSceneName = "Stage_1";
+    [Tooltip("이 버튼이 에필로그 진입용이면 체크하세요.")]
+    [SerializeField] private bool   _isEpilogue;
 
     private void Start()
     {
@@ -19,7 +21,7 @@ public class LobbyRandomSeedButton : MonoBehaviour
     private void OnClicked()
     {
         TurnHistoryRepository.Instance.ClearAll();
-        NewGameConfig.SetRandom(_stageId);
+        NewGameConfig.SetRandom(_stageId, _isEpilogue);
         UnityEngine.SceneManagement.SceneManager.LoadScene(_gameSceneName);
     }
 }
