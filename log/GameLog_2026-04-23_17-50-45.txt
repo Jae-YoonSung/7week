@@ -1,0 +1,12 @@
+[17:50:45] [session_start] date=2026-04-23 time=17:50:45
+[17:51:14] [level_start] stage=1_2
+[17:51:14] [zone_init] zone=0 char=#1 행크 role=FriendA id=1
+[17:51:14] [zone_init] zone=0 char=#6 조이 role=FriendB id=6
+[17:51:14] [zone_init] zone=1 char=#2 트래비스 role=Murderer id=2
+[17:51:14] [zone_init] zone=1 char=#4 그레이스 role=Protagonist id=4
+[17:51:14] [zone_init] zone=2 char=#5 카프카 role=Deputy id=5
+[17:51:14] [zone_init] zone=3 char=#3 루시 role=Fanatic id=3
+[17:51:14] [zone_init] zone=3 char=#7 스미스 role=Variable id=7
+[17:51:14] [loop_start] loop=1
+[17:51:14] [turn_start] loop=1 turn=1
+[17:51:33] [session_end] duration=00:00:47

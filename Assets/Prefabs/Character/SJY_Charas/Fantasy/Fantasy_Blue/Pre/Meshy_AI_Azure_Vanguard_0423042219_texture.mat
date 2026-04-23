@@ -336,7 +336,7 @@ Material:
     - _Matcap: 1
     - _MatcapBlend: 0.75
     - _MatcapBlendMode: 0
-    - _MatcapIntensity: 1
+    - _MatcapIntensity: 1.5
     - _MaxCameraDistance: 1000
     - _MaxDistanceToFade: 100
     - _MaxFadeDistance: 250
