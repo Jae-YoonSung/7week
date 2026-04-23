@@ -45,7 +45,10 @@ public static class SeedEncoder
     /// 가능한 시드의 최댓값을 반환합니다. (Random.Range 상한값으로 사용)
     /// </summary>
     public static int GetMaxSeed(int characterCount, int roleCount, int zoneCount)
-        => Factorial(roleCount) * IntPow(zoneCount, characterCount);
+    {
+        long result = (long)Factorial(roleCount) * IntPow(zoneCount, characterCount);
+        return result > int.MaxValue ? int.MaxValue : (int)result;
+    }
 
     // ── Lehmer 코드 ──────────────────────────────────────────────────────────
 

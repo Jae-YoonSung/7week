@@ -24,6 +24,10 @@ public class ZonePoint : MonoBehaviour
     [Header("드롭 인디케이터")]
     [SerializeField] private GameObject _dropIndicator;
 
+    [Header("구역 유령 색상")]
+    [Tooltip("ZonePhantom이 이 구역에 있을 때 활성화할 오브젝트 (색상 오버레이 등)")]
+    [SerializeField] private GameObject _phantomColorIndicator;
+
     public int              ZoneId           => _zoneId;
     public Vector3          Position         => transform.position;
     public bool             DisableAbilities => _disableAbilities;
@@ -33,6 +37,12 @@ public class ZonePoint : MonoBehaviour
     {
         if (_dropIndicator != null)
             _dropIndicator.SetActive(active);
+    }
+
+    public void SetPhantomPresent(bool active)
+    {
+        if (_phantomColorIndicator != null)
+            _phantomColorIndicator.SetActive(active);
     }
 
     /// <summary>슬롯 배열 길이 (0이면 자동 오프셋 모드).</summary>

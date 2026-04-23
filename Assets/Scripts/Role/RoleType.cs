@@ -16,5 +16,9 @@ public enum RoleType
     Martyr,      // 순교자
     LoverC,      // 연인C
     LoverD,      // 연인D
-    Punisher     // 응징자
+    Punisher,    // 응징자
+    ZonePhantom,   // 구역 유령 — 존 슬롯 비점유, 타겟 불가, 존 색 변경
+    AbilityBlocker, // 능력 봉인자 — 같은 구역 모든 캐릭터 능력 봉인
+    Decoy,          // 미끼 — 같은 구역 타겟 불가, _disableAbilities 효과 받음
+    PhantomShifter  // 유령 이동자 — 대기 시 ZonePhantom을 반시계(−1) 이동
 }

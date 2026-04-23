@@ -38,6 +38,9 @@ public class GameState : IGameState
     // zoneId 인덱스로 접근. InitZoneRules()로 초기화됩니다.
     private bool[] _abilityDisabledZones = new bool[ZoneCount];
 
+    // 이번 턴 캐릭터 능력으로 봉인된 구역. ResetForNewTurn()마다 초기화됩니다.
+    private bool[] _dynamicDisabledZones = new bool[ZoneCount];
+
     // 구역 효과 배열. zoneId 인덱스로 접근. CharacterSpawner.ApplyZoneRulesToGameState()로 초기화됩니다.
     private ZoneEffectConfig[] _zoneEffects;
 
@@ -67,6 +70,7 @@ public class GameState : IGameState
         _deathMarks.Clear();
         _eventLog.Clear();
         DeathsThisTurn = 0;
+        System.Array.Clear(_dynamicDisabledZones, 0, _dynamicDisabledZones.Length);
     }
 
     /// <summary>
@@ -339,6 +343,19 @@ public class GameState : IGameState
     /// <summary>현재 턴 이벤트 로그를 반환합니다. ResultDisplayState에서 UI에 전달합니다.</summary>
     public IReadOnlyList<string> GetEventLog() => _eventLog;
 
+    /// <summary>
+    /// ZonePhantom을 반시계 방향(−1)으로 한 칸 이동합니다.
+    /// Zone 0에서 −1 하면 Zone 3이 됩니다.
+    /// </summary>
+    public void MovePhantomCounterClockwise()
+    {
+        var phantom = GetCharacterByRole(RoleType.ZonePhantom);
+        if (phantom == null) return;
+        int current = GetZone(phantom.CharacterId);
+        int next    = (current - 1 + ZoneCount) % ZoneCount;
+        ForceMoveCharacter(phantom.CharacterId, next);
+    }
+
     /// <summary>이 게임에 참여하는 캐릭터 수입니다. PlayerActionState의 전원 확정 판정에 사용합니다.</summary>
     public int CharacterCount => _characters.Count;
 
@@ -406,8 +423,11 @@ public class GameState : IGameState
         var result = new List<ICharacterStatus>();
         foreach (var c in _characters)
         {
-            if (c.IsAlive && c.CurrentZone == zoneId)
-                result.Add(c);
+            var role = GetRole(c.CharacterId);
+            if (!c.IsAlive || c.CurrentZone != zoneId) continue;
+            // ZonePhantom: 슬롯 비점유 + 타겟 불가 / Decoy: 슬롯 점유 + 타겟 불가
+            if (role == RoleType.ZonePhantom || role == RoleType.Decoy) continue;
+            result.Add(c);
         }
         return result;
     }
@@ -468,7 +488,14 @@ public class GameState : IGameState
     }
 
     public bool IsAbilityDisabledInZone(int zoneId)
-        => zoneId >= 0 && zoneId < _abilityDisabledZones.Length && _abilityDisabledZones[zoneId];
+        => zoneId >= 0 && zoneId < ZoneCount
+           && (_abilityDisabledZones[zoneId] || _dynamicDisabledZones[zoneId]);
+
+    public void DisableAbilitiesInZone(int zoneId)
+    {
+        if (zoneId >= 0 && zoneId < ZoneCount)
+            _dynamicDisabledZones[zoneId] = true;
+    }
 
     public void AddLog(string message)
     {
