@@ -1749,7 +1749,7 @@ MonoBehaviour:
       m_Calls: []
   _bridgeToShelfHeadBob:
     target: {fileID: 4724938210960339837}
-    stepDuration: 0.18
+    stepDuration: 0.24
     verticalOffset: 1
     ease: 4
     resetDuration: 0.06

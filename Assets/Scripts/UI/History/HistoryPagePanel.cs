@@ -42,8 +42,7 @@ public struct CharacterTokenPrefabs
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(RectTransform))]
-public class HistoryPagePanel : MonoBehaviour,
-    IBeginDragHandler, IDragHandler, IEndDragHandler
+public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
 {
     // ── Inspector ─────────────────────────────────────────────────────────────
 
@@ -78,12 +77,6 @@ public class HistoryPagePanel : MonoBehaviour,
     [SerializeField] private float _hoverDuration = 0.15f;
     [SerializeField] private Ease  _hoverEase     = Ease.OutCubic;
 
-    [Header("드래그 설정")]
-    [Tooltip("이 거리(px) 이상 아래로 드래그하면 패널이 내려갑니다.")]
-    [SerializeField] private float _collapseDistanceThreshold = 100f;
-    [Tooltip("이 속도(px/s) 이상으로 아래로 스와이프하면 즉시 내려갑니다.")]
-    [SerializeField] private float _collapseVelocityThreshold = 600f;
-
     // ── 공개 프로퍼티 ─────────────────────────────────────────────────────────
 
     public int  LoopIndex   { get; private set; }
@@ -109,15 +102,11 @@ public class HistoryPagePanel : MonoBehaviour,
     private float _expandedY;
     /// <summary>컨트롤러에서 전달받은 펼침 오프셋 — 버튼 드래그 상한 계산에 사용</summary>
     private float _expandOffset;
-    /// <summary>드래그 중 계산한 Y 속도 (px/s, 아래 방향이 음수)</summary>
-    private float _dragVelocityY;
 
     /// <summary>버튼 RectTransform 및 호버 원점 Y</summary>
     private RectTransform _selectButtonRect;
     private float         _buttonOriginY;
 
-    // 버튼 드래그 상태
-    private float _buttonDragVelocityY;
     private Tweener       _hoverTween;
 
     private readonly List<HistoryCharacterToken> _activeTokens = new List<HistoryCharacterToken>();
@@ -172,7 +161,6 @@ public class HistoryPagePanel : MonoBehaviour,
     {
         IsExpanded = true;
         _expandedY = _originY + expandOffset;
-        _selectButton.interactable = false;
         // 호버 상태로 올라가 있을 수 있으므로 버튼을 원점으로 복귀
         _hoverTween?.Kill();
         _selectButtonRect.anchoredPosition = new Vector2(
@@ -187,7 +175,6 @@ public class HistoryPagePanel : MonoBehaviour,
     public void Collapse(bool instant = false)
     {
         IsExpanded = false;
-        _selectButton.interactable = true;
         AnimateTo(_originY, instant, isExpanding: false);
     }
 
@@ -210,48 +197,6 @@ public class HistoryPagePanel : MonoBehaviour,
         _currentTween?.Kill();
         var pos = _rect.anchoredPosition;
         _rect.anchoredPosition = new Vector2(pos.x, targetY);
-    }
-
-    // ── 드래그 핸들러 ─────────────────────────────────────────────────────────
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (!IsExpanded) return;
-        _currentTween?.Kill();
-        _dragVelocityY = 0f;
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        if (!IsExpanded) return;
-
-        // 속도 갱신 (화면 공간 px/s, 아래 방향 음수)
-        if (Time.deltaTime > 0f)
-            _dragVelocityY = eventData.delta.y / Time.deltaTime;
-
-        // 오직 아래 방향만 허용 — 펼친 위치 위로는 올라가지 않음
-        float newY = Mathf.Min(_rect.anchoredPosition.y + eventData.delta.y, _expandedY);
-        _rect.anchoredPosition = new Vector2(_rect.anchoredPosition.x, newY);
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        if (!IsExpanded) return;
-
-        float draggedDown  = _expandedY - _rect.anchoredPosition.y;
-        bool  pastDistance = draggedDown  >  _collapseDistanceThreshold;
-        bool  fastSwipe    = _dragVelocityY < -_collapseVelocityThreshold;
-
-        if (pastDistance || fastSwipe)
-        {
-            Collapse();
-            OnCollapseRequested?.Invoke(this);
-        }
-        else
-        {
-            // 기준치 미달 → 펼친 위치로 복귀
-            AnimateTo(_expandedY, instant: false, isExpanding: true);
-        }
     }
 
     // ── 콘텐츠 갱신 ──────────────────────────────────────────────────────────
@@ -383,9 +328,22 @@ public class HistoryPagePanel : MonoBehaviour,
             _loopConditionIcon.SetActive(active);
     }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        HandleSelectClicked();
+    }
+
     private void HandleSelectClicked()
     {
-        OnHeaderClicked?.Invoke(this);
+        if (IsExpanded)
+        {
+            Collapse();
+            OnCollapseRequested?.Invoke(this);
+        }
+        else
+        {
+            OnHeaderClicked?.Invoke(this);
+        }
     }
 
     // ── 버튼 호버 ─────────────────────────────────────────────────────────────
@@ -401,51 +359,6 @@ public class HistoryPagePanel : MonoBehaviour,
         var exitEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
         exitEntry.callback.AddListener(_ => OnButtonHoverExit());
         trigger.triggers.Add(exitEntry);
-
-        var beginDragEntry = new EventTrigger.Entry { eventID = EventTriggerType.BeginDrag };
-        beginDragEntry.callback.AddListener(e => OnButtonBeginDrag((PointerEventData)e));
-        trigger.triggers.Add(beginDragEntry);
-
-        var dragEntry = new EventTrigger.Entry { eventID = EventTriggerType.Drag };
-        dragEntry.callback.AddListener(e => OnButtonDrag((PointerEventData)e));
-        trigger.triggers.Add(dragEntry);
-
-        var endDragEntry = new EventTrigger.Entry { eventID = EventTriggerType.EndDrag };
-        endDragEntry.callback.AddListener(e => OnButtonEndDrag((PointerEventData)e));
-        trigger.triggers.Add(endDragEntry);
-    }
-
-    private void OnButtonBeginDrag(PointerEventData eventData)
-    {
-        if (IsExpanded) return;
-        _currentTween?.Kill();
-        _buttonDragVelocityY = 0f;
-    }
-
-    private void OnButtonDrag(PointerEventData eventData)
-    {
-        if (IsExpanded) return;
-        if (Time.deltaTime > 0f)
-            _buttonDragVelocityY = eventData.delta.y / Time.deltaTime;
-
-        // 위 방향만 허용 — 오리진 아래로는 내려가지 않음, 펼침 위치 위로도 올라가지 않음
-        float targetExpandedY = _originY + _expandOffset;
-        float newY = Mathf.Clamp(_rect.anchoredPosition.y + eventData.delta.y, _originY, targetExpandedY);
-        _rect.anchoredPosition = new Vector2(_rect.anchoredPosition.x, newY);
-    }
-
-    private void OnButtonEndDrag(PointerEventData eventData)
-    {
-        if (IsExpanded) return;
-        float targetExpandedY = _originY + _expandOffset;
-        float draggedUp   = _rect.anchoredPosition.y - _originY;
-        bool  pastDistance = draggedUp > _collapseDistanceThreshold;
-        bool  fastSwipe    = _buttonDragVelocityY > _collapseVelocityThreshold;
-
-        if (pastDistance || fastSwipe)
-            OnHeaderClicked?.Invoke(this);   // 컨트롤러가 Expand() 호출
-        else
-            AnimateTo(_originY, instant: false, isExpanding: false); // 원위치 복귀
     }
 
     private void OnButtonHoverEnter()

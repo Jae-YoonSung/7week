@@ -114,6 +114,7 @@ Assets/Scripts/
  Core/
   PoolManager.cs
   SingletonMonobehaviour.cs
+ DebugLogger/GameLogger.cs
  GameFlow/
   GameFlowController.cs
   IState.cs
