@@ -7580,7 +7580,7 @@ MonoBehaviour:
   _setupConfig: {fileID: 11400000, guid: 83fbc0862a127a0488ecce7f2ca05c03, type: 2}
   _characterSpawner: {fileID: 1589347838}
   _stageVisualConfig: {fileID: 0}
-  _epilogueVisualConfig: {fileID: 11400000, guid: 14403c8a5fbeb344b812b5bf77377150, type: 2}
+  _epilogueVisualConfig: {fileID: 11400000, guid: bd13b1366b4899445bdd9fc01cc1f0a3, type: 2}
   _lobbySceneName: LobbyScene
   _stageId: 
   _triggerEndingDialogueOnWin: 1
