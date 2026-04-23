@@ -185,8 +185,11 @@ public class PlayerActionState : IState
         Debug.Log($"[PlayerActionState] CommitPendingMoves — {_pendingMoves.Count}건 적용");
         foreach (var kv in _pendingMoves)
         {
+            int    fromZone = gs.GetZone(kv.Key);
+            string name     = gs.GetCharacter(kv.Key)?.CharacterName ?? $"ID:{kv.Key}";
+            RoleType role   = gs.GetRole(kv.Key);
             gs.ApplyMove(kv.Key, kv.Value);
-            Debug.Log($"  ID:{kv.Key} → Zone {kv.Value} 이동");
+            Debug.Log($"  {name}({role}) id={kv.Key} Zone {fromZone} → Zone {kv.Value} 이동");
         }
     }
 }

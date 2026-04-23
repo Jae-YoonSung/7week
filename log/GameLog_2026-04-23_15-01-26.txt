@@ -1,0 +1,30 @@
+[15:01:26] [session_start] date=2026-04-23 time=15:01:26
+[15:01:41] [loop_start] loop=1
+[15:01:41] [turn_start] loop=1 turn=1
+[15:01:41] [level_start] stage=1_1
+[15:02:03] [Log]   ID:5 Zone 3 → Zone 0 이동
+[15:02:03] [Log]   ID:7 Zone 3 → Zone 0 이동
+[15:02:08] [turn_start] loop=1 turn=2
+[15:02:46] [Log]   ID:4 Zone 0 → Zone 3 이동
+[15:02:47] [turn_start] loop=1 turn=3
+[15:02:51] [Log]   ID:6 Zone 0 → Zone 3 이동
+[15:02:51] [Log]   ID:7 Zone 0 → Zone 3 이동
+[15:02:51] [Log]   ID:5 Zone 0 → Zone 3 이동
+[15:02:52] [loop_end] loop=1 duration=01:11
+[15:02:52] [loop_start] loop=2
+[15:02:52] [turn_start] loop=2 turn=1
+[15:02:56] [Log]   ID:3 Zone 2 → Zone 0 이동
+[15:02:56] [Log]   ID:2 Zone 1 → Zone 0 이동
+[15:02:56] [Log]   ID:5 Zone 3 → Zone 0 이동
+[15:02:58] [loop_end] loop=2 duration=00:05
+[15:02:58] [loop_start] loop=3
+[15:02:58] [turn_start] loop=3 turn=1
+[15:03:04] [Log]   ID:3 Zone 2 → Zone 0 이동
+[15:03:04] [Log]   ID:5 Zone 3 → Zone 0 이동
+[15:03:04] [Log]   ID:7 Zone 3 → Zone 0 이동
+[15:03:04] [Log]   ID:2 Zone 1 → Zone 0 이동
+[15:03:04] [Log]   ID:1 Zone 1 → Zone 0 이동
+[15:03:05] [loop_end] loop=3 duration=00:07
+[15:03:05] [loop_start] loop=4
+[15:03:05] [turn_start] loop=4 turn=1
+[15:03:07] [session_end] duration=00:01:41

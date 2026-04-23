@@ -9,6 +9,8 @@ public static GameLogger Instance { get; private set; }
 private string logFilePath;
 public string LogFilePath => logFilePath;
 
+private DateTime _sessionStart;
+
 private void Awake()
 {
     if (Instance != null)
@@ -23,13 +25,19 @@ private void Awake()
     string logDir = Path.Combine(exeDir, "log");
     Directory.CreateDirectory(logDir);
 
-    string fileName = $"GameLog_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt";
+    _sessionStart = DateTime.Now;
+    string fileName = $"GameLog_{_sessionStart:yyyy-MM-dd_HH-mm-ss}.txt";
     logFilePath = Path.Combine(logDir, fileName);
 
-    // 유니티 로그만 처리
     Application.logMessageReceived += HandleUnityLog;
 
-    Log("=== Game Session Started ===");
+    Log($"[session_start] date={_sessionStart:yyyy-MM-dd} time={_sessionStart:HH:mm:ss}");
+}
+
+private void OnApplicationQuit()
+{
+    TimeSpan duration = DateTime.Now - _sessionStart;
+    Log($"[session_end] duration={duration:hh\\:mm\\:ss}");
 }
 
 public void Log(string message)

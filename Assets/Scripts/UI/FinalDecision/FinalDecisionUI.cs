@@ -146,6 +146,10 @@ public class FinalDecisionUI : MonoBehaviour
             if (!correct) wrongSlots.Add(slot);
         }
 
+        if (GameLogger.Instance != null)
+            foreach (var slot in wrongSlots)
+                GameLogger.Instance.Log($"[wrong_answer] charId={slot.CharacterId} 제출={slot.AssignedCard.RoleType} 정답={gfc.GetActualRole(slot.CharacterId)}");
+
         _submitButton.interactable = false;
 
         // 정답 여부에 상관없이 바로 제출 로직 진행 (정답 표시 생략)

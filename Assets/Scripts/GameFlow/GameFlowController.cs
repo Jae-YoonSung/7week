@@ -155,6 +155,9 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     /// <summary>현재 GameState입니다. PlayerTurnInputHandler에서 구역 조회에 사용합니다.</summary>
     public IGameState    GameState        => _loopSM?.GameState;
 
+    /// <summary>이 씬의 스테이지 ID입니다. 로비 경유 시 NewGameConfig 값을 우선합니다.</summary>
+    public string        StageId          => !string.IsNullOrEmpty(_loopSM?.StageId) ? _loopSM.StageId : _stageId;
+
     /// <summary>현재 루프 번호 (1-based). GameHUD 표시용.</summary>
     public int           LoopCount        => (_loopSM?.LoopCount ?? 0) + 1;
     /// <summary>현재 턴 번호 (1-based). GameHUD 표시용.</summary>
