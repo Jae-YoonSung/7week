@@ -1,4 +1,5 @@
 using Unity.Services.Analytics;
+using Unity.Services.Core;
 using UnityEngine;
 
 // GameEventDispatcher의 모든 이벤트를 구독해 Unity Analytics로 전송하는 컴포넌트.
@@ -54,8 +55,14 @@ public class AnalyticsReporter : MonoBehaviour
         GameEventDispatcher.OnZoneInit          -= HandleZoneInit;
     }
 
-    // Analytics가 초기화되지 않았으면 전송을 건너뛴다.
-    private bool CanSend() => AnalyticsInitializer.IsReady;
+    // Analytics가 초기화됐는지, 그리고 서비스가 현재도 살아있는지 이중으로 확인한다.
+    // IsReady만으로는 앱 종료 시 서비스가 먼저 해제되는 경우를 막지 못한다.
+    private bool CanSend()
+    {
+        if (!AnalyticsInitializer.IsReady) return false;
+        if (UnityServices.State != ServicesInitializationState.Initialized) return false;
+        return true;
+    }
 
     private void HandleSessionStart(SessionStartEvent e)
     {
@@ -70,10 +77,18 @@ public class AnalyticsReporter : MonoBehaviour
     private void HandleSessionEnd(SessionEndEvent e)
     {
         if (!CanSend()) return;
-        AnalyticsService.Instance.RecordEvent(new CustomEvent("session_end")
+        try
         {
-            { "duration", e.DurationSeconds }
-        });
+            AnalyticsService.Instance.RecordEvent(new CustomEvent("session_end")
+            {
+                { "duration", e.DurationSeconds }
+            });
+            AnalyticsService.Instance.Flush();
+        }
+        catch (ServicesInitializationException)
+        {
+            Debug.Log("[AnalyticsReporter] 앱 종료 중 서비스가 해제되어 session_end 로그를 생략합니다.");
+        }
     }
 
     private void HandleLevelStart(LevelStartEvent e)
@@ -99,12 +114,20 @@ public class AnalyticsReporter : MonoBehaviour
     private void HandleLevelAbandon(LevelAbandonEvent e)
     {
         if (!CanSend()) return;
-        AnalyticsService.Instance.RecordEvent(new CustomEvent("level_abandon")
+        try
         {
-            { "stage_id", e.StageId },
-            { "loop",     e.Loop },
-            { "turn",     e.Turn }
-        });
+            AnalyticsService.Instance.RecordEvent(new CustomEvent("level_abandon")
+            {
+                { "stage_id", e.StageId },
+                { "loop",     e.Loop },
+                { "turn",     e.Turn }
+            });
+            AnalyticsService.Instance.Flush();
+        }
+        catch (ServicesInitializationException)
+        {
+            Debug.Log("[AnalyticsReporter] 앱 종료 중 서비스가 해제되어 level_abandon 로그를 생략합니다.");
+        }
     }
 
     private void HandleStageSelect(StageSelectEvent e)
