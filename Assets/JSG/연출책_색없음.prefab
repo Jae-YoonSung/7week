@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5080684893957574328}
   - component: {fileID: 3664875134072866550}
   - component: {fileID: 3997420611282589060}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uADF8\uC758 \uB05D\uB9FA\uC74C\uC5D0 \uAD00\uD558\uC5EC"
+  m_text: Chapter 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
@@ -619,7 +619,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9184641179096324852}
   m_Layer: 8
-  m_Name: "Clear\uC5F0\uCD9CBook"
+  m_Name: "\uC5F0\uCD9C\uCC45_\uC0C9\uC5C6\uC74C"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1889697240664944040}
   - component: {fileID: 2344520424944287974}
   - component: {fileID: 5724368583802047822}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: "\uD53C\uADDC\uC5B4 "
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,8 +29,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -55.61, y: 25.24, z: 2.01}
-  m_LocalScale: {x: 1.1825904, y: 1.1825904, z: 1.1825904}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 4.08, y: 4.08, z: 4.08}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: a49721fcea034714d88b3183e1c62ece, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
