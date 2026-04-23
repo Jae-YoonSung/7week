@@ -69,15 +69,10 @@ public class StageClearSequenceController : MonoBehaviour
     private struct ColoredBookRevealSettings
     {
         [Header("Material Color Change")]
-        public bool useMaterialColorChange;
         public Color targetColor;
         public float colorChangeDuration;
         [Tooltip("If empty, changes all Renderers. Otherwise, specify child paths (e.g. 'Cover').")]
         public string[] targetRendererPaths;
-
-        [Header("Prefab Swap (Legacy)")]
-        public GameObject coloredBookPrefab;
-        public bool hideUncoloredBookAfterReveal;
     }
 
     [Serializable]
@@ -132,10 +127,8 @@ public class StageClearSequenceController : MonoBehaviour
     [SerializeField] private BookInsertSettings _bookInsert;
     [SerializeField] private ColoredBookRevealSettings _coloredBookReveal = new ColoredBookRevealSettings
     {
-        useMaterialColorChange = true,
         targetColor = Color.red,
-        colorChangeDuration = 1.0f,
-        hideUncoloredBookAfterReveal = true
+        colorChangeDuration = 1.0f
     };
 
     [Header("Cinemachine 3")]
@@ -205,7 +198,6 @@ public class StageClearSequenceController : MonoBehaviour
 
     private bool _isPlaying;
     private GameObject _spawnedClosingBook;
-    private GameObject _spawnedColoredBook;
     private Sequence _bridgeHeadBobSequence;
     private Vector3 _bridgeHeadBobBaseLocalPosition;
     private bool _hasSavedHeadBobBasePosition;
@@ -621,59 +613,42 @@ public class StageClearSequenceController : MonoBehaviour
         if (_spawnedClosingBook == null)
             yield break;
 
-        if (_coloredBookReveal.useMaterialColorChange)
+        List<Renderer> targetRenderers = new List<Renderer>();
+
+        if (_coloredBookReveal.targetRendererPaths != null && _coloredBookReveal.targetRendererPaths.Length > 0)
         {
-            List<Renderer> targetRenderers = new List<Renderer>();
-
-            if (_coloredBookReveal.targetRendererPaths != null && _coloredBookReveal.targetRendererPaths.Length > 0)
+            foreach (var path in _coloredBookReveal.targetRendererPaths)
             {
-                foreach (var path in _coloredBookReveal.targetRendererPaths)
-                {
-                    Transform targetTransform = string.IsNullOrEmpty(path)
-                        ? _spawnedClosingBook.transform
-                        : _spawnedClosingBook.transform.Find(path);
+                Transform targetTransform = string.IsNullOrEmpty(path)
+                    ? _spawnedClosingBook.transform
+                    : _spawnedClosingBook.transform.Find(path);
 
-                    if (targetTransform != null)
-                    {
-                        Renderer rnd = targetTransform.GetComponent<Renderer>();
-                        if (rnd != null)
-                            targetRenderers.Add(rnd);
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"[StageClearSequence] Missing renderer path: {path}");
-                    }
+                if (targetTransform != null)
+                {
+                    Renderer rnd = targetTransform.GetComponent<Renderer>();
+                    if (rnd != null)
+                        targetRenderers.Add(rnd);
+                }
+                else
+                {
+                    Debug.LogWarning($"[StageClearSequence] Missing renderer path: {path}");
                 }
             }
-            else
-            {
-                targetRenderers.AddRange(_spawnedClosingBook.GetComponentsInChildren<Renderer>());
-            }
-
-            if (targetRenderers.Count > 0)
-            {
-                Sequence colorSeq = DOTween.Sequence().SetLink(_spawnedClosingBook);
-                float duration = Mathf.Max(0.01f, _coloredBookReveal.colorChangeDuration);
-
-                foreach (var rnd in targetRenderers)
-                    colorSeq.Join(rnd.material.DOColor(_coloredBookReveal.targetColor, duration));
-
-                yield return colorSeq.WaitForCompletion();
-            }
         }
-        else if (_coloredBookReveal.coloredBookPrefab != null)
+        else
         {
-            var sourceTransform = _spawnedClosingBook.transform;
-            _spawnedColoredBook = Instantiate(
-                _coloredBookReveal.coloredBookPrefab,
-                sourceTransform.position,
-                sourceTransform.rotation,
-                sourceTransform.parent);
+            targetRenderers.AddRange(_spawnedClosingBook.GetComponentsInChildren<Renderer>());
+        }
 
-            _spawnedColoredBook.transform.localScale = sourceTransform.localScale;
+        if (targetRenderers.Count > 0)
+        {
+            Sequence colorSeq = DOTween.Sequence().SetLink(_spawnedClosingBook);
+            float duration = Mathf.Max(0.01f, _coloredBookReveal.colorChangeDuration);
 
-            if (_coloredBookReveal.hideUncoloredBookAfterReveal)
-                _spawnedClosingBook.SetActive(false);
+            foreach (var rnd in targetRenderers)
+                colorSeq.Join(rnd.material.DOColor(_coloredBookReveal.targetColor, duration));
+
+            yield return colorSeq.WaitForCompletion();
         }
     }
 

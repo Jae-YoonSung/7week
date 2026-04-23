@@ -65,6 +65,12 @@ public class LobbyDialogueManager : MonoBehaviour
     // 3: 완료
     private int _phase;
 
+    /// <summary>
+    /// 다이얼로그 및 힌트 단계가 모두 완료됐을 때 true를 반환합니다.
+    /// BookshelfController에서 책 클릭 허용 여부 판단에 사용합니다.
+    /// </summary>
+    public bool IsComplete => _phase >= 3;
+
     private Coroutine _typewriterCo;
     private Coroutine _cursorCo;
 

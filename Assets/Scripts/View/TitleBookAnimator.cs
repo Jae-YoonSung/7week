@@ -76,6 +76,16 @@ public class TitleBookAnimator : MonoBehaviour
         PlayOpen();
     }
 
+    /// <summary>
+    /// 키 입력 없이 즉시 책 열기 애니메이션을 실행합니다.
+    /// BookshelfController에서 카메라 블렌드 완료 후 호출합니다.
+    /// </summary>
+    public void ForceOpen()
+    {
+        if (_opened) return;
+        PlayOpen();
+    }
+
     // ── 외부 API ──────────────────────────────────────────────────────────────
 
     /// <summary>다음 페이지 버튼에 연결.</summary>

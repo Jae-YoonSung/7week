@@ -10,7 +10,7 @@ StageClearSequenceController 적용 가이드
 6. Bridge To Shelf 카메라로 전환합니다.
 7. Bridge To Shelf 카메라에서 Look At Shelf 카메라로 넘어가는 동안, 카메라에 아주 단순한 상하 헤드무빙만 넣습니다.
 8. Look At Shelf 카메라가 자리 잡은 뒤 책이 대기 위치를 거쳐 책장 위치로 이동합니다.
-9. 책이 책장에 꽂히면 책의 색상이 서서히 지정된 색상으로 바뀝니다. (옵션에 따라 프리팹 교체도 가능)
+9. 책이 책장에 꽂히면 책의 색상이 서서히 지정된 색상으로 바뀝니다.
 10. 피규어를 순차적으로 등장시킵니다.
 11. 화면이 점점 어두워지며 로비 씬으로 돌아갑니다.
 
@@ -93,14 +93,6 @@ Book
 - `Book Spawn > Close Entries`
   책 닫기 애니메이션 정의입니다.
   `TitleBookAnimator`처럼 특정 자식의 로컬 Z 회전을 바꾸는 방식입니다.
-
-- `Colored Book Reveal > Colored Book Prefab`
-  책장에 책이 꽂힌 직후 즉시 교체될 색 있는 책 프리팹입니다.
-  이제는 스르륵 드러나는 연출이 없고, 위치와 회전을 맞춘 상태로 한 번에 바뀝니다.
-
-- `Colored Book Reveal > Hide Uncolored Book After Reveal`
-  색 있는 책으로 교체한 뒤 기존 색 없는 책을 꺼 줄지 여부입니다.
-  보통 켜 두면 됩니다.
 
 Close Entry
 

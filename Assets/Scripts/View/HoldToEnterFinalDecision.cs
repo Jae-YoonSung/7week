@@ -65,9 +65,18 @@ public class HoldToEnterFinalDecision : MonoBehaviour
 
     public void BeginHold()
     {
-        if (!CanActivate()) return;
-        if (TutorialManager.IsActive && !TutorialManager.Instance.IsInputAllowed(TutorialInputPermission.EnterFinalDecision))
+        if (!CanActivate())
+        {
+            Debug.LogWarning("[HoldToEnterFinalDecision] 현재 상태에서는 버튼을 누를 수 없습니다. (CanActivate == false)");
             return;
+        }
+        if (TutorialManager.IsActive && !TutorialManager.Instance.IsInputAllowed(TutorialInputPermission.EnterFinalDecision))
+        {
+            Debug.LogWarning("[HoldToEnterFinalDecision] 튜토리얼 매니저에 의해 입력이 차단되었습니다.");
+            return;
+        }
+        
+        Debug.Log("[HoldToEnterFinalDecision] 버튼 홀드 시작됨!");
         _isDraining = false;
         _isHolding  = true;
         _triggered  = false;
@@ -89,6 +98,7 @@ public class HoldToEnterFinalDecision : MonoBehaviour
     private void Trigger()
     {
         _triggered  = true;
+        Debug.Log("[HoldToEnterFinalDecision] 홀드 완료! EnterFinalDecision 호출!");
         _isHolding  = false;
         _isDraining = false;
         SetFill(1f);
