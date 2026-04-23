@@ -17,6 +17,7 @@ public class StageClearSequenceController : MonoBehaviour
         public float hideDeskObjectsDelay;
         public float afterBookCloseDelay;
         public float afterStandUpDelay;
+        public float afterBridgeCameraDelay;
         public float waitForShelfCameraTransition;
         public float afterInsertDelay;
         public float finalFadeDuration;
@@ -55,11 +56,40 @@ public class StageClearSequenceController : MonoBehaviour
         public Ease stagingMoveEase;
         public bool matchStagingRotation;
         public bool matchStagingScale;
+        [Header("Staging Swap")]
+        public GameObject stagingSwapPrefab;
         public Transform shelfTarget;
         public float moveDuration;
         public Ease moveEase;
         public bool matchRotation;
         public bool matchScale;
+    }
+
+    [Serializable]
+    private struct ColoredBookRevealSettings
+    {
+        [Header("Material Color Change")]
+        public bool useMaterialColorChange;
+        public Color targetColor;
+        public float colorChangeDuration;
+        [Tooltip("If empty, changes all Renderers. Otherwise, specify child paths (e.g. 'Cover').")]
+        public string[] targetRendererPaths;
+
+        [Header("Prefab Swap (Legacy)")]
+        public GameObject coloredBookPrefab;
+        public bool hideUncoloredBookAfterReveal;
+    }
+
+    [Serializable]
+    private struct CameraRotationSettings
+    {
+        public bool enable;
+        [Tooltip("회전할 각도 (현재 회전값 기준 상대값)")]
+        public Vector3 rotationOffset;
+        public float duration;
+        public Ease ease;
+        [Tooltip("회전이 끝날 때까지 다음 연출(책 꽂기 등)을 대기할지 여부")]
+        public bool waitForCompletion;
     }
 
     [Serializable]
@@ -72,6 +102,16 @@ public class StageClearSequenceController : MonoBehaviour
         public float appearDuration;
         public float startScaleMultiplier;
         public Ease appearEase;
+    }
+
+    [Serializable]
+    private struct HeadBobSettings
+    {
+        public Transform target;
+        public float stepDuration;
+        public float verticalOffset;
+        public Ease ease;
+        public float resetDuration;
     }
 
     [Header("Start")]
@@ -90,10 +130,19 @@ public class StageClearSequenceController : MonoBehaviour
     [Header("Book")]
     [SerializeField] private BookSpawnSettings _bookSpawn;
     [SerializeField] private BookInsertSettings _bookInsert;
+    [SerializeField] private ColoredBookRevealSettings _coloredBookReveal = new ColoredBookRevealSettings
+    {
+        useMaterialColorChange = true,
+        targetColor = Color.red,
+        colorChangeDuration = 1.0f,
+        hideUncoloredBookAfterReveal = true
+    };
 
     [Header("Cinemachine 3")]
     [SerializeField] private CinemachineCamera _standUpCamera;
     [SerializeField] private int _standUpCameraPriority = 90;
+    [SerializeField] private CinemachineCamera _bridgeToShelfCamera;
+    [SerializeField] private int _bridgeToShelfCameraPriority = 95;
     [SerializeField] private CinemachineCamera _lookAtShelfCamera;
     [SerializeField] private int _lookAtShelfCameraPriority = 100;
     [SerializeField] private CinemachineCamera[] _otherCameras;
@@ -103,9 +152,32 @@ public class StageClearSequenceController : MonoBehaviour
     [Tooltip("Use this for stand-up animation, chair movement, SFX, etc.")]
     [SerializeField] private UnityEvent _onStandUp;
 
+    [Header("Bridge Camera Event")]
+    [Tooltip("Use this for the camera step between stand-up and shelf look.")]
+    [SerializeField] private UnityEvent _onBridgeToShelfCamera;
+
+    [Header("Bridge To Shelf Head Bob")]
+    [SerializeField] private HeadBobSettings _bridgeToShelfHeadBob = new HeadBobSettings
+    {
+        stepDuration = 0.24f,
+        verticalOffset = 0.015f,
+        ease = Ease.InOutSine,
+        resetDuration = 0.12f
+    };
+
     [Header("Shelf Look Event")]
     [Tooltip("Use this for player turn, timeline play, lights, SFX, etc.")]
     [SerializeField] private UnityEvent _onLookAtShelf;
+
+    [Header("Shelf Camera Rotation")]
+    [SerializeField] private CameraRotationSettings _shelfCameraRotation = new CameraRotationSettings
+    {
+        enable = false,
+        rotationOffset = Vector3.zero,
+        duration = 1.0f,
+        ease = Ease.InOutSine,
+        waitForCompletion = false
+    };
 
     [Header("Figures")]
     [SerializeField] private bool _hideExistingFiguresOnAwake = true;
@@ -124,15 +196,21 @@ public class StageClearSequenceController : MonoBehaviour
         hideDeskObjectsDelay = 0.15f,
         afterBookCloseDelay = 0.2f,
         afterStandUpDelay = 0.6f,
+        afterBridgeCameraDelay = 0.4f,
         waitForShelfCameraTransition = 0.35f,
         afterInsertDelay = 0.2f,
-        finalFadeDuration = 0.75f,
-        lobbyLoadDelay = 0.05f
+        finalFadeDuration = 1.5f,
+        lobbyLoadDelay = 0.5f
     };
 
     private bool _isPlaying;
     private GameObject _spawnedClosingBook;
+    private GameObject _spawnedColoredBook;
+    private Sequence _bridgeHeadBobSequence;
+    private Vector3 _bridgeHeadBobBaseLocalPosition;
+    private bool _hasSavedHeadBobBasePosition;
     private int _cachedStandUpCameraPriority;
+    private int _cachedBridgeToShelfCameraPriority;
     private int _cachedLookAtShelfPriority;
     private int[] _cachedOtherCameraPriorities;
 
@@ -168,6 +246,7 @@ public class StageClearSequenceController : MonoBehaviour
 
     private void OnDestroy()
     {
+        StopBridgeToShelfHeadBob(restoreImmediately: true);
         DOTween.Kill(this);
         RestoreCameraPriorities();
     }
@@ -228,13 +307,31 @@ public class StageClearSequenceController : MonoBehaviour
         if (_timings.afterStandUpDelay > 0f)
             yield return new WaitForSeconds(_timings.afterStandUpDelay);
 
+        ApplyBridgeToShelfCameraPriorities();
+        _onBridgeToShelfCamera?.Invoke();
+
+        if (_timings.afterBridgeCameraDelay > 0f)
+            yield return new WaitForSeconds(_timings.afterBridgeCameraDelay);
+
         ApplyLookAtShelfCameraPriorities();
+        StartBridgeToShelfHeadBob();
         _onLookAtShelf?.Invoke();
 
         if (_timings.waitForShelfCameraTransition > 0f)
             yield return new WaitForSeconds(_timings.waitForShelfCameraTransition);
 
+        StopBridgeToShelfHeadBob(restoreImmediately: false);
+
+        if (_shelfCameraRotation.enable)
+        {
+            if (_shelfCameraRotation.waitForCompletion)
+                yield return RotateShelfCamera();
+            else
+                StartCoroutine(RotateShelfCamera());
+        }
+
         yield return InsertBookToShelf();
+        yield return RevealColoredBook();
 
         if (_timings.afterInsertDelay > 0f)
             yield return new WaitForSeconds(_timings.afterInsertDelay);
@@ -320,6 +417,26 @@ public class StageClearSequenceController : MonoBehaviour
             _cachedLookAtShelfPriority = _lookAtShelfCamera.Priority.Value;
             _lookAtShelfCamera.Priority = _otherCameraPriority;
         }
+
+        if (_bridgeToShelfCamera != null)
+        {
+            _cachedBridgeToShelfCameraPriority = _bridgeToShelfCamera.Priority.Value;
+            _bridgeToShelfCamera.Priority = _otherCameraPriority;
+        }
+    }
+
+    private void ApplyBridgeToShelfCameraPriorities()
+    {
+        CacheAndLowerOtherCameraPriorities();
+
+        if (_standUpCamera != null)
+            _standUpCamera.Priority = _otherCameraPriority;
+
+        if (_bridgeToShelfCamera != null)
+            _bridgeToShelfCamera.Priority = _bridgeToShelfCameraPriority;
+
+        if (_lookAtShelfCamera != null)
+            _lookAtShelfCamera.Priority = _otherCameraPriority;
     }
 
     private void ApplyLookAtShelfCameraPriorities()
@@ -328,6 +445,9 @@ public class StageClearSequenceController : MonoBehaviour
 
         if (_standUpCamera != null)
             _standUpCamera.Priority = _otherCameraPriority;
+
+        if (_bridgeToShelfCamera != null)
+            _bridgeToShelfCamera.Priority = _otherCameraPriority;
 
         if (_lookAtShelfCamera != null)
         {
@@ -367,6 +487,9 @@ public class StageClearSequenceController : MonoBehaviour
         if (_standUpCamera != null)
             _standUpCamera.Priority = _cachedStandUpCameraPriority;
 
+        if (_bridgeToShelfCamera != null)
+            _bridgeToShelfCamera.Priority = _cachedBridgeToShelfCameraPriority;
+
         if (_lookAtShelfCamera != null)
             _lookAtShelfCamera.Priority = _cachedLookAtShelfPriority;
 
@@ -381,18 +504,108 @@ public class StageClearSequenceController : MonoBehaviour
         }
     }
 
+    private void StartBridgeToShelfHeadBob()
+    {
+        Transform target = ResolveHeadBobTarget();
+        if (target == null)
+            return;
+
+        StopBridgeToShelfHeadBob(restoreImmediately: true);
+
+        if (!_hasSavedHeadBobBasePosition)
+        {
+            _bridgeHeadBobBaseLocalPosition = target.localPosition;
+            _hasSavedHeadBobBasePosition = true;
+        }
+
+        float stepDuration = Mathf.Max(0.01f, _bridgeToShelfHeadBob.stepDuration);
+        Vector3 upPos = _bridgeHeadBobBaseLocalPosition + new Vector3(
+            0f,
+            _bridgeToShelfHeadBob.verticalOffset,
+            0f);
+        Vector3 downPos = _bridgeHeadBobBaseLocalPosition;
+
+        _bridgeHeadBobSequence = DOTween.Sequence().SetLink(target.gameObject);
+        _bridgeHeadBobSequence.Append(target.DOLocalMove(upPos, stepDuration).SetEase(_bridgeToShelfHeadBob.ease));
+        _bridgeHeadBobSequence.Append(target.DOLocalMove(downPos, stepDuration).SetEase(_bridgeToShelfHeadBob.ease));
+        _bridgeHeadBobSequence.SetLoops(-1, LoopType.Restart);
+    }
+
+    private void StopBridgeToShelfHeadBob(bool restoreImmediately)
+    {
+        Transform target = ResolveHeadBobTarget();
+
+        _bridgeHeadBobSequence?.Kill();
+        _bridgeHeadBobSequence = null;
+
+        if (target == null)
+            return;
+
+        DOTween.Kill(target);
+
+        if (restoreImmediately)
+        {
+            if (_hasSavedHeadBobBasePosition)
+                target.localPosition = _bridgeHeadBobBaseLocalPosition;
+            return;
+        }
+
+        float resetDuration = Mathf.Max(0.01f, _bridgeToShelfHeadBob.resetDuration);
+        target.DOLocalMove(_bridgeHeadBobBaseLocalPosition, resetDuration)
+            .SetEase(Ease.OutSine)
+            .SetLink(target.gameObject);
+    }
+
+    private Transform ResolveHeadBobTarget()
+    {
+        if (_bridgeToShelfHeadBob.target != null)
+            return _bridgeToShelfHeadBob.target;
+
+        return _bridgeToShelfCamera != null ? _bridgeToShelfCamera.transform : null;
+    }
+
+    private IEnumerator RotateShelfCamera()
+    {
+        if (_lookAtShelfCamera == null) yield break;
+
+        Transform camTransform = _lookAtShelfCamera.transform;
+        yield return camTransform.DOLocalRotate(
+                _shelfCameraRotation.rotationOffset,
+                Mathf.Max(0.01f, _shelfCameraRotation.duration),
+                RotateMode.LocalAxisAdd)
+            .SetEase(_shelfCameraRotation.ease)
+            .SetLink(camTransform.gameObject)
+            .WaitForCompletion();
+    }
+
     private IEnumerator InsertBookToShelf()
     {
         if (_spawnedClosingBook == null)
             yield break;
 
         if (_bookInsert.stagingTarget != null)
+        {
             yield return MoveBookToTarget(
                 _bookInsert.stagingTarget,
                 _bookInsert.stagingMoveDuration,
                 _bookInsert.stagingMoveEase,
                 _bookInsert.matchStagingRotation,
                 _bookInsert.matchStagingScale);
+
+            if (_bookInsert.stagingSwapPrefab != null)
+            {
+                var oldBook = _spawnedClosingBook;
+                
+                _spawnedClosingBook = Instantiate(
+                    _bookInsert.stagingSwapPrefab,
+                    oldBook.transform.position,
+                    oldBook.transform.rotation,
+                    oldBook.transform.parent);
+                
+                _spawnedClosingBook.transform.localScale = oldBook.transform.localScale;
+                oldBook.SetActive(false);
+            }
+        }
 
         if (_bookInsert.shelfTarget != null)
             yield return MoveBookToTarget(
@@ -401,6 +614,67 @@ public class StageClearSequenceController : MonoBehaviour
                 _bookInsert.moveEase,
                 _bookInsert.matchRotation,
                 _bookInsert.matchScale);
+    }
+
+    private IEnumerator RevealColoredBook()
+    {
+        if (_spawnedClosingBook == null)
+            yield break;
+
+        if (_coloredBookReveal.useMaterialColorChange)
+        {
+            List<Renderer> targetRenderers = new List<Renderer>();
+
+            if (_coloredBookReveal.targetRendererPaths != null && _coloredBookReveal.targetRendererPaths.Length > 0)
+            {
+                foreach (var path in _coloredBookReveal.targetRendererPaths)
+                {
+                    Transform targetTransform = string.IsNullOrEmpty(path)
+                        ? _spawnedClosingBook.transform
+                        : _spawnedClosingBook.transform.Find(path);
+
+                    if (targetTransform != null)
+                    {
+                        Renderer rnd = targetTransform.GetComponent<Renderer>();
+                        if (rnd != null)
+                            targetRenderers.Add(rnd);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[StageClearSequence] Missing renderer path: {path}");
+                    }
+                }
+            }
+            else
+            {
+                targetRenderers.AddRange(_spawnedClosingBook.GetComponentsInChildren<Renderer>());
+            }
+
+            if (targetRenderers.Count > 0)
+            {
+                Sequence colorSeq = DOTween.Sequence().SetLink(_spawnedClosingBook);
+                float duration = Mathf.Max(0.01f, _coloredBookReveal.colorChangeDuration);
+
+                foreach (var rnd in targetRenderers)
+                    colorSeq.Join(rnd.material.DOColor(_coloredBookReveal.targetColor, duration));
+
+                yield return colorSeq.WaitForCompletion();
+            }
+        }
+        else if (_coloredBookReveal.coloredBookPrefab != null)
+        {
+            var sourceTransform = _spawnedClosingBook.transform;
+            _spawnedColoredBook = Instantiate(
+                _coloredBookReveal.coloredBookPrefab,
+                sourceTransform.position,
+                sourceTransform.rotation,
+                sourceTransform.parent);
+
+            _spawnedColoredBook.transform.localScale = sourceTransform.localScale;
+
+            if (_coloredBookReveal.hideUncoloredBookAfterReveal)
+                _spawnedClosingBook.SetActive(false);
+        }
     }
 
     private IEnumerator MoveBookToTarget(
