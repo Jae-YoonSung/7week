@@ -1707,13 +1707,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawerPanel
   _shownAnchoredX: -650
-  _distanceThreshold: 100
-  _velocityThreshold: 600
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
-  _drawerButtons:
-  - {fileID: 1273171413}
 --- !u!225 &155018637
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5069,6 +5065,8 @@ MonoBehaviour:
   _stageRoleConfig: {fileID: 11400000, guid: 75bd62f42a9d34c4d89fc79296e767e3, type: 2}
   _setupConfig: {fileID: 11400000, guid: 189fc97a606ade749befc87978494309, type: 2}
   _characterSpawner: {fileID: 1589347838}
+  _stageVisualConfig: {fileID: 0}
+  _epilogueVisualConfig: {fileID: 0}
   _lobbySceneName: LobbyScene
   _stageId: 0
   _triggerEndingDialogueOnWin: 0
@@ -6024,13 +6022,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawerPanel
   _shownAnchoredX: -750
-  _distanceThreshold: 100
-  _velocityThreshold: 600
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
-  _drawerButtons:
-  - {fileID: 1273171413}
 --- !u!225 &599471879
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -10270,13 +10264,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawerPanel
   _shownAnchoredX: 750
-  _distanceThreshold: 100
-  _velocityThreshold: 600
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
-  _drawerButtons:
-  - {fileID: 1273171413}
 --- !u!225 &931349651
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -17651,6 +17641,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1727461952}
   m_CullTransparentMesh: 1
+--- !u!1 &1733351660
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1733351662}
+  - component: {fileID: 1733351661}
+  m_Layer: 0
+  m_Name: GameEventLogger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1733351661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733351660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb0a91f348efc7479ad4aa798e66f97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameEventLogger
+--- !u!4 &1733351662
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733351660}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -24.92532, y: -6.558, z: -2.14001}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1737952075
 GameObject:
   m_ObjectHideFlags: 0
@@ -20800,3 +20834,4 @@ SceneRoots:
   - {fileID: 1641428130}
   - {fileID: 601919574}
   - {fileID: 815696971}
+  - {fileID: 1733351662}

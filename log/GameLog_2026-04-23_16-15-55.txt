@@ -1,0 +1,30 @@
+[16:15:55] [session_start] date=2026-04-23 time=16:15:55
+[16:16:08] [level_start] stage=1_1
+[16:16:08] [zone_init] zone=0 char=#4 그레이스 role=Variable id=4
+[16:16:08] [zone_init] zone=0 char=#6 조이 role=Protagonist id=6
+[16:16:08] [zone_init] zone=1 char=#1 행크 role=FriendA id=1
+[16:16:08] [zone_init] zone=1 char=#2 트래비스 role=Fanatic id=2
+[16:16:08] [zone_init] zone=2 char=#3 루시 role=Murderer id=3
+[16:16:08] [zone_init] zone=3 char=#5 카프카 role=FriendB id=5
+[16:16:08] [zone_init] zone=3 char=#7 스미스 role=Deputy id=7
+[16:16:08] [loop_start] loop=1
+[16:16:08] [turn_start] loop=1 turn=1
+[16:16:17] [Log]   #5 카프카(FriendB) id=5 Zone 3 → Zone 0 이동
+[16:16:17] [Log]   #7 스미스(Deputy) id=7 Zone 3 → Zone 0 이동
+[16:16:17] [Log]   #6 조이(Protagonist) id=6 Zone 0 → Zone 3 이동
+[16:16:17] [Log]   #4 그레이스(Variable) id=4 Zone 0 → Zone 3 이동
+[16:16:17] [turn_end] loop=1 turn=1 duration=00:09
+[16:16:19] [turn_start] loop=1 turn=2
+[16:16:37] [loop_end] loop=1 duration=00:28
+[16:16:37] [level_complete] stage=1_1 duration=00:28
+[16:17:17] [level_start] stage=1_2
+[16:17:17] [zone_init] zone=0 char=#1 행크 role=FriendA id=1
+[16:17:17] [zone_init] zone=0 char=#6 조이 role=FriendB id=6
+[16:17:17] [zone_init] zone=1 char=#2 트래비스 role=Murderer id=2
+[16:17:17] [zone_init] zone=1 char=#4 그레이스 role=Protagonist id=4
+[16:17:17] [zone_init] zone=2 char=#5 카프카 role=Deputy id=5
+[16:17:17] [zone_init] zone=3 char=#3 루시 role=Fanatic id=3
+[16:17:17] [zone_init] zone=3 char=#7 스미스 role=Variable id=7
+[16:17:17] [loop_start] loop=1
+[16:17:17] [turn_start] loop=1 turn=1
+[16:17:24] [session_end] duration=00:01:28
