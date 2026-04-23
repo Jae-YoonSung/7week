@@ -4043,6 +4043,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LobbyRandomSeedButton
   _stageId: 
   _gameSceneName: Stage_1
+  _isEpilogue: 1
 --- !u!1 &869289246
 GameObject:
   m_ObjectHideFlags: 0
@@ -5962,7 +5963,7 @@ MonoBehaviour:
   _seed: 52635548
   _stageId: 1_3
   _gameSceneName: Stage_1
-  _isEpilogue: 0
+  _isEpilogue: 1
   _label: {fileID: 0}
 --- !u!1 &1404257371
 GameObject:
@@ -6737,6 +6738,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LobbyRandomSeedButton
   _stageId: 
   _gameSceneName: Stage_3
+  _isEpilogue: 1
 --- !u!1 &1596435726
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,7 +1,0 @@
-[15:22:34] [session_start] date=2026-04-23 time=15:22:34
-[15:22:47] [level_start] stage=1_1
-[15:22:47] [loop_start] loop=1
-[15:22:47] [turn_start] loop=1 turn=1
-[15:23:09] [loop_end] loop=1 duration=00:21
-[15:23:09] [level_fail] stage=1_1 duration=00:21
-[15:26:55] [session_end] duration=00:04:20

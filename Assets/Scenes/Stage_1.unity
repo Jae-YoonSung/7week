@@ -8681,7 +8681,7 @@ MonoBehaviour:
   _setupConfig: {fileID: 11400000, guid: c8b4f5edc20791e46b21e19fb9387ca5, type: 2}
   _characterSpawner: {fileID: 1589347838}
   _stageVisualConfig: {fileID: 0}
-  _epilogueVisualConfig: {fileID: 11400000, guid: 14403c8a5fbeb344b812b5bf77377150, type: 2}
+  _epilogueVisualConfig: {fileID: 11400000, guid: 7de7dfb0264e9ac4b91aecc925449f6f, type: 2}
   _lobbySceneName: LobbyScene
   _stageId: 
   _triggerEndingDialogueOnWin: 0
@@ -21399,8 +21399,6 @@ MonoBehaviour:
   _submitButton: {fileID: 412150635}
   _fadeInDuration: 0.6
   _continueDelay: 2
-  _wrongAnswerBlockDuration: 2
-  _wrongTextColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1424682372
 GameObject:
   m_ObjectHideFlags: 0
@@ -25357,7 +25355,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1742176679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28114,7 +28112,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1953585280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29277,7 +29275,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2098580460
 RectTransform:
   m_ObjectHideFlags: 0
