@@ -17,11 +17,18 @@ public class StageRoleConfig : ScriptableObject
     [Tooltip("이 스테이지의 루프 강제 종료 조건. null이면 루프 조건 없음.")]
     [SerializeField] private LoopConditionConfig _loopCondition;
 
+    [Tooltip("ZonePhantom(구역 유령)의 고정 시작 구역 (0~3). ZonePhantom이 없는 스테이지에서는 무시됩니다.")]
+    [Range(0, 3)]
+    [SerializeField] private int _phantomStartZone = 0;
+
     /// <summary>고유 스테이지 식별자. 세이브 파일 검증에 사용합니다.</summary>
     public string StageId => _stageId;
 
     /// <summary>스테이지별 루프 강제 종료 조건. null이면 루프가 자동 종료되지 않습니다.</summary>
     public LoopConditionConfig LoopCondition => _loopCondition;
+
+    /// <summary>ZonePhantom의 고정 시작 구역. 8번 캐릭터에게 시드와 무관하게 적용됩니다.</summary>
+    public int PhantomStartZone => _phantomStartZone;
 
     /// <summary>등록된 직업 목록 (읽기 전용)</summary>
     public IReadOnlyList<RoleData> Roles => roles;

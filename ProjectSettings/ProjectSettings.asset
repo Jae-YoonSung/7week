@@ -942,11 +942,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 6eae28d8-e856-484b-b22f-82602f6c0e74
+  cloudProjectId: 563f7a77-a58f-45b6-b997-0bc3b0ecc2b6
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Week6
-  organizationId: kp_0525
+  projectName: Week07
+  organizationId: gomding0319
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

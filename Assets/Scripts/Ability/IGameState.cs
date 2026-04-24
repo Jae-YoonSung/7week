@@ -52,6 +52,9 @@ public interface IGameState
     /// <summary>해당 구역에서 특수 능력이 비활성화되어 있으면 true를 반환합니다.</summary>
     bool IsAbilityDisabledInZone(int zoneId);
 
+    /// <summary>이번 턴 한정으로 해당 구역의 능력을 봉인합니다. 턴 종료 시 자동 해제됩니다.</summary>
+    void DisableAbilitiesInZone(int zoneId);
+
     // ── 지연 사망 ──────────────────────────────────────────────────────────
 
     /// <summary>
