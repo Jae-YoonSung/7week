@@ -133,13 +133,18 @@ public class FinalDecisionUI : MonoBehaviour
         if (gfc == null) return;
 
         foreach (var slot in _roleSlots)
-            if (slot != null && slot.AssignedCard == null) return;
+        {
+            if (slot == null) continue;
+            if (gfc.GetActualRole(slot.CharacterId) == RoleType.ZonePhantom) continue;
+            if (slot.AssignedCard == null) return;
+        }
 
         var wrongSlots = new List<RoleSlot>();
         foreach (var slot in _roleSlots)
         {
             if (slot == null || slot.AssignedCard == null) continue;
             var actual   = gfc.GetActualRole(slot.CharacterId);
+            if (actual == RoleType.ZonePhantom) continue;
             var assigned = slot.AssignedCard.RoleType;
             bool correct = assigned == actual;
             Debug.Log($"[FinalDecision] CharId={slot.CharacterId}  배정={assigned}  정답={actual}  → {(correct ? "O" : "X")}");

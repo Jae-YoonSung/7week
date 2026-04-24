@@ -235,7 +235,12 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
             if (_triggerEndingDialogueOnWin)
                 LobbyDialogueManager.PendingEndingDialogue = true;
         }
-        SceneManager.LoadScene(_lobbySceneName);
+
+        // NewGameConfig에 전용 로비씬이 설정되어 있으면 우선 사용, 없으면 기본 _lobbySceneName
+        string lobbyScene = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName)
+            ? NewGameConfig.LobbySceneName
+            : _lobbySceneName;
+        SceneManager.LoadScene(lobbyScene);
     }
 
     private void HandleLoopReset()

@@ -336,7 +336,12 @@ public class StageClearSequenceController : MonoBehaviour
 
         RecordStageClearIfNeeded();
         LobbyDialogueManager.PendingEndingDialogue = _triggerLobbyEndingDialogue;
-        SceneManager.LoadScene(_lobbySceneName);
+
+        // NewGameConfig에 전용 로비씬이 설정되어 있으면 우선 사용
+        string lobbyScene = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName)
+            ? NewGameConfig.LobbySceneName
+            : _lobbySceneName;
+        SceneManager.LoadScene(lobbyScene);
     }
 
     private void SpawnClosingBook()

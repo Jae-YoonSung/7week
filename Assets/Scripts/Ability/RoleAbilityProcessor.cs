@@ -34,9 +34,9 @@ public class RoleAbilityProcessor
             // 이번 턴 앞선 능력에 의해 사망 마크된 캐릭터는 이후 능력 발동 없음 (우선순위 규칙)
             if (gameState.IsMarkedForDeath(character.CharacterId)) continue;
 
-            // 능력이 봉인된 구역에 위치한 캐릭터는 능력 발동 없음
+            // 능력이 봉인된 구역에 위치한 캐릭터는 능력 발동 없음 (ZonePhantom은 봉인 면역)
             int zone = gameState.GetZone(character.CharacterId);
-            if (gameState.IsAbilityDisabledInZone(zone)) continue;
+            if (gameState.IsAbilityDisabledInZone(zone) && roleData.RoleType != RoleType.ZonePhantom) continue;
 
             roleData.AbilityConfig.Execute(character.CharacterId, gameState);
         }
