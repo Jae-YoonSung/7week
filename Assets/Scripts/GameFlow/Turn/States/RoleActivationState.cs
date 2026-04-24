@@ -78,6 +78,9 @@ public class RoleActivationState : IState
         var processor = new RoleAbilityProcessor(_orderConfig);
         processor.Process(gameState);
 
+        // 심약자 패시브: 전 루프에 자신이 죽은 턴과 동일한 턴에 자살
+        ApplyTimidEffect(gameState);
+
         // ── 단계 N+1: 사망 확정 (응징자·연인C/D 패시브 포함) ────────────────
         gameState.ConfirmDeaths();
         LogTurnSummary(gameState);
@@ -156,7 +159,40 @@ public class RoleActivationState : IState
     private bool CheckLoopEndCondition(GameState gameState)
     {
         var condition = _getLoopCondition?.Invoke();
-        return condition != null && condition.ShouldLoop(gameState);
+        if (condition == null) return false;
+
+        // 영속자가 살아있으면 강제 루프 차단
+        if (gameState.GetCharacterByRole(RoleType.Persister) != null)
+        {
+            Debug.Log("[LoopCondition] 영속자 생존 — 강제 루프 차단");
+            return false;
+        }
+
+        return condition.ShouldLoop(gameState);
+    }
+
+    // 심약자: 전 루프에 자신이 죽은 턴과 동일한 턴에 자살
+    private void ApplyTimidEffect(GameState gameState)
+    {
+        var timid = gameState.GetCharacterByRole(RoleType.Timid);
+        if (timid == null) return;
+
+        int loopIndex = _getLoopIndex();
+        if (loopIndex == 0) return;
+
+        int turnIndex  = _getTurnIndex();
+        var prevRecord = _historyRepo.GetRecord(loopIndex - 1, turnIndex);
+        if (prevRecord == null) return;
+
+        foreach (var death in prevRecord.Deaths)
+        {
+            if (death.CharacterId == timid.CharacterId)
+            {
+                gameState.MarkForDeath(timid.CharacterId, RoleType.Timid, timid.CharacterId);
+                Debug.Log($"[심약자] 전 루프 {turnIndex}턴에 자신이 사망 — 자살");
+                return;
+            }
+        }
     }
 
     private void LogTurnSummary(GameState gameState) { }

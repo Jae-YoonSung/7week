@@ -1894,6 +1894,7 @@ MonoBehaviour:
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
   _dropIndicator: {fileID: 1811115737}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &137149189
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2983,6 +2984,7 @@ MonoBehaviour:
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
   _dropIndicator: {fileID: 1126716519}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &202144441
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8173,14 +8175,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 304ad309ac2378d478b53e34b4f56f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowController
-  _orderConfig: {fileID: 11400000, guid: 0a2ea068f8191d64ea3dd18190f8d869, type: 2}
-  _characterRegistry: {fileID: 11400000, guid: dcdbf53e1737d8942bf440fd67969e0b, type: 2}
-  _stageRoleConfig: {fileID: 11400000, guid: f536feeb255a1c3459efb3a912ac6cba, type: 2}
-  _setupConfig: {fileID: 11400000, guid: c8b4f5edc20791e46b21e19fb9387ca5, type: 2}
+  _orderConfig: {fileID: 11400000, guid: 30a4fa475d4f038469aa7027e97c38ab, type: 2}
+  _characterRegistry: {fileID: 11400000, guid: 835c0089d2cc96e4fbbe4cc3af056758, type: 2}
+  _stageRoleConfig: {fileID: 11400000, guid: 1e108d2eb3bb5864db97f4adfe535fb1, type: 2}
+  _setupConfig: {fileID: 11400000, guid: f3bccbac9fd056a4dbd5cde00d879619, type: 2}
   _characterSpawner: {fileID: 1589347838}
   _stageVisualConfig: {fileID: 0}
-  _epilogueVisualConfig: {fileID: 11400000, guid: 7de7dfb0264e9ac4b91aecc925449f6f, type: 2}
-  _lobbySceneName: LobbyScene1
+  _epilogueVisualConfig: {fileID: 0}
+  _lobbySceneName: LobbyScene4
   _stageId: 
   _triggerEndingDialogueOnWin: 0
 --- !u!1001 &538387526
@@ -18391,6 +18393,7 @@ MonoBehaviour:
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
   _dropIndicator: {fileID: 249940030}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &1273087943
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22220,9 +22223,10 @@ MonoBehaviour:
   - {fileID: 1533104547}
   - {fileID: 1656294734}
   - {fileID: 1506250465}
-  _disableAbilities: 1
+  _disableAbilities: 0
   _zoneEffect: {fileID: 0}
   _dropIndicator: {fileID: 220229535}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &1576250531
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -26227,7 +26231,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1909151240}
   m_LocalRotation: {x: -0.06266904, y: -0.81257486, z: 0.5770672, w: 0.05280407}
-  m_LocalPosition: {x: 0, y: 0, z: -13.64}
+  m_LocalPosition: {x: 0, y: 0, z: 1.98}
   m_LocalScale: {x: 9.480827, y: 9, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -26236,7 +26240,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 111.377, y: 25.712997, z: 206.526}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.39, y: -6.4409246}
+  m_AnchoredPosition: {x: 3.71, y: -11.84}
   m_SizeDelta: {x: 1.5946, y: 0.6549}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1909151242
@@ -28636,7 +28640,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 1f504256629ae4744a6cc2fc54c0246d, type: 3}
-  m_Color: {r: 1, g: 0.83183765, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
