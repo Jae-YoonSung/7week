@@ -188,6 +188,7 @@ public class GameEventLogger : MonoBehaviour
         if (_gfc == null) return;
         var gs = _gfc.GameState;
         if (gs == null) return;
+        if (_gfc.CharacterViews == null) return;
         foreach (var charId in _gfc.CharacterViews.Keys)
             _assignedZones[charId] = gs.GetZone(charId);
     }
