@@ -68,15 +68,6 @@ public class GameEventLogger : MonoBehaviour
 
         // ZoneLayout 캐시 — IsSpecialZone / GetZoneType에서 ZoneEffect 조회에 사용
         _zoneLayout = FindFirstObjectByType<ZoneLayout>();
-
-        // 초기 존 스냅샷 (Start 실행 시점에 CharacterViews가 비어있을 수 있으므로
-        // SyncAssignedZones가 첫 번째 턴에서 보완한다)
-        var gs = _gfc.GameState;
-        if (gs != null)
-        {
-            foreach (var charId in _gfc.CharacterViews.Keys)
-                _assignedZones[charId] = gs.GetZone(charId);
-        }
     }
 
     private void OnDestroy()
