@@ -151,9 +151,22 @@ public class FinalDecisionUI : MonoBehaviour
             if (!correct) wrongSlots.Add(slot);
         }
 
-        if (GameLogger.Instance != null)
-            foreach (var slot in wrongSlots)
-                GameLogger.Instance.Log($"[wrong_answer] charId={slot.CharacterId} 제출={slot.AssignedCard.RoleType} 정답={gfc.GetActualRole(slot.CharacterId)}");
+        // 슬롯 전체를 순회해 정답/오답 모두 answer_submit 이벤트로 기록한다.
+        // 기존 wrongSlots 기반 직접 로그 대신 Dispatcher를 통해
+        // 파일 로그·Analytics 양쪽에 동시에 전달된다.
+        foreach (var slot in _roleSlots)
+        {
+            if (slot == null || slot.AssignedCard == null) continue;
+            var  actual  = gfc.GetActualRole(slot.CharacterId);
+            bool correct = slot.AssignedCard.RoleType == actual;
+            GameEventDispatcher.Raise(new AnswerSubmitEvent(
+                gfc.StageId,
+                gfc.LoopCount,
+                slot.AssignedCard.RoleType.ToString(),
+                actual.ToString(),
+                correct
+            ));
+        }
 
         _submitButton.interactable = false;
 
