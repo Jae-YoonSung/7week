@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1add48c2affdc54c96638ea8b9b391a, type: 3}
-  m_Name: EX_Character_3
-  m_EditorClassIdentifier: Assembly-CSharp::StageCharacterVisualConfig
-  _entries: []
+  m_Script: {fileID: 11500000, guid: 5f4571b09e5e8f949ba82771c4a93aa2, type: 3}
+  m_Name: Start 2 New
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueSO
+  lines:
+  - "\uBC00\uB824 \uB5A8\uC5B4\uC9C0\uB294 \uAC74 \uB204\uAD6C\uC77C\uAE4C."
