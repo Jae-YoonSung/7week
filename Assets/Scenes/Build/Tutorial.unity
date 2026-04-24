@@ -5067,7 +5067,7 @@ MonoBehaviour:
   _characterSpawner: {fileID: 1589347838}
   _stageVisualConfig: {fileID: 0}
   _epilogueVisualConfig: {fileID: 0}
-  _lobbySceneName: LobbyScene
+  _lobbySceneName: LobbyScene0
   _stageId: 0
   _triggerEndingDialogueOnWin: 0
 --- !u!1001 &538387526

@@ -106,7 +106,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Chapter 1
+  m_text: "\uADF8\uC758 \uB05D\uB9FA\uC74C\uC5D0 \uAD00\uD558\uC5EC"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
@@ -410,9 +410,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Chapter
-
-'
+  m_text: Tutorial
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
@@ -446,13 +444,13 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: -54.4
+  m_lineSpacing: -42.33
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -478,7 +476,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 17.14752, w: -26.408117}
+  m_margin: {x: 0, y: 0, z: 17.756065, w: -26.408117}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -836,7 +834,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9184641179096324852}
   m_Layer: 9
-  m_Name: "\uAF42\uD78C\uCC45_Stage1"
+  m_Name: "\uAF42\uD78C\uCC45_Stage0"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -876,7 +874,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2410729084381458514
 RectTransform:
   m_ObjectHideFlags: 0

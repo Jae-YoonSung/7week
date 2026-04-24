@@ -79,12 +79,14 @@ public class TitleSceneController : MonoBehaviour
     [SerializeField] private float _fadeHoldDuration = 0.2f;
 
     // ─────────────────────────────────────────────────────────────────────────
-    [Header("씬 전환")]
-    [SerializeField] private string _lobbySceneName = "LobbyScene";
+    [Header("씬 전환 (기본값)")]
+    [Tooltip("BookshelfBook에서 씬 이름을 지정하지 않았을 때 사용할 기본 로비 씬 이름")]
+    [SerializeField] private string _defaultLobbySceneName = "LobbyScene";
 
     // ─────────────────────────────────────────────────────────────────────────
     // 런타임 상태
     private bool _sequencePlaying = false;
+    private string _currentTargetSceneName;
 
     // ── Unity ────────────────────────────────────────────────────────────────
 
@@ -100,15 +102,22 @@ public class TitleSceneController : MonoBehaviour
     /// 책이 클릭됐을 때 BookshelfBook이 호출합니다.
     /// 이미 시퀀스가 진행 중이면 무시합니다.
     /// </summary>
-    public void OnBookClicked(Transform bookTransform)
+    public void OnBookClicked(Transform bookTransform, string targetSceneName)
     {
         if (_sequencePlaying) return;
         _sequencePlaying = true;
+
+        _currentTargetSceneName = string.IsNullOrEmpty(targetSceneName) ? _defaultLobbySceneName : targetSceneName;
 
         // 책을 씬 루트로 분리해 독립적으로 이동
         bookTransform.SetParent(null, worldPositionStays: true);
 
         StartCoroutine(PlayTitleSequence(bookTransform));
+    }
+
+    private void Start()
+    {
+        StartCoroutine(FadeIn());
     }
 
     // ── Private — 초기화 ─────────────────────────────────────────────────────
@@ -128,9 +137,21 @@ public class TitleSceneController : MonoBehaviour
     private void InitializeFade()
     {
         if (_fadeImage == null) return;
-        // 시작 시 페이드 이미지 완전 투명
+        // 시작 시 페이드 이미지 완전 불투명 (Start에서 FadeIn 실행)
         var c = _fadeImage.color;
-        _fadeImage.color = new Color(c.r, c.g, c.b, 0f);
+        _fadeImage.color = new Color(c.r, c.g, c.b, 1f);
+        _fadeImage.raycastTarget = true;
+    }
+
+    private IEnumerator FadeIn()
+    {
+        if (_fadeImage == null) yield break;
+
+        yield return _fadeImage.DOFade(0f, _fadeDuration)
+                  .SetEase(Ease.OutQuad)
+                  .WaitForCompletion();
+        
+        _fadeImage.raycastTarget = false;
     }
 
     // ── Private — 메인 시퀀스 ────────────────────────────────────────────────
@@ -151,7 +172,7 @@ public class TitleSceneController : MonoBehaviour
         yield return FadeOut();
         yield return new WaitForSeconds(_fadeHoldDuration);
 
-        SceneManager.LoadScene(_lobbySceneName);
+        SceneManager.LoadScene(_currentTargetSceneName);
     }
 
     // ── Private — 책 이동 ────────────────────────────────────────────────────
