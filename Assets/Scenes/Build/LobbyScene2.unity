@@ -253,7 +253,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 422071be77b653743b44560620f33608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyPresetSeedButton
-  _seed: 11111
+  _seed: 62380000
   _stageId: 2_1
   _gameSceneName: Stage_2
   _isEpilogue: 0
@@ -5522,7 +5522,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 422071be77b653743b44560620f33608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyPresetSeedButton
-  _seed: 52635548
+  _seed: 3668334
   _stageId: 2_3
   _gameSceneName: Stage_2
   _isEpilogue: 1
@@ -6682,8 +6682,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 422071be77b653743b44560620f33608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyPresetSeedButton
-  _seed: 15905396
-  _stageId: 2_1
+  _seed: 21657932
+  _stageId: 2_2
   _gameSceneName: Stage_2
   _isEpilogue: 1
   _label: {fileID: 0}

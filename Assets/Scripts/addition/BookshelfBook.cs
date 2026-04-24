@@ -66,6 +66,9 @@ public class BookshelfBook : MonoBehaviour
     public bool IsUnlocked => string.IsNullOrEmpty(_requiredClearStageId)
                            || StageClearRepository.Instance.HasCleared(_requiredClearStageId);
 
+    /// <summary>이 책이 담당하는 스테이지 ID</summary>
+    public string StageId => _stageId;
+
     /// <summary>이 책이 담당하는 스테이지(본편)의 클리어 여부</summary>
     public bool IsCleared => !string.IsNullOrEmpty(_stageId)
                           && StageClearRepository.Instance.HasCleared(_stageId);
