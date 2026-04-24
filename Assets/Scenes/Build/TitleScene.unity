@@ -6141,12 +6141,14 @@ MonoBehaviour:
     displayName: 2_1
   - stageId: 2_2
     displayName: 2_2
+  - stageId: 2_3
+    displayName: 2_3
   - stageId: 3_1
     displayName: 3_1
-  - stageId: 2_1
-    displayName: 2_1
-  - stageId: 2_1
-    displayName: 2_1
+  - stageId: 3_2
+    displayName: 3_2
+  - stageId: 4_1
+    displayName: 4_1
   _toggleKey: 282
   _showOnStart: 0
 --- !u!4 &1864130245
