@@ -253,9 +253,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 422071be77b653743b44560620f33608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyPresetSeedButton
-  _seed: 12399397
-  _stageId: 1_1
-  _gameSceneName: Stage_1
+  _seed: 62380000
+  _stageId: 2_1
+  _gameSceneName: Stage_2
   _isEpilogue: 0
   _label: {fileID: 0}
 --- !u!1 &81974535
@@ -4461,7 +4461,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4639d74073c903e4f8404d716a766887, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 802ff9503098ebd479ce66622d54f7b7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5522,9 +5522,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 422071be77b653743b44560620f33608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyPresetSeedButton
-  _seed: 52635548
-  _stageId: 1_3
-  _gameSceneName: Stage_1
+  _seed: 3668334
+  _stageId: 2_3
+  _gameSceneName: Stage_2
   _isEpilogue: 1
   _label: {fileID: 0}
 --- !u!1 &1445180794
@@ -5978,7 +5978,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Chapter 1
+  m_text: Chapter 2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
@@ -6682,9 +6682,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 422071be77b653743b44560620f33608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyPresetSeedButton
-  _seed: 15905396
-  _stageId: 1_2
-  _gameSceneName: Stage_1
+  _seed: 21657932
+  _stageId: 2_2
+  _gameSceneName: Stage_2
   _isEpilogue: 1
   _label: {fileID: 0}
 --- !u!1 &1703331683
@@ -6702,7 +6702,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1703331684
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7388,7 +7388,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1942343672
 RectTransform:
   m_ObjectHideFlags: 0

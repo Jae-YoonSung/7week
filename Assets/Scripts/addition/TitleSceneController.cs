@@ -120,6 +120,59 @@ public class TitleSceneController : MonoBehaviour
         StartCoroutine(FadeIn());
     }
 
+    private void Update()
+    {
+        HandleDebugInput();
+    }
+
+    private void HandleDebugInput()
+    {
+        // 1. F12: 모든 클리어 기록 초기화 및 씬 재시작
+        if (Input.GetKeyDown(KeyCode.F12))
+        {
+            StageClearRepository.Instance.ClearAllRecords();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            return;
+        }
+
+        // 2. 숫자 키 1~9: 책장 왼쪽에서부터 순서대로 강제 클리어
+        for (int i = 0; i < 9; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+            {
+                ForceClearBook(i);
+            }
+        }
+    }
+
+    private void ForceClearBook(int index)
+    {
+        var books = FindObjectsByType<BookshelfBook>(FindObjectsSortMode.None);
+        if (books == null || books.Length == 0) return;
+
+        // 책들을 왼쪽(X좌표 작은 순)에서 오른쪽으로 정렬하여 1, 2, 3... 키에 대응
+        System.Array.Sort(books, (a, b) => a.transform.position.x.CompareTo(b.transform.position.x));
+
+        if (index >= 0 && index < books.Length)
+        {
+            var targetBook = books[index];
+            string sid = targetBook.StageId;
+
+            if (!string.IsNullOrEmpty(sid))
+            {
+                StageClearRepository.Instance.RecordClear(sid);
+                Debug.Log($"[Debug] 스테이지 강제 클리어 처리됨: {sid}");
+
+                // 씬 내 모든 책들의 시각적 상태(색상, 잠금) 즉시 갱신
+                foreach (var b in books)
+                {
+                    b.RefreshClearedState();
+                    b.RefreshLockState();
+                }
+            }
+        }
+    }
+
     // ── Private — 초기화 ─────────────────────────────────────────────────────
 
     private void InitializeCameras()

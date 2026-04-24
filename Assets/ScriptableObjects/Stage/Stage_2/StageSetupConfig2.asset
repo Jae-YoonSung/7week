@@ -15,29 +15,29 @@ MonoBehaviour:
   _characterRegistry: {fileID: 11400000, guid: e155536aed6b64349999477dfe402b0e, type: 2}
   _stageRoleConfig: {fileID: 11400000, guid: b5631e8bea52404488195fcb55b79356, type: 2}
   _useRandomSeed: 0
-  _seed: 5397
+  _seed: 3668334
   _previewSetup:
   - characterId: 1
     roleIndex: 0
-    zoneId: 1
+    zoneId: 2
   - characterId: 2
     roleIndex: 1
-    zoneId: 1
+    zoneId: 3
   - characterId: 3
     roleIndex: 2
-    zoneId: 1
+    zoneId: 2
   - characterId: 4
-    roleIndex: 3
-    zoneId: 0
+    roleIndex: 5
+    zoneId: 1
   - characterId: 5
     roleIndex: 4
     zoneId: 1
   - characterId: 6
-    roleIndex: 5
-    zoneId: 1
+    roleIndex: 3
+    zoneId: 2
   - characterId: 7
-    roleIndex: 6
-    zoneId: 1
-  - characterId: 8
     roleIndex: 7
-    zoneId: 0
+    zoneId: 3
+  - characterId: 8
+    roleIndex: 6
+    zoneId: 3

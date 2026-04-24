@@ -1894,6 +1894,7 @@ MonoBehaviour:
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
   _dropIndicator: {fileID: 1811115737}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &137149189
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2983,6 +2984,7 @@ MonoBehaviour:
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
   _dropIndicator: {fileID: 1126716519}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &202144441
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5065,7 +5067,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &344669040
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18391,6 +18393,7 @@ MonoBehaviour:
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
   _dropIndicator: {fileID: 249940030}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &1273087943
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22223,6 +22226,7 @@ MonoBehaviour:
   _disableAbilities: 1
   _zoneEffect: {fileID: 0}
   _dropIndicator: {fileID: 220229535}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &1576250531
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28675,12 +28679,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
+      propertyPath: _lobbySceneName
+      value: LobbyScene1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: _shelfCameraRotation.enable
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: _shelfCameraRotation.duration
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
+      propertyPath: _coloredBookReveal.targetColor.r
+      value: 0.49019608
       objectReference: {fileID: 0}
     - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: '_deskObjectsToHide.Array.data[0]'
