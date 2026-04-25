@@ -68,6 +68,7 @@ public class PlayerTurnInputHandler : MonoBehaviour
         {
             _playerAction.OnCharacterSelected += HandleCharacterSelected;
             _playerAction.OnActionConfirmed   += HandleActionConfirmed;
+            _playerAction.SetBlockedZoneChecker(CheckAnyCharOnBlockedZone);
         }
 
         // 파도 구역 등 턴 시작 시 구역이 변경될 수 있으므로 OnPlayerActionStarted 때 _assignedZones 재동기화
@@ -206,7 +207,11 @@ public class PlayerTurnInputHandler : MonoBehaviour
             {
                 _hoveredZone?.SetDropIndicator(false);
                 _hoveredZone = newHovered;
-                _hoveredZone?.SetDropIndicator(true);
+                // 입장이 차단된 구역에는 드롭 인디케이터를 표시하지 않습니다.
+                var hoverGfc = GameFlowController.Instance;
+                int hoverTurn = hoverGfc != null ? hoverGfc.TurnCount : 1;
+                if (_hoveredZone != null && !IsEntryBlocked(_hoveredZone.ZoneId, hoverTurn))
+                    _hoveredZone.SetDropIndicator(true);
             }
         }
     }
@@ -225,9 +230,21 @@ public class PlayerTurnInputHandler : MonoBehaviour
             if (Physics.Raycast(ray, out var hit, Mathf.Infinity, _zoneLayerMask)
                 && hit.collider.TryGetComponent(out ZonePoint zonePoint))
             {
+                var dropGfc = GameFlowController.Instance;
+                int dropTurn = dropGfc != null ? dropGfc.TurnCount : 1;
+                bool entryBlocked = IsEntryBlocked(zonePoint.ZoneId, dropTurn);
+
                 if (TutorialManager.IsActive && !TutorialManager.Instance.IsZoneDropAllowed(_draggingId, zonePoint.ZoneId))
                 {
                     // 튜토리얼 드롭 차단 → 원위치 복귀
+                    if (_draggingAnimator != null) _draggingAnimator.LandAt(_dragOriginalPos, _dragOriginalRot);
+                    else if (_draggingView != null) _draggingView.SnapToPosition(_dragOriginalPos);
+                    GameFlowController.Instance?.BeginDragSelect(-1);
+                }
+                else if (entryBlocked)
+                {
+                    // 입장 봉쇄 구역 → 원위치 복귀
+                    Debug.Log($"[PlayerTurnInputHandler] Zone {zonePoint.ZoneId} 입장 봉쇄 — 원위치 복귀");
                     if (_draggingAnimator != null) _draggingAnimator.LandAt(_dragOriginalPos, _dragOriginalRot);
                     else if (_draggingView != null) _draggingView.SnapToPosition(_dragOriginalPos);
                     GameFlowController.Instance?.BeginDragSelect(-1);
@@ -290,7 +307,11 @@ public class PlayerTurnInputHandler : MonoBehaviour
             _assignedZones[charId] = gs != null ? gs.GetZone(charId) : 0;
 
         if (_zoneLayout != null)
+        {
             _zoneLayout.InitSlots(_assignedZones);
+            var resetGfc = GameFlowController.Instance;
+            _zoneLayout.RefreshBlockEntryIndicators(resetGfc != null ? resetGfc.TurnCount : 1);
+        }
     }
 
     /// <summary>
@@ -308,6 +329,9 @@ public class PlayerTurnInputHandler : MonoBehaviour
         if (_zoneLayout == null) return;
 
         _zoneLayout.InitSlots(_assignedZones);
+
+        var syncGfc = GameFlowController.Instance;
+        _zoneLayout.RefreshBlockEntryIndicators(syncGfc != null ? syncGfc.TurnCount : 1);
 
         var positions = _zoneLayout.ComputeSlotPositions(_assignedZones);
         var rotations = _zoneLayout.ComputeSlotRotations(_assignedZones);
@@ -418,5 +442,25 @@ public class PlayerTurnInputHandler : MonoBehaviour
         }
 
         return view;
+    }
+
+    private bool IsEntryBlocked(int zoneId, int turn)
+        => _zoneLayout != null && _zoneLayout.IsEntryBlockedAtTurn(zoneId, turn);
+
+    /// <summary>
+    /// 현재 턴에 입장이 차단된 구역에 캐릭터가 한 명이라도 배치되어 있으면 true를 반환합니다.
+    /// PlayerActionState의 SetBlockedZoneChecker()에 연결됩니다.
+    /// </summary>
+    private bool CheckAnyCharOnBlockedZone()
+    {
+        if (_zoneLayout == null) return false;
+        var gfc = GameFlowController.Instance;
+        int turn = gfc != null ? gfc.TurnCount : 1;
+        foreach (var kv in _assignedZones)
+        {
+            if (IsEntryBlocked(kv.Value, turn))
+                return true;
+        }
+        return false;
     }
 }

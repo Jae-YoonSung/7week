@@ -32,6 +32,16 @@ public class PlayerActionState : IState
 
     private int                  _selectedId    = -1;
     private Dictionary<int, int> _pendingMoves  = new();
+    private Func<bool>           _hasCharOnBlockedZone;
+
+    /// <summary>
+    /// 외부에서 주입하는 "입장 봉쇄 구역에 캐릭터가 남아 있는지" 검사 델리게이트.
+    /// PlayerTurnInputHandler.Start()에서 SetBlockedZoneChecker()로 연결합니다.
+    /// </summary>
+    public void SetBlockedZoneChecker(Func<bool> checker) => _hasCharOnBlockedZone = checker;
+
+    /// <summary>입장이 차단된 구역에 캐릭터가 한 명이라도 남아 있으면 true.</summary>
+    public bool HasCharacterOnBlockedZone => _hasCharOnBlockedZone?.Invoke() ?? false;
 
     /// <summary>
     /// 턴 시작 위치(PreviousZone)와 예약 목적지가 다른 캐릭터가 한 명 이상 있으면 true.

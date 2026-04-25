@@ -178,6 +178,24 @@ public class ZoneLayout : MonoBehaviour
         return zone != null && zone.DisableAbilities;
     }
 
+    /// <summary>현재 턴(1-based)에서 해당 구역으로의 진입이 차단되어 있으면 true를 반환합니다.</summary>
+    public bool IsEntryBlockedAtTurn(int zoneId, int turn)
+    {
+        var zone = GetZonePoint(zoneId);
+        return zone != null && zone.IsEntryBlockedAtTurn(turn);
+    }
+
+    /// <summary>모든 구역의 입장 봉쇄 인디케이터를 현재 턴 기준으로 갱신합니다.</summary>
+    public void RefreshBlockEntryIndicators(int turn)
+    {
+        if (_zones == null) return;
+        foreach (var zone in _zones)
+        {
+            if (zone != null)
+                zone.SetBlockEntryIndicator(zone.IsEntryBlockedAtTurn(turn));
+        }
+    }
+
     /// <summary>
     /// charZoneMap(characterId → zoneId)을 받아 각 캐릭터의 슬롯 위치를 계산합니다.
     /// _slotMap의 고정 슬롯 인덱스를 사용하므로 다른 캐릭터가 이동해도 위치가 바뀌지 않습니다.

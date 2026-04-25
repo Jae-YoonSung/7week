@@ -25,6 +25,7 @@ public class HoldToAdvanceTurn : MonoBehaviour
     [SerializeField] private TextMeshPro _blockText;
     [SerializeField] private float       _blockTextFloatHeight = 1f;
     [SerializeField] private float       _blockTextDuration    = 1f;
+    [SerializeField] private string      _blockEntryMessage    = "봉쇄 구역에서 캐릭터를 내려주세요";
 
     private Vector3 _fullScale;
     private float   _holdTimer;
@@ -86,10 +87,16 @@ public class HoldToAdvanceTurn : MonoBehaviour
         if (TutorialManager.IsActive && !TutorialManager.Instance.IsInputAllowed(TutorialInputPermission.AdvanceTurn))
             return;
 
-        var playerAction = GameFlowController.Instance?.GetPlayerActionState();
+        var gfc          = GameFlowController.Instance;
+        var playerAction = gfc != null ? gfc.GetPlayerActionState() : null;
+        if (playerAction != null && playerAction.HasCharacterOnBlockedZone)
+        {
+            ShowBlockText(_blockEntryMessage);
+            return;
+        }
         if (playerAction != null && !playerAction.HasAnyMove)
         {
-            ShowBlockText();
+            ShowBlockText(null);
             return;
         }
 
@@ -134,9 +141,10 @@ public class HoldToAdvanceTurn : MonoBehaviour
         _fillObject.transform.localScale = _fullScale * t;
     }
 
-    private void ShowBlockText()
+    private void ShowBlockText(string message)
     {
         if (_blockText == null) return;
+        if (message != null) _blockText.text = message;
 
         if (_blockTextCoroutine != null)
             StopCoroutine(_blockTextCoroutine);

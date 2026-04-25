@@ -21,5 +21,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9039d6eea11cf944d8328cbebfa9cba4, type: 2}
   - {fileID: 11400000, guid: d80e817c971b98d4689af606979f0e17, type: 2}
   - {fileID: 11400000, guid: d7ff040d2f02c02468a5e1637830dff2, type: 2}
-  _loopCondition: {fileID: 11400000, guid: d74ac4e312b19ff42aeaea39ea0acbfc, type: 2}
+  _loopCondition: {fileID: 11400000, guid: d6bb7bbf0be1d4246be46e1f496c36af, type: 2}
   _phantomStartZone: 0

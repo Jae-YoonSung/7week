@@ -12,29 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0e960cfedbf2004c85a52f346db53f7, type: 3}
   m_Name: Stage4SetupConfig
   m_EditorClassIdentifier: Assembly-CSharp::StageSetupConfig
-  _characterRegistry: {fileID: 11400000, guid: ffe78918776f4314e867ca7d94d8a38a, type: 2}
-  _stageRoleConfig: {fileID: 11400000, guid: 25b0edd91510a9b42b4d1e62e393e7f2, type: 2}
+  _characterRegistry: {fileID: 11400000, guid: 835c0089d2cc96e4fbbe4cc3af056758, type: 2}
+  _stageRoleConfig: {fileID: 11400000, guid: 1e108d2eb3bb5864db97f4adfe535fb1, type: 2}
   _useRandomSeed: 0
-  _seed: 10868
+  _seed: 43479540
   _previewSetup:
   - characterId: 1
-    roleIndex: 0
+    roleIndex: 3
     zoneId: 0
   - characterId: 2
-    roleIndex: 1
+    roleIndex: 5
     zoneId: 1
   - characterId: 3
-    roleIndex: 2
+    roleIndex: 0
     zoneId: 3
   - characterId: 4
-    roleIndex: 3
-    zoneId: 1
-  - characterId: 5
     roleIndex: 4
-    zoneId: 2
+    zoneId: 3
+  - characterId: 5
+    roleIndex: 1
+    zoneId: 1
   - characterId: 6
-    roleIndex: 5
-    zoneId: 2
-  - characterId: 7
     roleIndex: 6
-    zoneId: 2
+    zoneId: 0
+  - characterId: 7
+    roleIndex: 2
+    zoneId: 3

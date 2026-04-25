@@ -21,6 +21,19 @@ public class ZonePoint : MonoBehaviour
     [Tooltip("턴 종료 후 발동할 구역 효과. null이면 효과 없음. (예: WaveZoneEffect)")]
     [SerializeField] private ZoneEffectConfig _zoneEffect;
 
+    [Header("입장 봉쇄")]
+    [Tooltip("true로 설정하면 BlockEntryFromTurn 이상의 턴부터 이 구역으로 캐릭터가 진입할 수 없습니다.")]
+    [SerializeField] private bool _blockEntry;
+
+    [Tooltip("몇 번째 턴(1-based)부터 진입을 차단할지 설정합니다.")]
+    [SerializeField] private int _blockEntryFromTurn = 1;
+
+    [Tooltip("몇 번째 턴(1-based)까지 차단할지 설정합니다. 0이면 끝까지 차단합니다.")]
+    [SerializeField] private int _blockEntryUntilTurn = 0;
+
+    [Tooltip("입장 봉쇄 상태일 때 활성화할 오브젝트 (잠금 표시, 이펙트 등).")]
+    [SerializeField] private GameObject _blockEntryIndicator;
+
     [Header("드롭 인디케이터")]
     [SerializeField] private GameObject _dropIndicator;
 
@@ -32,11 +45,25 @@ public class ZonePoint : MonoBehaviour
     public Vector3          Position         => transform.position;
     public bool             DisableAbilities => _disableAbilities;
     public ZoneEffectConfig ZoneEffect       => _zoneEffect;
+    public bool             BlockEntry       => _blockEntry;
+    public int              BlockEntryFromTurn => _blockEntryFromTurn;
+
+    /// <summary>현재 턴(1-based)에서 이 구역으로의 진입이 차단되어 있으면 true를 반환합니다.</summary>
+    public bool IsEntryBlockedAtTurn(int turn)
+        => _blockEntry
+           && turn >= _blockEntryFromTurn
+           && (_blockEntryUntilTurn <= 0 || turn <= _blockEntryUntilTurn);
 
     public void SetDropIndicator(bool active)
     {
         if (_dropIndicator != null)
             _dropIndicator.SetActive(active);
+    }
+
+    public void SetBlockEntryIndicator(bool active)
+    {
+        if (_blockEntryIndicator != null)
+            _blockEntryIndicator.SetActive(active);
     }
 
     public void SetPhantomPresent(bool active)
@@ -89,9 +116,15 @@ public class ZonePoint : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = _disableAbilities ? Color.red : Color.cyan;
+        Gizmos.color = _disableAbilities ? Color.red : (_blockEntry ? new Color(1f, 0.5f, 0f) : Color.cyan);
         Gizmos.DrawWireSphere(transform.position, 0.4f);
-        string label = _disableAbilities ? $"Zone {_zoneId} [능력 봉인]" : $"Zone {_zoneId}";
+        string label = _disableAbilities
+            ? $"Zone {_zoneId} [능력 봉인]"
+            : (_blockEntry
+                ? (_blockEntryUntilTurn > 0
+                    ? $"Zone {_zoneId} [T{_blockEntryFromTurn}~T{_blockEntryUntilTurn} 입장봉쇄]"
+                    : $"Zone {_zoneId} [T{_blockEntryFromTurn}~ 입장봉쇄]")
+                : $"Zone {_zoneId}");
         UnityEditor.Handles.Label(transform.position + Vector3.up * 0.6f, label);
 
         // 슬롯 위치 표시
