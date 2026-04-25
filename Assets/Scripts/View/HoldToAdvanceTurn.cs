@@ -35,6 +35,7 @@ public class HoldToAdvanceTurn : MonoBehaviour
 
     private Vector3   _blockTextOriginLocal;
     private Coroutine _blockTextCoroutine;
+    private string    _noMoveMessage;
 
     // ── Unity ────────────────────────────────────────────────────────────────
 
@@ -49,6 +50,7 @@ public class HoldToAdvanceTurn : MonoBehaviour
         if (_blockText != null)
         {
             _blockTextOriginLocal = _blockText.transform.localPosition;
+            _noMoveMessage        = _blockText.text;
             _blockText.gameObject.SetActive(false);
         }
     }
@@ -96,7 +98,7 @@ public class HoldToAdvanceTurn : MonoBehaviour
         }
         if (playerAction != null && !playerAction.HasAnyMove)
         {
-            ShowBlockText(null);
+            ShowBlockText(_noMoveMessage);
             return;
         }
 
