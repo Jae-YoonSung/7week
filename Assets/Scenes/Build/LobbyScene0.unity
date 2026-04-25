@@ -7851,7 +7851,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2089628069}
         m_TargetAssemblyTypeName: TitleBookAnimator, Assembly-CSharp
         m_MethodName: TurnPageBack
         m_Mode: 1
@@ -10158,7 +10158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageLobbyController
   _fadeImage: {fileID: 348894415}
-  _fadeInDuration: 0.6
+  _fadeInDuration: 1
   _backButton: {fileID: 1425789371}
   _titleSceneName: TitleScene
   _bookAnimator: {fileID: 2089628069}

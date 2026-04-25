@@ -4798,7 +4798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageLobbyController
   _fadeImage: {fileID: 664097325}
-  _fadeInDuration: 0.6
+  _fadeInDuration: 1
   _backButton: {fileID: 1390935350}
   _titleSceneName: TitleScene
   _bookAnimator: {fileID: 2089628069}

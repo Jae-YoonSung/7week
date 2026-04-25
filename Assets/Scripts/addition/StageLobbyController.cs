@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DG.Tweening;
 
 /// <summary>
 /// 스테이지 전용 로비 씬 컨트롤러입니다.
@@ -104,14 +105,6 @@ public class StageLobbyController : MonoBehaviour
     }
 
 
-    private IEnumerator BackToTitleSequence()
-    {
-        // 뒤로가기 클릭 시 페이드 아웃 후 씬 전환
-        yield return FadeOut();
-        NewGameConfig.Clear();
-        SceneManager.LoadScene(_titleSceneName);
-    }
-
     // ── 버튼 상태 갱신 ────────────────────────────────────────────────────────
 
     /// <summary>
@@ -131,41 +124,35 @@ public class StageLobbyController : MonoBehaviour
     {
         if (_fadeImage == null) yield break;
 
-        float elapsed = 0f;
-        Color c = _fadeImage.color;
-        float duration = Mathf.Max(0.01f, _fadeInDuration);
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            _fadeImage.color = new Color(c.r, c.g, c.b, 1f - t);
-            yield return null;
-        }
-
-        _fadeImage.color = new Color(c.r, c.g, c.b, 0f);
+        yield return _fadeImage.DOFade(0f, _fadeInDuration)
+            .SetEase(Ease.OutQuad)
+            .WaitForCompletion();
 
         // 페이드 완료 후 레이캐스트 차단 해제
         _fadeImage.raycastTarget = false;
+    }
+
+    private bool _isFadingOut = false;
+
+    private IEnumerator BackToTitleSequence()
+    {
+        if (_isFadingOut) yield break;
+        _isFadingOut = true;
+
+        // 뒤로가기 클릭 시 페이드 아웃 후 씬 전환
+        yield return FadeOut();
+        
+        NewGameConfig.Clear();
+        SceneManager.LoadScene(_titleSceneName);
     }
 
     private IEnumerator FadeOut()
     {
         if (_fadeImage == null) yield break;
 
-        _fadeImage.raycastTarget = true; // 페이드 시작 시 레이캐스트 차단
-        float elapsed = 0f;
-        Color c = _fadeImage.color;
-        float duration = Mathf.Max(0.01f, _fadeInDuration); // 동일한 시간 사용
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            _fadeImage.color = new Color(c.r, c.g, c.b, t);
-            yield return null;
-        }
-
-        _fadeImage.color = new Color(c.r, c.g, c.b, 1f);
+        _fadeImage.raycastTarget = true; // 페이드 시작 시 클릭 즉시 차단
+        yield return _fadeImage.DOFade(1f, _fadeInDuration)
+            .SetEase(Ease.InOutQuad)
+            .WaitForCompletion();
     }
 }

@@ -165,7 +165,7 @@ public class TitleSceneController : MonoBehaviour
 
     private void ForceClearBook(int index)
     {
-        var books = FindObjectsByType<BookshelfBook>(FindObjectsSortMode.None);
+        var books = FindObjectsByType<BookshelfBook>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         if (books == null || books.Length == 0) return;
 
         // 책들을 왼쪽(X좌표 작은 순)에서 오른쪽으로 정렬하여 1, 2, 3... 키에 대응

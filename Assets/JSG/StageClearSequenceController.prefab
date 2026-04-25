@@ -937,7 +937,6 @@ MonoBehaviour:
     matchRotation: 1
     matchScale: 1
   _coloredBookReveal:
-    useMaterialColorChange: 1
     targetColor: {r: 1, g: 0, b: 0, a: 1}
     colorChangeDuration: 1
     targetRendererPaths:
@@ -946,8 +945,6 @@ MonoBehaviour:
     - Book_Left/Mesh_0.002
     - Book_Left/Mesh_0.002 (1)
     - Book_Left/Mesh_0.002 (2)
-    coloredBookPrefab: {fileID: 6969824151227052771, guid: f6c3f261ef12cb54db1ef9d9e46f603b, type: 3}
-    hideUncoloredBookAfterReveal: 1
   _standUpCamera: {fileID: 5757791740659764845}
   _standUpCameraPriority: 90
   _bridgeToShelfCamera: {fileID: 3439849557619315729}
