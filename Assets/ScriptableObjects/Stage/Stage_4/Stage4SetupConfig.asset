@@ -15,11 +15,11 @@ MonoBehaviour:
   _characterRegistry: {fileID: 11400000, guid: 835c0089d2cc96e4fbbe4cc3af056758, type: 2}
   _stageRoleConfig: {fileID: 11400000, guid: 1e108d2eb3bb5864db97f4adfe535fb1, type: 2}
   _useRandomSeed: 0
-  _seed: 1026
+  _seed: 0
   _previewSetup:
   - characterId: 1
     roleIndex: 0
-    zoneId: 2
+    zoneId: 0
   - characterId: 2
     roleIndex: 1
     zoneId: 0
@@ -34,7 +34,7 @@ MonoBehaviour:
     zoneId: 0
   - characterId: 6
     roleIndex: 5
-    zoneId: 1
+    zoneId: 0
   - characterId: 7
     roleIndex: 6
     zoneId: 0

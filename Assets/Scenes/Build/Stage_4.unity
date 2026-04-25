@@ -7631,7 +7631,7 @@ MonoBehaviour:
   _setupConfig: {fileID: 11400000, guid: f3bccbac9fd056a4dbd5cde00d879619, type: 2}
   _characterSpawner: {fileID: 1589347838}
   _stageVisualConfig: {fileID: 0}
-  _epilogueVisualConfig: {fileID: 0}
+  _epilogueVisualConfig: {fileID: 11400000, guid: e8015ca262995ba46a1e549ad1cf4794, type: 2}
   _lobbySceneName: LobbyScene 4
   _stageId: 
   _triggerEndingDialogueOnWin: 0
@@ -11640,7 +11640,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD76C\uC0DD\uC591"
+  m_text: "\uC21C\uAD50\uC790"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
@@ -18113,7 +18113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698736e7c60b45e478039878cbee5d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoleCard
-  _roleType: 1
+  _roleType: 8
 --- !u!225 &1304120449
 CanvasGroup:
   m_ObjectHideFlags: 0
