@@ -4029,9 +4029,9 @@ MonoBehaviour:
   _entries:
   - buttonObject: {fileID: 10015027}
     requiredClearStageId: 3_1
-  - buttonObject: {fileID: 0}
+  - buttonObject: {fileID: 1793842477}
     requiredClearStageId: 3_1
-  - buttonObject: {fileID: 0}
+  - buttonObject: {fileID: 1562385936}
     requiredClearStageId: 3_1
   - buttonObject: {fileID: 755638897}
     requiredClearStageId: 3_1

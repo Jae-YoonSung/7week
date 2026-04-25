@@ -579,6 +579,8 @@ MonoBehaviour:
   _blockText: {fileID: 183495673}
   _blockTextFloatHeight: 0
   _blockTextDuration: 2
+  _blockEntryMessage: "\uBD09\uC1C4 \uAD6C\uC5ED\uC5D0\uC11C \uCE90\uB9AD\uD130\uB97C
+    \uB0B4\uB824\uC8FC\uC138\uC694"
 --- !u!1 &41045326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,6 +1509,10 @@ MonoBehaviour:
   - {fileID: 718067038}
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 1811115737}
   _phantomColorIndicator: {fileID: 0}
 --- !u!65 &137149189
@@ -2438,6 +2444,10 @@ MonoBehaviour:
   - {fileID: 630362507}
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 1126716519}
   _phantomColorIndicator: {fileID: 0}
 --- !u!65 &202144441
@@ -6287,7 +6297,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8445f47edf4b807438005811c1b4881c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f480605bc1c3ba24bacb83b1775624e8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -16478,6 +16488,10 @@ MonoBehaviour:
   - {fileID: 1506250465}
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 220229535}
   _phantomColorIndicator: {fileID: 0}
 --- !u!65 &1576250531

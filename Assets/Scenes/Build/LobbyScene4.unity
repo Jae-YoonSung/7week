@@ -1210,9 +1210,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 422071be77b653743b44560620f33608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyPresetSeedButton
-  _seed: 34237518
-  _stageId: 3_1
-  _gameSceneName: Stage_3
+  _seed: 17805745
+  _stageId: 4_1
+  _gameSceneName: Stage_4
   _isEpilogue: 0
   _label: {fileID: 0}
 --- !u!114 &161764077
@@ -2894,7 +2894,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &637293512
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3842,14 +3842,12 @@ MonoBehaviour:
     requiredClearStageId: 4_1
   - buttonObject: {fileID: 860668093}
     requiredClearStageId: 4_1
-  - buttonObject: {fileID: 0}
+  - buttonObject: {fileID: 546924195}
     requiredClearStageId: 4_1
   - buttonObject: {fileID: 755638897}
     requiredClearStageId: 4_1
   - buttonObject: {fileID: 1152953878}
     requiredClearStageId: 4_1
-  - buttonObject: {fileID: 546924195}
-    requiredClearStageId: 4_2
 --- !u!1 &860668093
 GameObject:
   m_ObjectHideFlags: 0
@@ -7118,7 +7116,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1703331684
 RectTransform:
   m_ObjectHideFlags: 0
