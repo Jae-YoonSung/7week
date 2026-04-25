@@ -23,22 +23,50 @@ public class RoleAbilityProcessor
     public void Process(IGameState gameState)
     {
         foreach (var roleData in _orderConfig.ExecutionOrder)
+            ExecuteOne(roleData, gameState);
+    }
+
+    /// <summary>
+    /// excludedRole을 제외한 나머지 직업 능력을 순서대로 실행합니다.
+    /// </summary>
+    public void ProcessExcept(IGameState gameState, RoleType excludedRole)
+    {
+        foreach (var roleData in _orderConfig.ExecutionOrder)
         {
-            if (roleData == null || roleData.AbilityConfig == null) continue;
-
-            var character = gameState.GetCharacterByRole(roleData.RoleType);
-
-            // 스테이지에 없거나 이미 사망한 캐릭터는 능력 발동 없음
-            if (character == null || !character.IsAlive) continue;
-
-            // 이번 턴 앞선 능력에 의해 사망 마크된 캐릭터는 이후 능력 발동 없음 (우선순위 규칙)
-            if (gameState.IsMarkedForDeath(character.CharacterId)) continue;
-
-            // 능력이 봉인된 구역에 위치한 캐릭터는 능력 발동 없음 (ZonePhantom은 봉인 면역)
-            int zone = gameState.GetZone(character.CharacterId);
-            if (gameState.IsAbilityDisabledInZone(zone) && roleData.RoleType != RoleType.ZonePhantom) continue;
-
-            roleData.AbilityConfig.Execute(character.CharacterId, gameState);
+            if (roleData != null && roleData.RoleType == excludedRole) continue;
+            ExecuteOne(roleData, gameState);
         }
+    }
+
+    /// <summary>
+    /// 특정 직업 능력 하나만 실행합니다. 순서 설정에 없어도 발동합니다.
+    /// </summary>
+    public void ProcessSingle(IGameState gameState, RoleType roleType)
+    {
+        foreach (var roleData in _orderConfig.ExecutionOrder)
+        {
+            if (roleData == null || roleData.RoleType != roleType) continue;
+            ExecuteOne(roleData, gameState);
+            return;
+        }
+    }
+
+    private void ExecuteOne(RoleData roleData, IGameState gameState)
+    {
+        if (roleData == null || roleData.AbilityConfig == null) return;
+
+        var character = gameState.GetCharacterByRole(roleData.RoleType);
+
+        // 스테이지에 없거나 이미 사망한 캐릭터는 능력 발동 없음
+        if (character == null || !character.IsAlive) return;
+
+        // 이번 턴 앞선 능력에 의해 사망 마크된 캐릭터는 이후 능력 발동 없음 (우선순위 규칙)
+        if (gameState.IsMarkedForDeath(character.CharacterId)) return;
+
+        // 능력이 봉인된 구역에 위치한 캐릭터는 능력 발동 없음 (ZonePhantom은 봉인 면역)
+        int zone = gameState.GetZone(character.CharacterId);
+        if (gameState.IsAbilityDisabledInZone(zone) && roleData.RoleType != RoleType.ZonePhantom) return;
+
+        roleData.AbilityConfig.Execute(character.CharacterId, gameState);
     }
 }
