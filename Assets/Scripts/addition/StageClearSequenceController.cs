@@ -264,6 +264,21 @@ public class StageClearSequenceController : MonoBehaviour
     private void HandleGameEndDialogueComplete(bool isWin)
     {
         if (!isWin || _isPlaying) return;
+
+        // 에필로그(What if) 스테이지인 경우 연출 없이 즉시 로비로 이동
+        // (NewGameConfig는 게임 중 초기화되므로 GameFlowController의 백업값을 참조)
+        if (GameFlowController.Instance != null && GameFlowController.Instance.IsEpilogue)
+        {
+            RecordStageClearIfNeeded();
+            LobbyDialogueManager.PendingEndingDialogue = _triggerLobbyEndingDialogue;
+
+            string lobbyScene = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName)
+                ? NewGameConfig.LobbySceneName
+                : _lobbySceneName;
+            SceneManager.LoadScene(lobbyScene);
+            return;
+        }
+
         PlaySequence();
     }
 
@@ -336,7 +351,12 @@ public class StageClearSequenceController : MonoBehaviour
 
         RecordStageClearIfNeeded();
         LobbyDialogueManager.PendingEndingDialogue = _triggerLobbyEndingDialogue;
-        SceneManager.LoadScene(_lobbySceneName);
+
+        // NewGameConfig에 전용 로비씬이 설정되어 있으면 우선 사용
+        string lobbyScene = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName)
+            ? NewGameConfig.LobbySceneName
+            : _lobbySceneName;
+        SceneManager.LoadScene(lobbyScene);
     }
 
     private void SpawnClosingBook()

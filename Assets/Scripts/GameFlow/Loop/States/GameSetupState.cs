@@ -35,37 +35,71 @@ public class GameSetupState : IState
         foreach (var data in _characterRegistry.Characters)
             characterStates.Add(new CharacterState(data));
 
-        var roles = _stageRoleConfig.Roles;
-        if (roles.Count != characterStates.Count)
+        var allRoles = _stageRoleConfig.Roles;
+        if (allRoles.Count != characterStates.Count)
         {
             Debug.LogError(
-                $"[GameSetupState] 역할 수({roles.Count})와 캐릭터 수({characterStates.Count})가 일치하지 않습니다. " +
+                $"[GameSetupState] 역할 수({allRoles.Count})와 캐릭터 수({characterStates.Count})가 일치하지 않습니다. " +
                 "StageRoleConfig와 CharacterRegistry를 확인하세요.");
             return;
         }
 
-        // ── 2. 시드 획득 및 디코딩 ─────────────────────────────────────────
-        int seed = GetSeed(characterStates.Count, roles.Count);
+        // ── 2. ZonePhantom + 8번 캐릭터가 모두 존재할 때만 시드에서 분리 ──
+        // (7명 이하 스테이지는 8번 캐릭터가 없으므로 분리하지 않음)
+        CharacterState phantomCharState = null;
+        RoleData       phantomRoleData  = null;
+        if (_stageRoleConfig.ContainsRole(RoleType.ZonePhantom))
+        {
+            foreach (var cs in characterStates)
+                if (cs.CharacterId == 8) { phantomCharState = cs; break; }
+            foreach (var r in allRoles)
+                if (r.RoleType == RoleType.ZonePhantom) { phantomRoleData = r; break; }
+        }
+        bool excludePhantom = phantomCharState != null && phantomRoleData != null;
+
+        var seedChars = new List<CharacterState>();
+        var seedRoles = new List<RoleData>();
+        foreach (var cs in characterStates)
+        {
+            if (excludePhantom && cs.CharacterId == 8) continue;
+            seedChars.Add(cs);
+        }
+        foreach (var r in allRoles)
+        {
+            if (excludePhantom && r.RoleType == RoleType.ZonePhantom) continue;
+            seedRoles.Add(r);
+        }
+
+        // ── 3. 시드 획득 및 디코딩 ─────────────────────────────────────────
+        int seed = GetSeed(seedChars.Count, seedRoles.Count);
         _loopSM.CurrentSeed = seed;
 
-        SeedEncoder.Decode(seed, characterStates.Count, roles.Count, GameState.ZoneCount,
+        SeedEncoder.Decode(seed, seedChars.Count, seedRoles.Count, GameState.ZoneCount,
             out var rolePerm, out var zones);
 
         Debug.Log($"[GameSetupState] 사용 시드: {seed}");
 
-        // ── 3. 역할 배정 + GameState 생성 ───────────────────────────────
+        // ── 4. 역할 배정 + GameState 생성 ───────────────────────────────
         var roleTable = new RoleAssignmentTable();
-        for (int i = 0; i < characterStates.Count; i++)
-            roleTable.Assign(characterStates[i].CharacterId, roles[rolePerm[i]]);
+        for (int i = 0; i < seedChars.Count; i++)
+            roleTable.Assign(seedChars[i].CharacterId, seedRoles[rolePerm[i]]);
+
+        // ZonePhantom은 8번 캐릭터에게 고정 배정
+        if (excludePhantom)
+            roleTable.Assign(phantomCharState.CharacterId, phantomRoleData);
 
         var gameState = new GameState(characterStates, roleTable);
         _loopSM.GameState = gameState;
 
-        // ── 4. 구역 배치 적용 ──────────────────────────────────────────
-        for (int i = 0; i < characterStates.Count; i++)
-            gameState.SetCharacterInitialZone(characterStates[i].CharacterId, zones[i]);
+        // ── 5. 구역 배치 적용 ──────────────────────────────────────────
+        for (int i = 0; i < seedChars.Count; i++)
+            gameState.SetCharacterInitialZone(seedChars[i].CharacterId, zones[i]);
 
-        // ── 5. 뷰 동기화 (2루프 이상) + 다음 단계로 전환 ────────────────
+        // ZonePhantom 구역 고정 (StageRoleConfig에서 지정한 값)
+        if (excludePhantom)
+            gameState.SetCharacterInitialZone(phantomCharState.CharacterId, _stageRoleConfig.PhantomStartZone);
+
+        // ── 6. 뷰 동기화 (2루프 이상) + 다음 단계로 전환 ────────────────
         if (_loopSM.LoopCount > 0)
             _loopSM.FireLoopReset();
 

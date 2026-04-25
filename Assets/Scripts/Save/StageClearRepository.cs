@@ -57,6 +57,32 @@ public class StageClearRepository
         Save();
     }
 
+    /// <summary>
+    /// 디버그용: 특정 stageId의 클리어 기록만 삭제합니다.
+    /// </summary>
+    public void RemoveClear(string stageId)
+    {
+        if (string.IsNullOrEmpty(stageId)) return;
+        if (!_data.clearedStageIds.Contains(stageId)) return;
+
+        _data.clearedStageIds.Remove(stageId);
+        Save();
+        Debug.Log($"[StageClearRepository] 클리어 기록 삭제됨: {stageId}");
+    }
+
+    /// <summary>
+    /// 디버그용: 모든 스테이지 클리어 기록을 삭제하고 저장 파일을 지웁니다.
+    /// </summary>
+    public void ClearAllRecords()
+    {
+        _data.clearedStageIds.Clear();
+        if (File.Exists(SavePath))
+        {
+            File.Delete(SavePath);
+        }
+        Debug.Log("[StageClearRepository] 모든 클리어 기록이 초기화되었습니다.");
+    }
+
     // ── 내부 저장/로드 ───────────────────────────────────────────────────────
 
     private void Save()

@@ -38,7 +38,9 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
 
     private LoopStateMachine               _loopSM;
     private Dictionary<int, CharacterView> _characterViews;
-    private bool                           _isEpilogue;
+    
+    /// <summary>현재 스테이지가 에필로그(What if) 모드인지 여부입니다.</summary>
+    public bool IsEpilogue { get; private set; }
 
     /// <summary>characterId → CharacterView. SpawnAll 이후 유효합니다.</summary>
     public IReadOnlyDictionary<int, CharacterView> CharacterViews => _characterViews;
@@ -100,7 +102,7 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     {
         base.Awake();
         // NewGameConfig는 StartGame() 내부에서 Clear()되므로 Awake에서 먼저 읽어둡니다.
-        _isEpilogue = NewGameConfig.IsEpilogue;
+        IsEpilogue = NewGameConfig.IsEpilogue;
         ValidateInspectorRefs();
         _loopSM = new LoopStateMachine(_orderConfig, _characterRegistry, _stageRoleConfig, _setupConfig);
     }
@@ -235,7 +237,12 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
             if (_triggerEndingDialogueOnWin)
                 LobbyDialogueManager.PendingEndingDialogue = true;
         }
-        SceneManager.LoadScene(_lobbySceneName);
+
+        // NewGameConfig에 전용 로비씬이 설정되어 있으면 우선 사용, 없으면 기본 _lobbySceneName
+        string lobbyScene = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName)
+            ? NewGameConfig.LobbySceneName
+            : _lobbySceneName;
+        SceneManager.LoadScene(lobbyScene);
     }
 
     private void HandleLoopReset()
@@ -273,7 +280,7 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
             return;
         }
 
-        var visualConfig = (_isEpilogue && _epilogueVisualConfig != null)
+        var visualConfig = (IsEpilogue && _epilogueVisualConfig != null)
             ? _epilogueVisualConfig
             : _stageVisualConfig;
         _characterViews = _characterSpawner.SpawnAll(gameState, visualConfig);

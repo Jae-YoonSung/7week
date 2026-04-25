@@ -118,6 +118,8 @@ public class StageSetupTool : EditorWindow
         for (int i = 0; i < roles.Count; i++)
             roleNames[i] = roles[i].RoleName;
 
+        bool excludePhantom = IsPhantomExcluded();
+
         // 헤더
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("#",      EditorStyles.boldLabel, GUILayout.Width(24));
@@ -133,22 +135,26 @@ public class StageSetupTool : EditorWindow
         for (int i = 0; i < _entries.Count; i++)
         {
             var e = _entries[i];
+            bool isLockedPhantom = excludePhantom && e.character != null && e.character.CharacterId == 8;
 
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label($"{i + 1}", GUILayout.Width(24));
             GUILayout.Label(e.character != null ? e.character.CharacterName : "—",
                 GUILayout.Width(110));
 
-            // 직업 드롭다운
+            // 8번 캐릭터(ZonePhantom)는 읽기 전용으로 표시
+            GUI.enabled = !isLockedPhantom;
             int newRole = EditorGUILayout.Popup(e.roleIndex, roleNames, GUILayout.Width(160));
-
-            // Zone 슬라이더 (0 ~ ZoneCount-1)
             int newZone = EditorGUILayout.IntField(e.zoneId, GUILayout.Width(50));
             newZone = Mathf.Clamp(newZone, 0, GameState.ZoneCount - 1);
+            GUI.enabled = true;
+
+            if (isLockedPhantom)
+                GUILayout.Label("고정", GUILayout.Width(50));
 
             EditorGUILayout.EndHorizontal();
 
-            if (newRole != e.roleIndex || newZone != e.zoneId)
+            if (!isLockedPhantom && (newRole != e.roleIndex || newZone != e.zoneId))
                 _entries[i] = new ToolEntry
                     { character = e.character, roleIndex = newRole, zoneId = newZone };
         }
@@ -178,16 +184,36 @@ public class StageSetupTool : EditorWindow
 
     private void BakeSeed()
     {
-        int charCount = _entries.Count;
-        int roleCount = _stageRoleConfig.Roles.Count;
+        var allRoles = _stageRoleConfig.Roles;
+        bool excludePhantom = IsPhantomExcluded();
+
+        // ZonePhantom 역할의 인덱스 (역할 리스트 내)
+        int phantomRoleIdx = -1;
+        if (excludePhantom)
+            for (int i = 0; i < allRoles.Count; i++)
+                if (allRoles[i] != null && allRoles[i].RoleType == RoleType.ZonePhantom) { phantomRoleIdx = i; break; }
+
+        // 8번 캐릭터 제외한 시드 대상 엔트리 구성
+        var seedEntries = new List<ToolEntry>();
+        foreach (var e in _entries)
+        {
+            if (excludePhantom && e.character != null && e.character.CharacterId == 8) continue;
+            seedEntries.Add(e);
+        }
+
+        int charCount = seedEntries.Count;
+        int roleCount = excludePhantom ? allRoles.Count - 1 : allRoles.Count;
 
         var rolePerm = new int[charCount];
         var zones    = new int[charCount];
 
         for (int i = 0; i < charCount; i++)
         {
-            rolePerm[i] = _entries[i].roleIndex;
-            zones[i]    = _entries[i].zoneId;
+            int idx = seedEntries[i].roleIndex;
+            // ZonePhantom이 제거된 역할 리스트 기준으로 인덱스 재매핑
+            if (excludePhantom && phantomRoleIdx >= 0 && idx > phantomRoleIdx) idx--;
+            rolePerm[i] = idx;
+            zones[i]    = seedEntries[i].zoneId;
         }
 
         int seed = SeedEncoder.Encode(rolePerm, zones, roleCount, GameState.ZoneCount);
@@ -200,6 +226,19 @@ public class StageSetupTool : EditorWindow
 
         Debug.Log($"[StageSetupTool] 시드 굽기 완료 — Seed: {seed}");
         Repaint();
+    }
+
+    // ZonePhantom 역할이 있고 8번 캐릭터도 존재하면 true
+    private bool IsPhantomExcluded()
+    {
+        if (_stageRoleConfig == null || _entries == null) return false;
+        bool hasPhantomRole = false;
+        foreach (var r in _stageRoleConfig.Roles)
+            if (r != null && r.RoleType == RoleType.ZonePhantom) { hasPhantomRole = true; break; }
+        if (!hasPhantomRole) return false;
+        foreach (var e in _entries)
+            if (e.character != null && e.character.CharacterId == 8) return true;
+        return false;
     }
 
     // ── 유틸 ─────────────────────────────────────────────────────────────────

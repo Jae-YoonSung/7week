@@ -20,5 +20,7 @@ public enum RoleType
     ZonePhantom,   // 구역 유령 — 존 슬롯 비점유, 타겟 불가, 존 색 변경
     AbilityBlocker, // 능력 봉인자 — 같은 구역 모든 캐릭터 능력 봉인
     Decoy,          // 미끼 — 같은 구역 타겟 불가, _disableAbilities 효과 받음
-    PhantomShifter  // 유령 이동자 — 대기 시 ZonePhantom을 반시계(−1) 이동
+    PhantomShifter,  // 유령 이동자 — 대기 시 ZonePhantom을 반시계(−1) 이동
+    FateA,           // 운명 A — 운명 B와 다른 칸이면 같은 칸 오름차순 1명 사망
+    FateB            // 운명 B — 운명 A와 같은 칸이면 운명 A·B 모두 사망
 }

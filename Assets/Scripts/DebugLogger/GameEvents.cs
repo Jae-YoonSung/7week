@@ -192,12 +192,13 @@ public readonly struct RoleConfirmedEvent
 // UI
 // ─────────────────────────────────────────────
 
-// 플레이어가 룰북을 열 때 발생한다.
+// 플레이어가 룰북을 열 때 발생한다. RulebookType: "role" = 역할 룰북, "sequence" = 사건 서술 순서 룰북.
 public readonly struct RulebookOpenEvent
 {
-    public readonly int Loop;
-    public readonly int Turn;
-    public RulebookOpenEvent(int loop, int turn) { Loop = loop; Turn = turn; }
+    public readonly int    Loop;
+    public readonly int    Turn;
+    public readonly string RulebookType;
+    public RulebookOpenEvent(int loop, int turn, string rulebookType) { Loop = loop; Turn = turn; RulebookType = rulebookType; }
 }
 
 // 플레이어가 메모장을 닫을 때 발생한다. 닫는 시점의 기록 상태를 스냅샷으로 저장한다.

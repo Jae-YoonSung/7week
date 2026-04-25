@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: CharacterData_2_7
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
   characterId: 7
-  characterName: "#7 \uC774\uC0AC\uBCA8 \uD06C\uB85C\uC6B0"
+  characterName: "#7 \uC5D8\uB77C\uC774\uC5B4\uC2A4 \uBD84"
   portrait: {fileID: 0}
   prefab: {fileID: 1689494175059677126, guid: 92208caaca889814f95468356cdf328b, type: 3}
