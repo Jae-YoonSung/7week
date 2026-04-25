@@ -83,10 +83,15 @@ public class TitleSceneController : MonoBehaviour
     [Tooltip("BookshelfBook에서 씬 이름을 지정하지 않았을 때 사용할 기본 로비 씬 이름")]
     [SerializeField] private string _defaultLobbySceneName = "LobbyScene";
 
-    // ─────────────────────────────────────────────────────────────────────────
     // 런타임 상태
     private bool _sequencePlaying = false;
     private string _currentTargetSceneName;
+    private bool _isInputReady = false; // 대사 완료 전까지 책 클릭 방지
+    
+    /// <summary>타이틀 씬의 페이드 및 대사가 완료되어 상호작용 가능한 상태인지 반환합니다.</summary>
+    public bool IsInputReady => _isInputReady;
+
+    private LobbyDialogueManager _dialogueManager;
 
     // ── Unity ────────────────────────────────────────────────────────────────
 
@@ -94,17 +99,18 @@ public class TitleSceneController : MonoBehaviour
     {
         InitializeCameras();
         InitializeFade();
+        _dialogueManager = FindFirstObjectByType<LobbyDialogueManager>();
     }
 
     // ── 외부 API (BookshelfBook에서 호출) ───────────────────────────────────
 
     /// <summary>
     /// 책이 클릭됐을 때 BookshelfBook이 호출합니다.
-    /// 이미 시퀀스가 진행 중이면 무시합니다.
+    /// 이미 시퀀스가 진행 중이거나 대사가 안 끝났으면 무시합니다.
     /// </summary>
     public void OnBookClicked(Transform bookTransform, string targetSceneName)
     {
-        if (_sequencePlaying) return;
+        if (!_isInputReady || _sequencePlaying) return;
         _sequencePlaying = true;
 
         _currentTargetSceneName = string.IsNullOrEmpty(targetSceneName) ? _defaultLobbySceneName : targetSceneName;
@@ -117,7 +123,19 @@ public class TitleSceneController : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(FadeIn());
+        StartCoroutine(TitleStartSequence());
+    }
+
+    private IEnumerator TitleStartSequence()
+    {
+        yield return FadeIn();
+
+        if (_dialogueManager != null)
+        {
+            yield return new WaitUntil(() => _dialogueManager.IsComplete);
+        }
+
+        _isInputReady = true;
     }
 
     private void Update()

@@ -41,6 +41,12 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     
     /// <summary>현재 스테이지가 에필로그(What if) 모드인지 여부입니다.</summary>
     public bool IsEpilogue { get; private set; }
+    
+    /// <summary>씬 시작 시 전달받은 원본 스테이지 ID 백업</summary>
+    public string CachedStageId { get; private set; }
+    
+    /// <summary>씬 시작 시 전달받은 원본 로비 씬 이름 백업</summary>
+    public string CachedLobbySceneName { get; private set; }
 
     /// <summary>characterId → CharacterView. SpawnAll 이후 유효합니다.</summary>
     public IReadOnlyDictionary<int, CharacterView> CharacterViews => _characterViews;
@@ -101,8 +107,11 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     protected override void Awake()
     {
         base.Awake();
-        // NewGameConfig는 StartGame() 내부에서 Clear()되므로 Awake에서 먼저 읽어둡니다.
+        // NewGameConfig는 StartGame() 내부에서 Clear()되므로 Awake에서 미리 필요한 값들을 모두 백업해둡니다.
         IsEpilogue = NewGameConfig.IsEpilogue;
+        CachedStageId = !string.IsNullOrEmpty(NewGameConfig.StageId) ? NewGameConfig.StageId : _stageId;
+        CachedLobbySceneName = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName) ? NewGameConfig.LobbySceneName : _lobbySceneName;
+        
         ValidateInspectorRefs();
         _loopSM = new LoopStateMachine(_orderConfig, _characterRegistry, _stageRoleConfig, _setupConfig);
     }
@@ -157,8 +166,8 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     /// <summary>현재 GameState입니다. PlayerTurnInputHandler에서 구역 조회에 사용합니다.</summary>
     public IGameState    GameState        => _loopSM?.GameState;
 
-    /// <summary>이 씬의 스테이지 ID입니다. 로비 경유 시 NewGameConfig 값을 우선합니다.</summary>
-    public string        StageId          => !string.IsNullOrEmpty(_loopSM?.StageId) ? _loopSM.StageId : _stageId;
+    /// <summary>이 씬의 스테이지 ID입니다.</summary>
+    public string        StageId          => !string.IsNullOrEmpty(_loopSM?.StageId) ? _loopSM.StageId : CachedStageId;
 
     /// <summary>현재 루프 번호 (1-based). GameHUD 표시용.</summary>
     public int           LoopCount        => (_loopSM?.LoopCount ?? 0) + 1;
@@ -230,19 +239,14 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     {
         if (isWin)
         {
-            string idToRecord = !string.IsNullOrEmpty(NewGameConfig.StageId) ? NewGameConfig.StageId : _stageId;
-            if (!string.IsNullOrEmpty(idToRecord))
-                StageClearRepository.Instance.RecordClear(idToRecord);
+            if (!string.IsNullOrEmpty(CachedStageId))
+                StageClearRepository.Instance.RecordClear(CachedStageId);
 
             if (_triggerEndingDialogueOnWin)
                 LobbyDialogueManager.PendingEndingDialogue = true;
         }
 
-        // NewGameConfig에 전용 로비씬이 설정되어 있으면 우선 사용, 없으면 기본 _lobbySceneName
-        string lobbyScene = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName)
-            ? NewGameConfig.LobbySceneName
-            : _lobbySceneName;
-        SceneManager.LoadScene(lobbyScene);
+        SceneManager.LoadScene(CachedLobbySceneName);
     }
 
     private void HandleLoopReset()

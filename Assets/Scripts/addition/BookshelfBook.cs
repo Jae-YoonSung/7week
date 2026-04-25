@@ -90,6 +90,9 @@ public class BookshelfBook : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // 컨트롤러가 연결되어 있고 아직 입력 준비가 안 됐다면 완전히 무시
+        if (_controller != null && !_controller.IsInputReady) return;
+
         if (!IsUnlocked || _isClicked) return;
         _isClicked = true;
         DOTween.Kill(transform);
@@ -104,10 +107,12 @@ public class BookshelfBook : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if (_controller != null && !_controller.IsInputReady) return;
+        
         if (!IsUnlocked || _hoverOffset <= 0f || _isHovering || _isClicked) return;
         _isHovering = true;
         DOTween.Kill(transform);
-        transform.DOLocalMove(_originalLocalPos + transform.forward * _hoverOffset, _hoverDuration).SetEase(Ease.OutQuad);
+        transform.DOLocalMove(_originalLocalPos + Vector3.right * _hoverOffset, _hoverDuration).SetEase(Ease.OutQuad);
     }
 
     private void OnMouseExit()

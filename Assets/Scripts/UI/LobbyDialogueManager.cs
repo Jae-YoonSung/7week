@@ -190,6 +190,14 @@ public class LobbyDialogueManager : MonoBehaviour
         StopAllCoroutinesSafe();
         _dialoguePanel?.SetActive(false);
 
+        // 타이틀 씬처럼 책 펼치기 연출(BookAnimator)이 없는 곳에서는
+        // 추가적인 클릭 대기(힌트 표시) 없이 즉시 완료 처리합니다.
+        if (_bookAnimator == null)
+        {
+            _phase = 3;
+            return;
+        }
+
         if (_anyKeyHint != null) _anyKeyHint.SetActive(true);
         _phase = 1;
     }
