@@ -650,6 +650,8 @@ MonoBehaviour:
   _blockText: {fileID: 247771645}
   _blockTextFloatHeight: 0
   _blockTextDuration: 2
+  _blockEntryMessage: "\uBD09\uC1C4 \uAD6C\uC5ED\uC5D0\uC11C \uCE90\uB9AD\uD130\uB97C
+    \uB0B4\uB824\uC8FC\uC138\uC694"
 --- !u!4 &26829729 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3220521445531105371, guid: 3cecf63d03d87cc4bb5457269ee3a7f5, type: 3}
@@ -2297,6 +2299,10 @@ MonoBehaviour:
   - {fileID: 718067038}
   _disableAbilities: 0
   _zoneEffect: {fileID: 11400000, guid: 4c78964caa315514f973069b973b8131, type: 2}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 1811115737}
   _phantomColorIndicator: {fileID: 0}
 --- !u!65 &137149189
@@ -3430,6 +3436,10 @@ MonoBehaviour:
   - {fileID: 630362507}
   _disableAbilities: 0
   _zoneEffect: {fileID: 11400000, guid: f27dc59e6aea6e44991e890fae2ed5bb, type: 2}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 1126716519}
   _phantomColorIndicator: {fileID: 0}
 --- !u!65 &202144441
@@ -19752,6 +19762,10 @@ MonoBehaviour:
   - {fileID: 1681499410}
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 249940030}
   _phantomColorIndicator: {fileID: 0}
 --- !u!65 &1273087943
@@ -21233,11 +21247,11 @@ PrefabInstance:
     - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: _figureRevealEntries.Array.data[5].existingObject
       value: 
-      objectReference: {fileID: 84625457}
+      objectReference: {fileID: 1938154590}
     - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: _figureRevealEntries.Array.data[6].existingObject
       value: 
-      objectReference: {fileID: 1938154590}
+      objectReference: {fileID: 84625457}
     - target: {fileID: 5991268876706226950, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: m_LocalPosition.y
       value: 27.08
@@ -25133,6 +25147,10 @@ MonoBehaviour:
   - {fileID: 1506250465}
   _disableAbilities: 1
   _zoneEffect: {fileID: 0}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 220229535}
   _phantomColorIndicator: {fileID: 0}
 --- !u!65 &1576250531
