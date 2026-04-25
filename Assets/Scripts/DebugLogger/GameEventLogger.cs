@@ -9,6 +9,8 @@ using UnityEngine;
 [DefaultExecutionOrder(-15)]
 public class GameEventLogger : MonoBehaviour
 {
+    public static GameEventLogger Instance { get; private set; }
+
     private GameFlowController _gfc;
     private TurnStateMachine   _turnSM;
 
@@ -32,6 +34,11 @@ public class GameEventLogger : MonoBehaviour
 
     // 씬의 ZoneLayout 참조 — IsSpecialZone / GetZoneType에서 ZoneEffect 조회에 사용한다.
     private ZoneLayout _zoneLayout;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -68,19 +75,11 @@ public class GameEventLogger : MonoBehaviour
 
         // ZoneLayout 캐시 — IsSpecialZone / GetZoneType에서 ZoneEffect 조회에 사용
         _zoneLayout = FindFirstObjectByType<ZoneLayout>();
-
-        // 초기 존 스냅샷 (Start 실행 시점에 CharacterViews가 비어있을 수 있으므로
-        // SyncAssignedZones가 첫 번째 턴에서 보완한다)
-        var gs = _gfc.GameState;
-        if (gs != null)
-        {
-            foreach (var charId in _gfc.CharacterViews.Keys)
-                _assignedZones[charId] = gs.GetZone(charId);
-        }
     }
 
     private void OnDestroy()
     {
+        if (Instance == this) Instance = null;
         if (_gfc != null)
         {
             _gfc.OnLoopReset                -= HandleLoopReset;
@@ -277,9 +276,9 @@ public class GameEventLogger : MonoBehaviour
     public void LogRoleConfirmed(string charId, string suspectedRole)
         => GameEventDispatcher.Raise(new RoleConfirmedEvent(_gfc.LoopCount, _gfc.TurnCount, charId, suspectedRole));
 
-    // 룰북을 열 때 호출한다.
-    public void LogRulebookOpen()
-        => GameEventDispatcher.Raise(new RulebookOpenEvent(_gfc.LoopCount, _gfc.TurnCount));
+    // 룰북을 열 때 호출한다. rulebookType: "role" = 역할 룰북, "sequence" = 사건 서술 순서 룰북.
+    public void LogRulebookOpen(string rulebookType)
+        => GameEventDispatcher.Raise(new RulebookOpenEvent(_gfc.LoopCount, _gfc.TurnCount, rulebookType));
 
     // 메모장을 닫을 때 현재 상태와 함께 호출한다.
     public void LogMemoClose(int entryCount, bool hasKillerNote)

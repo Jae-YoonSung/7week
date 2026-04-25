@@ -2467,6 +2467,7 @@ GameObject:
   - component: {fileID: 155018635}
   - component: {fileID: 155018634}
   - component: {fileID: 155018636}
+  - component: {fileID: 155018637}
   m_Layer: 5
   m_Name: Sequence
   m_TagString: Untagged
@@ -2547,6 +2548,19 @@ MonoBehaviour:
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
+--- !u!114 &155018637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155018632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d8bcad12932834c9bd64016520050b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DrawerEventHook
+  _panelType: 1
 --- !u!1 &159965541
 GameObject:
   m_ObjectHideFlags: 0
@@ -8667,7 +8681,7 @@ MonoBehaviour:
   _characterSpawner: {fileID: 1589347838}
   _stageVisualConfig: {fileID: 0}
   _epilogueVisualConfig: {fileID: 11400000, guid: 083442a8d23c726468e6fa39f63e3804, type: 2}
-  _lobbySceneName: LobbyScene
+  _lobbySceneName: LobbyScene2
   _stageId: 
   _triggerEndingDialogueOnWin: 0
 --- !u!1001 &538387526
@@ -9527,6 +9541,7 @@ GameObject:
   - component: {fileID: 599471877}
   - component: {fileID: 599471876}
   - component: {fileID: 599471878}
+  - component: {fileID: 599471879}
   m_Layer: 5
   m_Name: Role
   m_TagString: Untagged
@@ -9607,6 +9622,19 @@ MonoBehaviour:
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
+--- !u!114 &599471879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599471874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d8bcad12932834c9bd64016520050b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DrawerEventHook
+  _panelType: 0
 --- !u!1001 &611439737
 PrefabInstance:
   m_ObjectHideFlags: 0

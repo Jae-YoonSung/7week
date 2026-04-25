@@ -170,7 +170,7 @@ public class GameLogger : MonoBehaviour
         => Log($"[role_confirmed] loop={e.Loop} turn={e.Turn} char={e.CharId} role={e.SuspectedRole}");
 
     private void HandleRulebookOpen(RulebookOpenEvent e)
-        => Log($"[rulebook_open] loop={e.Loop} turn={e.Turn}");
+        => Log($"[rulebook_open] loop={e.Loop} turn={e.Turn} type={e.RulebookType}");
 
     private void HandleMemoClose(MemoCloseEvent e)
         => Log($"[memo_close] loop={e.Loop} turn={e.Turn} entries={e.EntryCount} has_killer={e.HasKillerNote}");

@@ -248,8 +248,9 @@ public class AnalyticsReporter : MonoBehaviour
         if (!CanSend()) return;
         AnalyticsService.Instance.RecordEvent(new CustomEvent("rulebook_open")
         {
-            { "loop", e.Loop },
-            { "turn", e.Turn }
+            { "loop",          e.Loop },
+            { "turn",          e.Turn },
+            { "rulebook_type", e.RulebookType }
         });
     }
 
