@@ -74,12 +74,15 @@ public class RoleActivationState : IState
                 gameState.MarkForDeath(delayed.TargetCharacterId, delayed.CauseRole, delayed.SourceCharacterId);
         }
 
-        // ── 단계 3~N: 직업 능력 순서대로 발동 ──────────────────────────────
+        // ── 단계 3~N: 직업 능력 순서대로 발동 (순교자 제외) ────────────────
         var processor = new RoleAbilityProcessor(_orderConfig);
-        processor.Process(gameState);
+        processor.ProcessExcept(gameState, RoleType.Martyr);
 
         // 심약자 패시브: 전 루프에 자신이 죽은 턴과 동일한 턴에 자살
         ApplyTimidEffect(gameState);
+
+        // 순교자: 심약자 자살 마크 포함 모든 마크 확인 후 구출
+        processor.ProcessSingle(gameState, RoleType.Martyr);
 
         // ── 단계 N+1: 사망 확정 (응징자·연인C/D 패시브 포함) ────────────────
         gameState.ConfirmDeaths();

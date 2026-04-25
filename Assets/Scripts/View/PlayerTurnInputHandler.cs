@@ -456,10 +456,13 @@ public class PlayerTurnInputHandler : MonoBehaviour
         if (_zoneLayout == null) return false;
         var gfc = GameFlowController.Instance;
         int turn = gfc != null ? gfc.TurnCount : 1;
+        var gs   = gfc != null ? gfc.GameState  : null;
         foreach (var kv in _assignedZones)
         {
-            if (IsEntryBlocked(kv.Value, turn))
-                return true;
+            if (!IsEntryBlocked(kv.Value, turn)) continue;
+            var status = gs?.GetCharacter(kv.Key);
+            if (status != null && !status.IsAlive) continue;
+            return true;
         }
         return false;
     }
