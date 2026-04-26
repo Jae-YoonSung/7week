@@ -269,11 +269,16 @@ public class StageClearSequenceController : MonoBehaviour
         // (NewGameConfig는 게임 중 초기화되므로 GameFlowController의 백업값을 참조)
         if (GameFlowController.Instance != null && GameFlowController.Instance.IsEpilogue)
         {
-            RecordStageClearIfNeeded();
+            if (_recordStageClear && !string.IsNullOrEmpty(GameFlowController.Instance.StageId))
+            {
+                string sid = !string.IsNullOrEmpty(_stageIdOverride) ? _stageIdOverride : GameFlowController.Instance.StageId;
+                StageClearRepository.Instance.RecordClear(sid);
+            }
+            
             LobbyDialogueManager.PendingEndingDialogue = _triggerLobbyEndingDialogue;
 
-            string lobbyScene = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName)
-                ? NewGameConfig.LobbySceneName
+            string lobbyScene = !string.IsNullOrEmpty(GameFlowController.Instance.CachedLobbySceneName)
+                ? GameFlowController.Instance.CachedLobbySceneName
                 : _lobbySceneName;
             SceneManager.LoadScene(lobbyScene);
             return;
@@ -291,6 +296,7 @@ public class StageClearSequenceController : MonoBehaviour
 
     private IEnumerator PlaySequenceCoroutine()
     {
+        Debug.Log("[StageClearSequence] 1. 연출 시작");
         _isPlaying = true;
         SetObjectsActive(_objectsToHideOnSequenceStart, false);
         HideRuntimeCharacterObjects();
@@ -301,25 +307,31 @@ public class StageClearSequenceController : MonoBehaviour
         if (_timings.hideDeskObjectsDelay > 0f)
             yield return new WaitForSeconds(_timings.hideDeskObjectsDelay);
 
+        Debug.Log("[StageClearSequence] 2. 책 소환 및 닫기 시작");
         SetObjectsActive(_deskObjectsToHide, false);
         SpawnClosingBook();
         yield return CloseSpawnedBook();
 
+        Debug.Log("[StageClearSequence] 3. 책 닫기 완료, 대기 중");
         if (_timings.afterBookCloseDelay > 0f)
             yield return new WaitForSeconds(_timings.afterBookCloseDelay);
 
+        Debug.Log("[StageClearSequence] 4. StandUp 카메라 전환 시도");
         ApplyStandUpCameraPriorities();
         _onStandUp?.Invoke();
 
+        Debug.Log("[StageClearSequence] 5. StandUp 대기 중");
         if (_timings.afterStandUpDelay > 0f)
             yield return new WaitForSeconds(_timings.afterStandUpDelay);
 
+        Debug.Log("[StageClearSequence] 6. Bridge 카메라 전환 시도");
         ApplyBridgeToShelfCameraPriorities();
         _onBridgeToShelfCamera?.Invoke();
 
         if (_timings.afterBridgeCameraDelay > 0f)
             yield return new WaitForSeconds(_timings.afterBridgeCameraDelay);
 
+        Debug.Log("[StageClearSequence] 7. Shelf 카메라 전환 시도");
         ApplyLookAtShelfCameraPriorities();
         StartBridgeToShelfHeadBob();
         _onLookAtShelf?.Invoke();
@@ -349,13 +361,27 @@ public class StageClearSequenceController : MonoBehaviour
         if (_timings.lobbyLoadDelay > 0f)
             yield return new WaitForSeconds(_timings.lobbyLoadDelay);
 
-        RecordStageClearIfNeeded();
+        if (GameFlowController.Instance != null && !string.IsNullOrEmpty(GameFlowController.Instance.StageId))
+        {
+            if (_recordStageClear)
+            {
+                string sid = !string.IsNullOrEmpty(_stageIdOverride) ? _stageIdOverride : GameFlowController.Instance.StageId;
+                StageClearRepository.Instance.RecordClear(sid);
+            }
+        }
+        else
+        {
+            // 폴백 (혹시 GameFlowController가 없는 씬에서 단독 실행될 경우)
+            if (_recordStageClear && !string.IsNullOrEmpty(_stageIdOverride))
+                StageClearRepository.Instance.RecordClear(_stageIdOverride);
+        }
+
         LobbyDialogueManager.PendingEndingDialogue = _triggerLobbyEndingDialogue;
 
-        // NewGameConfig에 전용 로비씬이 설정되어 있으면 우선 사용
-        string lobbyScene = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName)
-            ? NewGameConfig.LobbySceneName
+        string lobbyScene = GameFlowController.Instance != null && !string.IsNullOrEmpty(GameFlowController.Instance.CachedLobbySceneName)
+            ? GameFlowController.Instance.CachedLobbySceneName
             : _lobbySceneName;
+            
         SceneManager.LoadScene(lobbyScene);
     }
 
@@ -763,18 +789,6 @@ public class StageClearSequenceController : MonoBehaviour
 
         _fadeCanvasGroup.blocksRaycasts = blocksRaycasts;
         _fadeCanvasGroup.interactable = blocksRaycasts;
-    }
-
-    private void RecordStageClearIfNeeded()
-    {
-        if (!_recordStageClear) return;
-
-        string stageId = !string.IsNullOrEmpty(_stageIdOverride)
-            ? _stageIdOverride
-            : NewGameConfig.StageId;
-
-        if (!string.IsNullOrEmpty(stageId))
-            StageClearRepository.Instance.RecordClear(stageId);
     }
 
     private static void SetObjectsActive(GameObject[] objects, bool active)

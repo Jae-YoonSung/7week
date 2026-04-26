@@ -128,6 +128,7 @@ public class GameSetupState : IState
             _sessionSeed = NewGameConfig.UseRandom
                 ? Random.Range(0, maxSeed)
                 : Mathf.Clamp(NewGameConfig.Seed, 0, maxSeed - 1);
+            _setupConfig?.SetRuntimeSeed(_sessionSeed);
             NewGameConfig.Clear();
             return _sessionSeed;
         }

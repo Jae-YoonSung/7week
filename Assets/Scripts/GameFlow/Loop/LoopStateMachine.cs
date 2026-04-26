@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 /// <summary>
 /// 게임 전체 루프 흐름을 관리하는 최상위 상태머신입니다.
 /// TurnStateMachine을 소유하며, RunningTurnState를 통해 턴 실행을 위임합니다.
@@ -202,6 +204,9 @@ public class LoopStateMachine : StateMachine
     /// </summary>
     public void AdvanceLoop()
     {
+        {
+            
+        }
         LoopCount++;
         if (LoopCount >= MaxLoops)
             EnterAwaitingFinalDecision();

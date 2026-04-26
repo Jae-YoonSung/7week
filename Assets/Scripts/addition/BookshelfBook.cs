@@ -58,8 +58,8 @@ public class BookshelfBook : MonoBehaviour
     [SerializeField] private Color _unclearedColor = Color.black;
     [Tooltip("색상을 변경할 렌더러 목록 (책 표지 등)")]
     [SerializeField] private Renderer[] _targetRenderers;
-    [Tooltip("클리어 시 활성화할 추가 오브젝트 (예: 엠블럼, 반짝임 등) (선택)")]
-    [SerializeField] private GameObject _clearedOverlay;
+    [Tooltip("클리어 시 활성화할 추가 오브젝트들 (엠블럼, 파티클 등)")]
+    [SerializeField] private GameObject[] _objectsToActivateOnClear;
 
     // ── 프로퍼티 ─────────────────────────────────────────────────────────────
 
@@ -84,12 +84,32 @@ public class BookshelfBook : MonoBehaviour
     private void Start()
     {
         _originalLocalPos = transform.localPosition;
+        
+        // 추가: 클리어/잠금 오버레이가 클릭을 방해하지 않도록 콜라이더 제거
+        if (_objectsToActivateOnClear != null)
+        {
+            foreach (var obj in _objectsToActivateOnClear)
+            {
+                if (obj != null) RemoveColliders(obj);
+            }
+        }
+        if (_lockOverlay != null) RemoveColliders(_lockOverlay);
+
         RefreshLockState();
         RefreshClearedState();
     }
 
+    private void RemoveColliders(GameObject target)
+    {
+        var colliders = target.GetComponentsInChildren<Collider>();
+        foreach (var c in colliders) c.enabled = false;
+    }
+
     private void OnMouseDown()
     {
+        // 컨트롤러가 연결되어 있고 아직 입력 준비가 안 됐다면 완전히 무시
+        if (_controller != null && !_controller.IsInputReady) return;
+
         if (!IsUnlocked || _isClicked) return;
         _isClicked = true;
         DOTween.Kill(transform);
@@ -104,10 +124,12 @@ public class BookshelfBook : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if (_controller != null && !_controller.IsInputReady) return;
+        
         if (!IsUnlocked || _hoverOffset <= 0f || _isHovering || _isClicked) return;
         _isHovering = true;
         DOTween.Kill(transform);
-        transform.DOLocalMove(_originalLocalPos + transform.forward * _hoverOffset, _hoverDuration).SetEase(Ease.OutQuad);
+        transform.DOLocalMove(_originalLocalPos + Vector3.right * _hoverOffset, _hoverDuration).SetEase(Ease.OutQuad);
     }
 
     private void OnMouseExit()
@@ -125,8 +147,8 @@ public class BookshelfBook : MonoBehaviour
         if (_lockOverlay != null)
             _lockOverlay.SetActive(!IsUnlocked);
 
-        if (_hideWhenLocked)
-            gameObject.SetActive(IsUnlocked);
+        // 언락되지 않았으면 책을 아예 보이지 않게 비활성화합니다.
+        gameObject.SetActive(IsUnlocked);
     }
 
     /// <summary>
@@ -147,10 +169,13 @@ public class BookshelfBook : MonoBehaviour
             }
         }
 
-        // 클리어 오버레이/효과 활성화
-        if (_clearedOverlay != null)
+        // 클리어 오브젝트들 활성화/비활성화
+        if (_objectsToActivateOnClear != null)
         {
-            _clearedOverlay.SetActive(cleared);
+            foreach (var obj in _objectsToActivateOnClear)
+            {
+                if (obj != null) obj.SetActive(cleared);
+            }
         }
     }
 }

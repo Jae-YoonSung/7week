@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c8578bb4a49544da23d92e6634402c, type: 3}
+  m_Name: RoleActivationOrderConfig4
+  m_EditorClassIdentifier: Assembly-CSharp::RoleActivationOrderConfig
+  executionOrder:
+  - {fileID: 11400000, guid: d7ff040d2f02c02468a5e1637830dff2, type: 2}
+  - {fileID: 11400000, guid: 0d469af23ce640640a6ccb40fe36aa10, type: 2}
+  - {fileID: 11400000, guid: 9039d6eea11cf944d8328cbebfa9cba4, type: 2}
+  - {fileID: 11400000, guid: d80e817c971b98d4689af606979f0e17, type: 2}
+  - {fileID: 11400000, guid: f5e6ed56bab519f49ad315b986379797, type: 2}
+  - {fileID: 11400000, guid: e68fc894de5dec34b9a7b8d4dab38bcd, type: 2}
+  - {fileID: 11400000, guid: 3191a0b6c3495644c9835d2c376886b3, type: 2}

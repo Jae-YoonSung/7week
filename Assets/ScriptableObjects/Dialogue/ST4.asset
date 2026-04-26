@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2b1a00d8620ff64d9219b0f591c7476, type: 3}
+  m_Name: ST4
+  m_EditorClassIdentifier: Assembly-CSharp::TurnEndDialogueConfig
+  gameStartDialogues:
+  - {fileID: 11400000, guid: 5db5a39bddbd239499865edd4bf256fa, type: 2}
+  normalDialogues:
+  - {fileID: 11400000, guid: fffef94ac7144cc4d980860db4538b43, type: 2}
+  deathDialogues:
+  - {fileID: 11400000, guid: f4791a8768630f645b98a169bbcc2b37, type: 2}
+  loopResetDialogues:
+  - {fileID: 11400000, guid: b8be8f5dff5066542a4ade060d73e2ee, type: 2}
+  winDialogues:
+  - {fileID: 11400000, guid: 3720d5c182a83e34c836af93e3f5d36e, type: 2}
+  loseDialogues:
+  - {fileID: 11400000, guid: 7cf99deb7853239408bd386ed7339206, type: 2}

@@ -30,6 +30,9 @@ public class StageSetupConfig : ScriptableObject
     public bool UseRandomSeed => _useRandomSeed;
     public int  Seed          => _seed;
 
+    /// <summary>런타임에서 실제 사용된 시드를 기록합니다. GameSetupState에서 호출합니다.</summary>
+    public void SetRuntimeSeed(int seed) => _seed = seed;
+
     /// <summary>
     /// GameSetupState에서 호출합니다.
     /// UseRandomSeed = true면 유효한 범위의 난수를 생성해 캐시 후 반환합니다.

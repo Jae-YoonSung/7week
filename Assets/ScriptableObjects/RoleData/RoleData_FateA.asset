@@ -16,4 +16,4 @@ MonoBehaviour:
   roleName: Fate A
   description: 
   roleIcon: {fileID: 0}
-  abilityConfig: {fileID: 0}
+  abilityConfig: {fileID: 11400000, guid: fac97de29fd17c247a5f217e99b42a1d, type: 2}

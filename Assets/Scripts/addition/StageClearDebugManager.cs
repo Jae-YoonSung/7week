@@ -179,8 +179,8 @@ public class StageClearDebugManager : MonoBehaviour
     /// <summary>씬 내 모든 관련 컴포넌트의 상태를 즉시 갱신합니다.</summary>
     private void RefreshScene()
     {
-        // BookshelfBook (타이틀씬 책 색상 + 잠금)
-        var books = FindObjectsByType<BookshelfBook>(FindObjectsSortMode.None);
+        // BookshelfBook (타이틀씬 책 색상 + 비활성화)
+        var books = FindObjectsByType<BookshelfBook>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var b in books)
         {
             b.RefreshLockState();
@@ -188,7 +188,7 @@ public class StageClearDebugManager : MonoBehaviour
         }
 
         // LobbyUnlockManager (로비씬 버튼 해금)
-        var unlockManagers = FindObjectsByType<LobbyUnlockManager>(FindObjectsSortMode.None);
+        var unlockManagers = FindObjectsByType<LobbyUnlockManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var m in unlockManagers)
             m.Refresh();
     }

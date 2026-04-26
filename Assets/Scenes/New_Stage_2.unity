@@ -513,6 +513,8 @@ MonoBehaviour:
   _blockText: {fileID: 247771645}
   _blockTextFloatHeight: 0
   _blockTextDuration: 2
+  _blockEntryMessage: "\uBD09\uC1C4 \uAD6C\uC5ED\uC5D0\uC11C \uCE90\uB9AD\uD130\uB97C
+    \uB0B4\uB824\uC8FC\uC138\uC694"
 --- !u!4 &26829729 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3220521445531105371, guid: 3cecf63d03d87cc4bb5457269ee3a7f5, type: 3}
@@ -1802,7 +1804,12 @@ MonoBehaviour:
   - {fileID: 718067038}
   _disableAbilities: 0
   _zoneEffect: {fileID: 11400000, guid: 4c78964caa315514f973069b973b8131, type: 2}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 1811115737}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &137149189
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2283,13 +2290,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawerPanel
   _shownAnchoredX: -650
-  _distanceThreshold: 100
-  _velocityThreshold: 600
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
-  _drawerButtons:
-  - {fileID: 1273171413}
 --- !u!1 &159965541
 GameObject:
   m_ObjectHideFlags: 0
@@ -2783,7 +2786,12 @@ MonoBehaviour:
   - {fileID: 630362507}
   _disableAbilities: 0
   _zoneEffect: {fileID: 11400000, guid: f27dc59e6aea6e44991e890fae2ed5bb, type: 2}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 1126716519}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &202144441
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6002,14 +6010,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3423353322650898348, guid: ccf1b44a98a91914d8fd6485718baa0c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -11.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 3423353322650898348, guid: ccf1b44a98a91914d8fd6485718baa0c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 10.04
-      objectReference: {fileID: 0}
     - target: {fileID: 7347520105038634275, guid: ccf1b44a98a91914d8fd6485718baa0c, type: 3}
       propertyPath: m_Name
       value: Stage2_Map
@@ -7649,6 +7649,8 @@ MonoBehaviour:
   _stageRoleConfig: {fileID: 11400000, guid: 25b0edd91510a9b42b4d1e62e393e7f2, type: 2}
   _setupConfig: {fileID: 11400000, guid: 83fbc0862a127a0488ecce7f2ca05c03, type: 2}
   _characterSpawner: {fileID: 1589347838}
+  _stageVisualConfig: {fileID: 0}
+  _epilogueVisualConfig: {fileID: 0}
   _lobbySceneName: LobbyScene
   _stageId: 
   _triggerEndingDialogueOnWin: 1
@@ -8473,13 +8475,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawerPanel
   _shownAnchoredX: -750
-  _distanceThreshold: 100
-  _velocityThreshold: 600
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
-  _drawerButtons:
-  - {fileID: 1273171413}
 --- !u!114 &606856859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13297,13 +13295,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawerPanel
   _shownAnchoredX: 750
-  _distanceThreshold: 100
-  _velocityThreshold: 600
   _animDuration: 0.4
   _showEase: 9
   _hideEase: 8
-  _drawerButtons:
-  - {fileID: 1273171413}
 --- !u!4 &936340411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8873565996176904294, guid: 4a36ecbe406017c44bbc8c34c72c49cc, type: 3}
@@ -17202,7 +17196,12 @@ MonoBehaviour:
   - {fileID: 1681499410}
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 249940030}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &1273087943
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20260,8 +20259,6 @@ MonoBehaviour:
   _submitButton: {fileID: 412150635}
   _fadeInDuration: 0.6
   _continueDelay: 2
-  _wrongAnswerBlockDuration: 2
-  _wrongTextColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1424682372
 GameObject:
   m_ObjectHideFlags: 0
@@ -21692,7 +21689,12 @@ MonoBehaviour:
   - {fileID: 1506250465}
   _disableAbilities: 1
   _zoneEffect: {fileID: 0}
+  _blockEntry: 0
+  _blockEntryFromTurn: 1
+  _blockEntryUntilTurn: 0
+  _blockEntryIndicator: {fileID: 0}
   _dropIndicator: {fileID: 220229535}
+  _phantomColorIndicator: {fileID: 0}
 --- !u!65 &1576250531
 BoxCollider:
   m_ObjectHideFlags: 0
