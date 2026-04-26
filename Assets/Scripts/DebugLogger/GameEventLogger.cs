@@ -57,6 +57,7 @@ public class GameEventLogger : MonoBehaviour
             return;
         }
 
+        _gfc.OnGameStarted              += HandleGameStarted;
         _gfc.OnLoopReset                += HandleLoopReset;
         _gfc.OnGameEndDialogueRequested += HandleFinalDecision;
 
@@ -82,6 +83,7 @@ public class GameEventLogger : MonoBehaviour
         if (Instance == this) Instance = null;
         if (_gfc != null)
         {
+            _gfc.OnGameStarted              -= HandleGameStarted;
             _gfc.OnLoopReset                -= HandleLoopReset;
             _gfc.OnGameEndDialogueRequested -= HandleFinalDecision;
         }
@@ -105,6 +107,14 @@ public class GameEventLogger : MonoBehaviour
 
     // ── 내부 핸들러 ──────────────────────────────────────────────────────────
 
+    // 게임 시작(인트로 포함) 시점에 레벨 타이머를 시작한다.
+    // OnGameStarted는 LoopStateMachine.StartGame() 직후 발생하므로
+    // 첫 턴 플레이어 행동 단계보다 앞선 시점이다.
+    private void HandleGameStarted()
+    {
+        _levelStart = DateTime.Now;
+    }
+
     // 각 턴의 플레이어 행동 단계 시작. 루프 첫 턴이면 루프 시작도 함께 기록한다.
     private void HandlePlayerActionStarted()
     {
@@ -117,7 +127,6 @@ public class GameEventLogger : MonoBehaviour
         {
             if (_gfc.LoopCount == 1)
             {
-                _levelStart = DateTime.Now;
                 GameEventDispatcher.Raise(new LevelStartEvent(_gfc.StageId));
                 RaiseZoneSnapshot();
             }

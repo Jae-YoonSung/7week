@@ -20,6 +20,13 @@ public readonly struct SessionEndEvent
     public SessionEndEvent(TimeSpan duration) { Duration = duration; }
 }
 
+// session_start 이후 경과 시간을 30초마다 기록하는 하트비트 이벤트
+public readonly struct SessionPingEvent
+{
+    public readonly float ElapsedSeconds; // session_start로부터 경과된 총 시간(초)
+    public SessionPingEvent(float elapsedSeconds) => ElapsedSeconds = elapsedSeconds;
+}
+
 // ─────────────────────────────────────────────
 // 레벨
 // ─────────────────────────────────────────────
