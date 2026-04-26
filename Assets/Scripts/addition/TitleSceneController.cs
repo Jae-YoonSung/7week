@@ -83,6 +83,10 @@ public class TitleSceneController : MonoBehaviour
     [Tooltip("BookshelfBook에서 씬 이름을 지정하지 않았을 때 사용할 기본 로비 씬 이름")]
     [SerializeField] private string _defaultLobbySceneName = "LobbyScene";
 
+    [Header("타이틀 텍스트 설정")]
+    [Tooltip("게임 시작 시 보이고, 책 클릭 시 사라질 타이틀 텍스트 오브젝트 (선택)")]
+    [SerializeField] private GameObject _titleTextObject;
+
     // 런타임 상태
     private bool _sequencePlaying = false;
     private string _currentTargetSceneName;
@@ -112,6 +116,14 @@ public class TitleSceneController : MonoBehaviour
     {
         if (!_isInputReady || _sequencePlaying) return;
         _sequencePlaying = true;
+
+        // 타이틀 텍스트가 설정되어 있다면 제거
+        if (_titleTextObject != null)
+        {
+            var cg = _titleTextObject.GetComponent<CanvasGroup>();
+            if (cg != null) cg.DOFade(0f, 0.5f); // CanvasGroup이 있으면 부드럽게 페이드 아웃
+            else _titleTextObject.SetActive(false); // 없으면 즉시 비활성화
+        }
 
         _currentTargetSceneName = string.IsNullOrEmpty(targetSceneName) ? _defaultLobbySceneName : targetSceneName;
 
