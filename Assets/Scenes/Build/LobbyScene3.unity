@@ -4141,12 +4141,19 @@ MonoBehaviour:
   _entries:
   - buttonObject: {fileID: 860668093}
     requiredClearStageId: 3_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 546924195}
     requiredClearStageId: 3_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 755638897}
     requiredClearStageId: 3_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 1152953878}
     requiredClearStageId: 3_1
+    playUnlockAnim: 1
+  _fadeInDuration: 0.4
+  _popScale: 1.6
+  _popDuration: 0.4
 --- !u!1 &860668093
 GameObject:
   m_ObjectHideFlags: 0

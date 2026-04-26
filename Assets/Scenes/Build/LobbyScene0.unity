@@ -4129,10 +4129,16 @@ MonoBehaviour:
   _entries:
   - buttonObject: {fileID: 278492655}
     requiredClearStageId: 0_0
+    playUnlockAnim: 0
   - buttonObject: {fileID: 363642949}
     requiredClearStageId: 0_0
+    playUnlockAnim: 1
   - buttonObject: {fileID: 0}
     requiredClearStageId: 0_0
+    playUnlockAnim: 0
+  _fadeInDuration: 0.4
+  _popScale: 1.2
+  _popDuration: 0.3
 --- !u!1 &849954039
 GameObject:
   m_ObjectHideFlags: 0
@@ -6290,7 +6296,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1340914225
 RectTransform:
   m_ObjectHideFlags: 0
