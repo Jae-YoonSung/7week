@@ -1026,7 +1026,7 @@ GameObject:
   m_Component:
   - component: {fileID: 234187855}
   m_Layer: 0
-  m_Name: "\uD53C\uADDC\uC5B4\uB4E4 4"
+  m_Name: "\uD53C\uADDC\uC5B4\uB4E4 3"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1041,7 +1041,7 @@ Transform:
   m_GameObject: {fileID: 234187854}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -132, y: 2.18, z: 42.03221}
+  m_LocalPosition: {x: -132, y: 19.27, z: 42.03221}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7740,7 +7740,7 @@ MonoBehaviour:
   - {fileID: 641861675}
   - {fileID: 641861674}
   _objectsToActivateOnClear:
-  - {fileID: 234187854}
+  - {fileID: 1412853380}
 --- !u!4 &1270382581 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9184641179096324852, guid: 41b4a7e3581b0c14ebe887334b578f6d, type: 3}
@@ -8540,7 +8540,7 @@ MonoBehaviour:
   - {fileID: 1274983513}
   - {fileID: 1274983512}
   _objectsToActivateOnClear:
-  - {fileID: 1412853380}
+  - {fileID: 234187854}
 --- !u!4 &1361277770 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9184641179096324852, guid: 2ef116e4985b5d141b48a03a22d92990, type: 3}
@@ -8876,7 +8876,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1412853381}
   m_Layer: 0
-  m_Name: "\uD53C\uADDC\uC5B4\uB4E4 3"
+  m_Name: "\uD53C\uADDC\uC5B4\uB4E4 4"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8891,7 +8891,7 @@ Transform:
   m_GameObject: {fileID: 1412853380}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -132, y: 18.96, z: 42.03221}
+  m_LocalPosition: {x: -132, y: 2.5, z: 42.03221}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13366,7 +13366,7 @@ SceneRoots:
   - {fileID: 120731129}
   - {fileID: 1892423376}
   - {fileID: 1435250579}
-  - {fileID: 1412853381}
   - {fileID: 234187855}
+  - {fileID: 1412853381}
   - {fileID: 1823708826}
   - {fileID: 1656814571}
