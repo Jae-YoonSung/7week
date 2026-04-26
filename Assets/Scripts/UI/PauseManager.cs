@@ -64,6 +64,40 @@ public class PauseManager : MonoBehaviour
         LeaveToPaused();
     }
 
+    /// <summary>현재 스테이지를 같은 시드로 처음부터 다시 시작합니다.</summary>
+    public void RestartWithSameSeed()
+    {
+        TurnHistoryRepository.Instance.ClearAll();
+
+        var gfc  = GameFlowController.Instance;
+        int seed = gfc != null ? gfc.CurrentSeed : 0;
+
+        NewGameConfig.SetSeed(
+            seed,
+            gfc != null ? gfc.CachedStageId        : null,
+            gfc != null && gfc.IsEpilogue);
+
+        string lobbyScene = gfc != null ? gfc.CachedLobbySceneName : _lobbySceneName;
+        string gameScene  = SceneManager.GetActiveScene().name;
+        NewGameConfig.SetLobbyReturnInfo(lobbyScene, gameScene);
+
+        Time.timeScale = 1f;
+        IsPaused = false;
+        SceneManager.LoadScene(gameScene);
+    }
+
+    /// <summary>게임을 즉시 종료합니다.</summary>
+    public void QuitGame()
+    {
+        TurnHistoryRepository.Instance.ClearAll();
+        Time.timeScale = 1f;
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
     // ── Private ───────────────────────────────────────────────────────────────
 
     private void LeaveToPaused()
