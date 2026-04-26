@@ -7,6 +7,7 @@ public static class GameEventDispatcher
     // ── 세션 ──────────────────────────────────
     public static event Action<SessionStartEvent>       OnSessionStart;
     public static event Action<SessionEndEvent>         OnSessionEnd;
+    public static event Action<SessionPingEvent>        OnSessionPing;
 
     // ── 레벨 ──────────────────────────────────
     public static event Action<LevelStartEvent>         OnLevelStart;
@@ -44,6 +45,7 @@ public static class GameEventDispatcher
 
     public static void Raise(SessionStartEvent e)       => OnSessionStart?.Invoke(e);
     public static void Raise(SessionEndEvent e)         => OnSessionEnd?.Invoke(e);
+    public static void Raise(SessionPingEvent e)        => OnSessionPing?.Invoke(e);
 
     public static void Raise(LevelStartEvent e)         => OnLevelStart?.Invoke(e);
     public static void Raise(LevelEndEvent e)           => OnLevelEnd?.Invoke(e);

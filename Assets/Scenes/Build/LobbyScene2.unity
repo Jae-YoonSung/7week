@@ -4460,18 +4460,28 @@ MonoBehaviour:
   _entries:
   - buttonObject: {fileID: 1675106410}
     requiredClearStageId: 2_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 849954039}
     requiredClearStageId: 2_1
+    playUnlockAnim: 1
   - buttonObject: {fileID: 860668093}
     requiredClearStageId: 2_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 92498040}
     requiredClearStageId: 2_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 755638897}
     requiredClearStageId: 2_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 1401699217}
     requiredClearStageId: 2_2
+    playUnlockAnim: 0
   - buttonObject: {fileID: 639239403}
     requiredClearStageId: 2_3
+    playUnlockAnim: 0
+  _fadeInDuration: 0.4
+  _popScale: 1.6
+  _popDuration: 0.4
 --- !u!1 &849954039
 GameObject:
   m_ObjectHideFlags: 0
@@ -8947,7 +8957,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1942343672
 RectTransform:
   m_ObjectHideFlags: 0

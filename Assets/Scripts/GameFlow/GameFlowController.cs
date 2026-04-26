@@ -48,6 +48,9 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     /// <summary>씬 시작 시 전달받은 원본 로비 씬 이름 백업</summary>
     public string CachedLobbySceneName { get; private set; }
 
+    /// <summary>이번 게임에서 실제 사용된 시드입니다. StartGame() 이후 유효합니다.</summary>
+    public int CurrentSeed => _setupConfig != null ? _setupConfig.Seed : 0;
+
     /// <summary>characterId → CharacterView. SpawnAll 이후 유효합니다.</summary>
     public IReadOnlyDictionary<int, CharacterView> CharacterViews => _characterViews;
 

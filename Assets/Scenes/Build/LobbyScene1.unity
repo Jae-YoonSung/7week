@@ -4367,18 +4367,28 @@ MonoBehaviour:
   _entries:
   - buttonObject: {fileID: 1675106410}
     requiredClearStageId: 1_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 849954039}
     requiredClearStageId: 1_1
+    playUnlockAnim: 1
   - buttonObject: {fileID: 860668093}
     requiredClearStageId: 1_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 92498040}
     requiredClearStageId: 1_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 755638897}
     requiredClearStageId: 1_1
+    playUnlockAnim: 0
   - buttonObject: {fileID: 1401699217}
     requiredClearStageId: 1_2
+    playUnlockAnim: 0
   - buttonObject: {fileID: 639239403}
     requiredClearStageId: 1_3
+    playUnlockAnim: 0
+  _fadeInDuration: 0.4
+  _popScale: 1.6
+  _popDuration: 0.4
 --- !u!1 &849954039
 GameObject:
   m_ObjectHideFlags: 0

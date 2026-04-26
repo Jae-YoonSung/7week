@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -39,6 +40,7 @@ public class GameLogger : MonoBehaviour
     {
         GameEventDispatcher.OnSessionStart      += HandleSessionStart;
         GameEventDispatcher.OnSessionEnd        += HandleSessionEnd;
+        GameEventDispatcher.OnSessionPing       += HandleSessionPing;
         GameEventDispatcher.OnLevelStart        += HandleLevelStart;
         GameEventDispatcher.OnLevelEnd          += HandleLevelEnd;
         GameEventDispatcher.OnLevelAbandon      += HandleLevelAbandon;
@@ -63,6 +65,7 @@ public class GameLogger : MonoBehaviour
     {
         GameEventDispatcher.OnSessionStart      -= HandleSessionStart;
         GameEventDispatcher.OnSessionEnd        -= HandleSessionEnd;
+        GameEventDispatcher.OnSessionPing       -= HandleSessionPing;
         GameEventDispatcher.OnLevelStart        -= HandleLevelStart;
         GameEventDispatcher.OnLevelEnd          -= HandleLevelEnd;
         GameEventDispatcher.OnLevelAbandon      -= HandleLevelAbandon;
@@ -87,6 +90,8 @@ public class GameLogger : MonoBehaviour
     private void Start()
     {
         GameEventDispatcher.Raise(new SessionStartEvent(_sessionStart, _sessionStart));
+        // 세션 시작 직후 하트비트 코루틴을 시작한다.
+        StartCoroutine(HeartbeatCoroutine());
     }
 
     private void OnApplicationQuit()
@@ -123,6 +128,23 @@ public class GameLogger : MonoBehaviour
     }
 
     // ── 이벤트 핸들러 (파일 포맷 변환) ──────────────────────────────────────
+
+    // 30초마다 session_start로부터 경과된 시간을 SessionPingEvent로 전송한다.
+    // 강제 종료 시에도 마지막 ping의 elapsed 값으로 플레이 시간을 추정할 수 있다.
+    private IEnumerator HeartbeatCoroutine()
+    {
+        var interval = new WaitForSeconds(30f);
+        while (true)
+        {
+            yield return interval;
+            float elapsed = (float)(DateTime.Now - _sessionStart).TotalSeconds;
+            GameEventDispatcher.Raise(new SessionPingEvent(elapsed));
+        }
+    }
+
+    // session_ping 이벤트를 파일에 기록한다.
+    private void HandleSessionPing(SessionPingEvent e)
+        => Log($"[session_ping] elapsed={e.ElapsedSeconds:F1}");
 
     private void HandleSessionStart(SessionStartEvent e)
         => Log($"[session_start] date={e.Date:yyyy-MM-dd} time={e.Time:HH:mm:ss}");

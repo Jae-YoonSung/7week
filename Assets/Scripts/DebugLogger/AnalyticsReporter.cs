@@ -11,6 +11,7 @@ public class AnalyticsReporter : MonoBehaviour
     {
         GameEventDispatcher.OnSessionStart      += HandleSessionStart;
         GameEventDispatcher.OnSessionEnd        += HandleSessionEnd;
+        GameEventDispatcher.OnSessionPing       += HandleSessionPing;
         GameEventDispatcher.OnLevelStart        += HandleLevelStart;
         GameEventDispatcher.OnLevelEnd          += HandleLevelEnd;
         GameEventDispatcher.OnLevelAbandon      += HandleLevelAbandon;
@@ -35,6 +36,7 @@ public class AnalyticsReporter : MonoBehaviour
     {
         GameEventDispatcher.OnSessionStart      -= HandleSessionStart;
         GameEventDispatcher.OnSessionEnd        -= HandleSessionEnd;
+        GameEventDispatcher.OnSessionPing       -= HandleSessionPing;
         GameEventDispatcher.OnLevelStart        -= HandleLevelStart;
         GameEventDispatcher.OnLevelEnd          -= HandleLevelEnd;
         GameEventDispatcher.OnLevelAbandon      -= HandleLevelAbandon;
@@ -62,6 +64,17 @@ public class AnalyticsReporter : MonoBehaviour
         if (!AnalyticsInitializer.IsReady) return false;
         if (UnityServices.State != ServicesInitializationState.Initialized) return false;
         return true;
+    }
+
+    // session_ping 이벤트를 Analytics로 전송한다.
+    // elapsed는 session_start로부터 경과된 총 시간(초)이다.
+    private void HandleSessionPing(SessionPingEvent e)
+    {
+        if (!CanSend()) return;
+        AnalyticsService.Instance.RecordEvent(new CustomEvent("session_ping")
+        {
+            { "elapsed", e.ElapsedSeconds }
+        });
     }
 
     private void HandleSessionStart(SessionStartEvent e)
