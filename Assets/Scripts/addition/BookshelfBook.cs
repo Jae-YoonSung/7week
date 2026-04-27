@@ -170,7 +170,7 @@ public class BookshelfBook : MonoBehaviour
     }
 
     /// <summary>
-    /// 연출 시작 시 원래 책 모델을 잠시 숨기거나 보일 때 사용합니다.
+    /// 연출 시작 시 책 렌더러만 켜거나 끕니다. (gameObject를 끄지 않고 renderer.enabled만 변경)
     /// </summary>
     public void SetRenderersActive(bool active)
     {
@@ -178,7 +178,7 @@ public class BookshelfBook : MonoBehaviour
         {
             foreach (var r in _targetRenderers)
             {
-                if (r != null) r.gameObject.SetActive(active);
+                if (r != null) r.enabled = active;
             }
         }
     }
