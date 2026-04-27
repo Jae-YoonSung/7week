@@ -38,14 +38,6 @@ public class BookshelfBook : MonoBehaviour
     [Tooltip("이 책을 클릭했을 때 이동할 전용 LobbyScene 이름")]
     [SerializeField] private string _lobbySceneName = "LobbyScene";
 
-    [Header("잠금 설정")]
-    [Tooltip("이 책을 클릭하려면 클리어되어 있어야 하는 스테이지 ID. 비워두면 항상 해금.")]
-    [SerializeField] private string _requiredClearStageId;
-    [Tooltip("잠금 상태일 때 활성화할 오버레이 오브젝트 (선택)")]
-    [SerializeField] private GameObject _lockOverlay;
-    [Tooltip("잠금 상태일 때 책 오브젝트 자체를 비활성화할지 여부")]
-    [SerializeField] private bool _hideWhenLocked = false;
-
     [Header("호버 효과 (선택)")]
     [Tooltip("마우스 오버 시 책을 살짝 튀어나오게 할 거리 (0이면 비활성)")]
     [SerializeField] private float _hoverOffset = 0.05f;
@@ -58,13 +50,10 @@ public class BookshelfBook : MonoBehaviour
     [SerializeField] private Color _unclearedColor = Color.black;
     [Tooltip("색상을 변경할 렌더러 목록 (책 표지 등)")]
     [SerializeField] private Renderer[] _targetRenderers;
-    [Tooltip("클리어 시 활성화할 추가 오브젝트들 (엠블럼, 파티클 등)")]
+    [Tooltip("클리어 시 활성화할 추가 오브젝트들 (피규어, 엠블럼 등)")]
     [SerializeField] private GameObject[] _objectsToActivateOnClear;
 
     // ── 프로퍼티 ─────────────────────────────────────────────────────────────
-
-    public bool IsUnlocked => string.IsNullOrEmpty(_requiredClearStageId)
-                           || StageClearRepository.Instance.HasCleared(_requiredClearStageId);
 
     /// <summary>이 책이 담당하는 스테이지 ID</summary>
     public string StageId => _stageId;
@@ -85,7 +74,7 @@ public class BookshelfBook : MonoBehaviour
     {
         _originalLocalPos = transform.localPosition;
         
-        // 추가: 클리어/잠금 오버레이가 클릭을 방해하지 않도록 콜라이더 제거
+        // 피규어/오버레이가 클릭을 방해하지 않도록 콜라이더 제거
         if (_objectsToActivateOnClear != null)
         {
             foreach (var obj in _objectsToActivateOnClear)
@@ -93,9 +82,7 @@ public class BookshelfBook : MonoBehaviour
                 if (obj != null) RemoveColliders(obj);
             }
         }
-        if (_lockOverlay != null) RemoveColliders(_lockOverlay);
 
-        RefreshLockState();
         RefreshClearedState();
     }
 
@@ -107,10 +94,10 @@ public class BookshelfBook : MonoBehaviour
 
     private void OnMouseDown()
     {
-        // 컨트롤러가 연결되어 있고 아직 입력 준비가 안 됐다면 완전히 무시
+        // 컨트롤러가 연결되어 있고 아직 입력 준비가 안 됐다면 무시
         if (_controller != null && !_controller.IsInputReady) return;
+        if (_isClicked) return;
 
-        if (!IsUnlocked || _isClicked) return;
         _isClicked = true;
         DOTween.Kill(transform);
 
@@ -125,8 +112,8 @@ public class BookshelfBook : MonoBehaviour
     private void OnMouseEnter()
     {
         if (_controller != null && !_controller.IsInputReady) return;
+        if (_hoverOffset <= 0f || _isHovering || _isClicked) return;
         
-        if (!IsUnlocked || _hoverOffset <= 0f || _isHovering || _isClicked) return;
         _isHovering = true;
         DOTween.Kill(transform);
         transform.DOLocalMove(_originalLocalPos + Vector3.right * _hoverOffset, _hoverDuration).SetEase(Ease.OutQuad);
@@ -142,39 +129,92 @@ public class BookshelfBook : MonoBehaviour
 
     // ── 공개 API ─────────────────────────────────────────────────────────────
 
-    public void RefreshLockState()
-    {
-        if (_lockOverlay != null)
-            _lockOverlay.SetActive(!IsUnlocked);
-
-        // 언락되지 않았으면 책을 아예 보이지 않게 비활성화합니다.
-        gameObject.SetActive(IsUnlocked);
-    }
-
     /// <summary>
-    /// 클리어 상태에 따라 책의 외형을 갱신합니다.
+    /// 씬 시작 시 등 클리어 상태에 따라 책의 외형(색상)과 피규어를 갱신합니다.
     /// </summary>
     public void RefreshClearedState()
     {
         bool cleared = IsCleared;
 
-        // 렌더러 색상 적용
         if (_targetRenderers != null)
         {
             foreach (var renderer in _targetRenderers)
             {
                 if (renderer == null) continue;
-                // 클리어 시 _clearedColor, 아닐 시 _unclearedColor(기본 검정) 적용
                 renderer.material.color = cleared ? _clearedColor : _unclearedColor;
             }
         }
 
-        // 클리어 오브젝트들 활성화/비활성화
         if (_objectsToActivateOnClear != null)
         {
             foreach (var obj in _objectsToActivateOnClear)
             {
                 if (obj != null) obj.SetActive(cleared);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 클리어 연출 씬에서 호출합니다. 책의 색상을 서서히 변화시킵니다.
+    /// </summary>
+    public void AnimateClearColor(float duration)
+    {
+        if (_targetRenderers != null)
+        {
+            foreach (var renderer in _targetRenderers)
+            {
+                if (renderer == null) continue;
+                renderer.material.DOColor(_clearedColor, duration);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 연출 시작 시 원래 책 모델을 잠시 숨기거나 보일 때 사용합니다.
+    /// </summary>
+    public void SetRenderersActive(bool active)
+    {
+        if (_targetRenderers != null)
+        {
+            foreach (var r in _targetRenderers)
+            {
+                if (r != null) r.gameObject.SetActive(active);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 연출 시작 시 피규어들을 강제로 숨길 때 사용합니다.
+    /// </summary>
+    public void SetFiguresActive(bool active)
+    {
+        if (_objectsToActivateOnClear != null)
+        {
+            foreach (var obj in _objectsToActivateOnClear)
+            {
+                if (obj != null) obj.SetActive(active);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 클리어 연출 씬에서 호출합니다. 등록된 피규어/오브젝트들을 순차적으로 켭니다.
+    /// </summary>
+    public System.Collections.IEnumerator RevealFiguresSequentially(float delayBetween = 0.2f, float duration = 0.4f)
+    {
+        if (_objectsToActivateOnClear != null)
+        {
+            foreach (var obj in _objectsToActivateOnClear)
+            {
+                if (obj != null)
+                {
+                    Vector3 originalScale = obj.transform.localScale;
+                    obj.transform.localScale = originalScale * 0.01f;
+                    obj.SetActive(true);
+                    
+                    obj.transform.DOScale(originalScale, duration).SetEase(Ease.OutBack);
+                    yield return new WaitForSeconds(delayBetween);
+                }
             }
         }
     }

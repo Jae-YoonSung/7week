@@ -179,11 +179,10 @@ public class StageClearDebugManager : MonoBehaviour
     /// <summary>씬 내 모든 관련 컴포넌트의 상태를 즉시 갱신합니다.</summary>
     private void RefreshScene()
     {
-        // BookshelfBook (타이틀씬 책 색상 + 비활성화)
+        // BookshelfBook (타이틀씬 책 색상 갱신)
         var books = FindObjectsByType<BookshelfBook>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (var b in books)
         {
-            b.RefreshLockState();
             b.RefreshClearedState();
         }
 

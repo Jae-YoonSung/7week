@@ -123,6 +123,9 @@ public class StageClearSequenceController : MonoBehaviour
     [SerializeField] private GameObject[] _deskObjectsToHide;
 
     [Header("Book")]
+    [Tooltip("씬 내에 배치된 책장 프리팹 안의 대상 책. 설정 시 이 책의 위치, 색상 변환, 피규어 연출을 자동으로 사용합니다.")]
+    [SerializeField] private BookshelfBook _targetBookshelfBook;
+    
     [SerializeField] private BookSpawnSettings _bookSpawn;
     [SerializeField] private BookInsertSettings _bookInsert;
     [SerializeField] private ColoredBookRevealSettings _coloredBookReveal = new ColoredBookRevealSettings
@@ -300,6 +303,13 @@ public class StageClearSequenceController : MonoBehaviour
         _isPlaying = true;
         SetObjectsActive(_objectsToHideOnSequenceStart, false);
         HideRuntimeCharacterObjects();
+
+        // [핵심] 더미 책이 꽂힐 공간을 확보하고, 피규어들이 차례대로 등장하게 만들기 위해 해당 책과 피규어만 숨깁니다.
+        if (_targetBookshelfBook != null)
+        {
+            _targetBookshelfBook.SetRenderersActive(false);
+            _targetBookshelfBook.SetFiguresActive(false);
+        }
 
         if (_timings.initialDelay > 0f)
             yield return new WaitForSeconds(_timings.initialDelay);
@@ -645,9 +655,13 @@ public class StageClearSequenceController : MonoBehaviour
             }
         }
 
-        if (_bookInsert.shelfTarget != null)
+        Transform finalShelfTarget = _bookInsert.shelfTarget;
+        if (_targetBookshelfBook != null)
+            finalShelfTarget = _targetBookshelfBook.transform;
+
+        if (finalShelfTarget != null)
             yield return MoveBookToTarget(
-                _bookInsert.shelfTarget,
+                finalShelfTarget,
                 _bookInsert.moveDuration,
                 _bookInsert.moveEase,
                 _bookInsert.matchRotation,
@@ -656,6 +670,7 @@ public class StageClearSequenceController : MonoBehaviour
 
     private IEnumerator RevealColoredBook()
     {
+        // 기존의 더미 책 색상 변경 연출 유지
         if (_spawnedClosingBook == null)
             yield break;
 
@@ -734,6 +749,13 @@ public class StageClearSequenceController : MonoBehaviour
 
     private IEnumerator RevealFigures()
     {
+        // 책장 프리팹을 참조하고 있다면, 그 책에 등록된 피규어들이 0.2초 간격으로 하나씩 튀어나오는 연출을 실행합니다.
+        if (_targetBookshelfBook != null)
+        {
+            yield return _targetBookshelfBook.RevealFiguresSequentially(delayBetween: 0.2f, duration: 0.4f);
+            yield break;
+        }
+
         if (_figureRevealEntries == null) yield break;
 
         foreach (var entry in _figureRevealEntries)

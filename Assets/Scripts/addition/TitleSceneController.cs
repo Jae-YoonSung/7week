@@ -193,11 +193,10 @@ public class TitleSceneController : MonoBehaviour
                 StageClearRepository.Instance.RecordClear(sid);
                 Debug.Log($"[Debug] 스테이지 강제 클리어 처리됨: {sid}");
 
-                // 씬 내 모든 책들의 시각적 상태(색상, 잠금) 즉시 갱신
+                // 씬 내 모든 책들의 시각적 상태(색상 등) 즉시 갱신
                 foreach (var b in books)
                 {
                     b.RefreshClearedState();
-                    b.RefreshLockState();
                 }
             }
         }

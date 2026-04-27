@@ -8995,16 +8995,16 @@ PrefabInstance:
     - {fileID: 3309133086480726218, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 3920980745903614434, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
-      insertIndex: 3
+      insertIndex: -1
       addedObject: {fileID: 1100978064}
-    - targetCorrespondingSourceObject: {fileID: 5433619277092783790, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
-      insertIndex: 1
+    - targetCorrespondingSourceObject: {fileID: 3920980745903614434, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 470173477}
-    - targetCorrespondingSourceObject: {fileID: 5433619277092783790, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
-      insertIndex: 7
+    - targetCorrespondingSourceObject: {fileID: 3920980745903614434, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 548728806}
-    - targetCorrespondingSourceObject: {fileID: 5433619277092783790, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
-      insertIndex: 11
+    - targetCorrespondingSourceObject: {fileID: 3920980745903614434, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1519100349}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
@@ -10863,7 +10863,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &621050610
 Transform:
   m_ObjectHideFlags: 0
@@ -18971,7 +18971,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2080097130}
+    m_TransformParent: {fileID: 625493917}
     m_Modifications:
     - target: {fileID: 1349404357239950, guid: 29d5d5484f0835b4c8e73189108e8b68, type: 3}
       propertyPath: m_Name
@@ -29962,7 +29962,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2080097130}
+    m_TransformParent: {fileID: 625493917}
     m_Modifications:
     - target: {fileID: 1043905089715962, guid: 7a8c89e29824c85498d5e9afe2484a3e, type: 3}
       propertyPath: m_Name
@@ -31842,7 +31842,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 2080097130}
+    m_TransformParent: {fileID: 625493917}
     m_Modifications:
     - target: {fileID: 1349404357239950, guid: 29d5d5484f0835b4c8e73189108e8b68, type: 3}
       propertyPath: m_Name
@@ -32356,6 +32356,10 @@ PrefabInstance:
     - target: {fileID: 6969824151227052771, guid: f6c3f261ef12cb54db1ef9d9e46f603b, type: 3}
       propertyPath: m_Name
       value: "\uAF42\uD78C\uCC45_Stage1"
+      objectReference: {fileID: 0}
+    - target: {fileID: 6969824151227052771, guid: f6c3f261ef12cb54db1ef9d9e46f603b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8098811588830768222, guid: f6c3f261ef12cb54db1ef9d9e46f603b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -33574,11 +33578,6 @@ RectTransform:
   m_AnchoredPosition: {x: 21.20002, y: -85}
   m_SizeDelta: {x: 350.00006, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!4 &2080097130 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5433619277092783790, guid: 5334f6628f42b3a4d8d1b07ade206976, type: 3}
-  m_PrefabInstance: {fileID: 481795413}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2084390390
 GameObject:
   m_ObjectHideFlags: 0
@@ -34412,7 +34411,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: _coloredBookReveal.targetColor.g
-      value: 0.49019608
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: _coloredBookReveal.targetColor.r
