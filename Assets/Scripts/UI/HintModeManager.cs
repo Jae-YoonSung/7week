@@ -19,6 +19,9 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
     [Header("힌트 활성화 버튼")]
     [SerializeField] private Button _hintButton;
 
+    [Header("힌트 모드 중 표시할 텍스트 오브젝트")]
+    [SerializeField] private GameObject _hintModeText;
+
     [Header("힌트 모드 텍스트 색상")]
     [SerializeField] private Color _normalColor     = Color.white;
     [SerializeField] private Color _activeModeColor = Color.yellow;
@@ -44,6 +47,9 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
             _buttonText = _hintButton.GetComponentInChildren<TextMeshProUGUI>();
             _hintButton.onClick.AddListener(ToggleHintMode);
         }
+
+        if (_hintModeText != null)
+            _hintModeText.SetActive(false);
     }
 
     private void OnDestroy()
@@ -125,5 +131,8 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
     {
         if (_buttonText == null) return;
         _buttonText.color = _hintUsed ? _usedColor : (IsHintMode ? _activeModeColor : _normalColor);
+
+        if (_hintModeText != null)
+            _hintModeText.SetActive(IsHintMode);
     }
 }
