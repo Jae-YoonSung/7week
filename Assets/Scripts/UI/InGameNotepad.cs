@@ -13,7 +13,7 @@ public class InGameNotepad : MonoBehaviour, IPointerClickHandler
     [Header("위치 설정 (Drawer 연출)")]
     [Tooltip("완전히 꺼낸 상태의 anchoredPosition (숨김 위치는 시작 시 현재 위치로 자동 캡처)")]
     [SerializeField] private Vector2 _shownAnchoredPos = Vector2.zero;
-    
+
     [Header("DOTween 설정")]
     [SerializeField] private float _animDuration = 0.4f;
     [SerializeField] private Ease  _showEase     = Ease.OutCubic;
@@ -23,11 +23,13 @@ public class InGameNotepad : MonoBehaviour, IPointerClickHandler
     [Tooltip("사용자가 글씨를 입력할 InputField (TextMeshPro)")]
     [SerializeField] private TMP_InputField _inputField;
 
-
     private RectTransform _rect;
-    private Vector2 _hiddenAnchoredPos;
-    private bool _isShown = false;
-    private Tweener _moveTween;
+    private Vector2       _hiddenAnchoredPos;
+    private bool          _isShown = false;
+    private Tweener       _moveTween;
+
+    private int  _lastCaretPosition  = 0;
+    private bool _clickedOutside     = false; // 이번 프레임에 바깥 클릭으로 닫혔는지
 
     private void Awake()
     {
@@ -39,32 +41,51 @@ public class InGameNotepad : MonoBehaviour, IPointerClickHandler
     {
         if (_inputField != null)
         {
-            // 1. 매 스테이지마다 메모 초기화
-            _inputField.text = "";
-
-            // 2. 엔터 키를 눌렀을 때 줄바꿈이 되도록 강제 설정
-            _inputField.lineType = TMP_InputField.LineType.MultiLineNewline;
+            _inputField.text     = "";
+            _inputField.lineType = TMP_InputField.LineType.MultiLineSubmit;
+            _inputField.onEndEdit.AddListener(OnInputEndEdit);
         }
     }
 
     private void Update()
     {
-        // 3. 메모장이 열려있을 때, 마우스 좌클릭이 발생하면 바깥 영역인지 검사합니다.
+        _clickedOutside = false;
+
+        if (_inputField != null && _inputField.isFocused)
+            _lastCaretPosition = _inputField.caretPosition;
+
         if (_isShown && Input.GetMouseButtonDown(0))
         {
             Canvas canvas = GetComponentInParent<Canvas>();
             Camera cam = null;
             if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
-            {
                 cam = canvas.worldCamera;
-            }
 
-            // 클릭한 마우스 좌표가 메모장 패널(RectTransform) 영역 밖이라면 메모장을 닫음
             if (!RectTransformUtility.RectangleContainsScreenPoint(_rect, Input.mousePosition, cam))
             {
+                _clickedOutside = true;
                 Hide();
             }
         }
+    }
+
+    /// <summary>
+    /// onEndEdit 발생 원인:
+    ///   - Escape        → wasCanceled = true  → 무시
+    ///   - 바깥 클릭     → _clickedOutside = true → 무시
+    ///   - Enter(Submit) → 위 두 경우가 아님 → 줄바꿈 삽입 후 재활성화
+    /// </summary>
+    private void OnInputEndEdit(string text)
+    {
+        if (_inputField.wasCanceled) return;
+        if (_clickedOutside) return;
+
+        _inputField.text = text.Insert(_lastCaretPosition, "\n");
+        _inputField.ActivateInputField();
+        int next = _lastCaretPosition + 1;
+        _inputField.caretPosition           = next;
+        _inputField.selectionAnchorPosition = next;
+        _inputField.selectionFocusPosition  = next;
     }
 
     // ── 패널 클릭 시 열기/닫기 ───────────────────────────────────────────
@@ -86,45 +107,32 @@ public class InGameNotepad : MonoBehaviour, IPointerClickHandler
         _moveTween?.Kill();
 
         if (show && _inputField != null)
-        {
-            // 이동 애니메이션이 시작되기도 전에 미리 포커스를 맞추되, 번쩍임을 막기 위해 색상을 투명하게 처리
             StartCoroutine(FocusWithoutFlash());
-        }
 
         if (instant)
-        {
             _rect.anchoredPosition = targetPos;
-        }
         else
-        {
             _moveTween = _rect.DOAnchorPos(targetPos, _animDuration).SetEase(ease);
-        }
     }
 
     private System.Collections.IEnumerator FocusWithoutFlash()
     {
-        // 1. 현재 선택 색상을 저장하고 잠시 투명하게 만듦 (번쩍임 방지)
         Color originalSelectionColor = _inputField.selectionColor;
         _inputField.selectionColor = new Color(0, 0, 0, 0);
-
-        // 2. 입력창 활성화 (이때 내부적으로 전체 선택이 일어나지만 투명해서 안 보임)
         _inputField.ActivateInputField();
-        
-        // 3. 한 프레임 대기 (유니티의 강제 선택 로직이 끝날 때까지)
         yield return null;
 
-        // 4. 커서를 맨 끝으로 이동시키고 선택 영역(Highlight)을 강제로 해제
         int textLength = _inputField.text.Length;
-        _inputField.caretPosition = textLength;
+        _inputField.caretPosition           = textLength;
         _inputField.selectionAnchorPosition = textLength;
-        _inputField.selectionFocusPosition = textLength;
-
-        // 5. 원래 색상으로 복구
-        _inputField.selectionColor = originalSelectionColor;
+        _inputField.selectionFocusPosition  = textLength;
+        _inputField.selectionColor          = originalSelectionColor;
     }
 
     private void OnDestroy()
     {
+        if (_inputField != null)
+            _inputField.onEndEdit.RemoveListener(OnInputEndEdit);
         _moveTween?.Kill();
     }
 }
