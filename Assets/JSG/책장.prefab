@@ -6150,6 +6150,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7955266005081566411, guid: 9db8890c74c059849b627a37771d8488, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8770044636817075985, guid: 9db8890c74c059849b627a37771d8488, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -6205,6 +6209,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3665860741422177044}
   m_SourcePrefab: {fileID: 100100000, guid: 9db8890c74c059849b627a37771d8488, type: 3}
+--- !u!23 &1181881225459678447 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4620697987021521317, guid: 9db8890c74c059849b627a37771d8488, type: 3}
+  m_PrefabInstance: {fileID: 5784564621167689034}
+  m_PrefabAsset: {fileID: 0}
 --- !u!23 &1562870434078990817 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5041366921019186347, guid: 9db8890c74c059849b627a37771d8488, type: 3}
@@ -6263,6 +6272,8 @@ MonoBehaviour:
   - {fileID: 8140575028745925290}
   - {fileID: 2315453681705603348}
   - {fileID: 2764661547006957665}
+  - {fileID: 7105174312175188924}
+  - {fileID: 1181881225459678447}
   _objectsToActivateOnClear: []
 --- !u!65 &3665860741422177044
 BoxCollider:
@@ -6285,6 +6296,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.8531189, y: 1.1411227, z: 0.4615364}
   m_Center: {x: -0.07344055, y: 0.02179346, z: 0.0646122}
+--- !u!23 &7105174312175188924 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3664875134072866550, guid: 9db8890c74c059849b627a37771d8488, type: 3}
+  m_PrefabInstance: {fileID: 5784564621167689034}
+  m_PrefabAsset: {fileID: 0}
 --- !u!23 &8140575028745925290 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2359823788787175392, guid: 9db8890c74c059849b627a37771d8488, type: 3}

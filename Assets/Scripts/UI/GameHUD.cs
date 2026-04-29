@@ -29,6 +29,10 @@ public class GameHUD : MonoBehaviour
     [SerializeField] private Button _endTurnButton;
     [SerializeField] private Button _deductionButton;
 
+    [Header("마감일 알림")]
+    [Tooltip("마감일에 도달했을 때(모든 루프 소진 시) 표시할 패널입니다.")]
+    [SerializeField] private GameObject _deadlinePanel;
+
     private TurnStateMachine _turnSM;
 
     // ── Unity ────────────────────────────────────────────────────────────────
@@ -66,6 +70,22 @@ public class GameHUD : MonoBehaviour
         RefreshPhaseText();
         RefreshDayPhaseImages();
         RefreshNextTurnText();
+        RefreshDeadlinePanel();
+    }
+
+    private void RefreshDeadlinePanel()
+    {
+        if (_deadlinePanel == null) return;
+        var gfc = GameFlowController.Instance;
+        if (gfc == null) return;
+
+        // 모든 루프를 다 쓰고 '최종 결정 대기' 상태가 되었을 때가 마감일입니다.
+        bool isDeadline = gfc.CurrentLoopState == LoopStateType.AwaitingFinalDecision;
+        
+        if (_deadlinePanel.activeSelf != isDeadline)
+        {
+            _deadlinePanel.SetActive(isDeadline);
+        }
     }
 
     // ── 버튼 콜백 ─────────────────────────────────────────────────────────────
