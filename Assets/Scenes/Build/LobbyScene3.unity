@@ -1135,7 +1135,7 @@ MonoBehaviour:
   _openHint: {fileID: 0}
   _bookAnimator: {fileID: 2089628069}
   _charDelay: 0.05
-  _inputDelay: 0.7
+  _inputDelay: 0.2
   _cursorBlink: 0.5
   _cursorChar: '|'
 --- !u!1 &148171550
@@ -1764,8 +1764,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291480266
-  m_fontColor: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
+    rgba: 4278249983
+  m_fontColor: {r: 1, g: 0.9137255, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1788,7 +1788,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 5
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -3089,7 +3089,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &664097325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5496,7 +5496,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 11.900002, y: -6}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 23, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1207713231
 MonoBehaviour:
@@ -5527,8 +5527,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4291480266
-  m_fontColor: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
+    rgba: 4278249983
+  m_fontColor: {r: 1, g: 0.9137255, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5551,7 +5551,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 4
+  m_fontStyle: 5
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -6154,9 +6154,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2089628069}
         m_TargetAssemblyTypeName: TitleBookAnimator, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: TurnPageBack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7572,7 +7572,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1703331684
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8926,6 +8926,7 @@ MonoBehaviour:
       duration: 2
       delay: 0
       ease: 15
+  _autoOpen: 0
 --- !u!4 &2089628070 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3189294979330270099, guid: e60b8ab2ba0f56543be9e9f1f089e24e, type: 3}

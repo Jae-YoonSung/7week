@@ -11571,7 +11571,7 @@ MonoBehaviour:
   _inputDelay: 0.3
   _cursorBlink: 0.5
   _cursorChar: '|'
-  _gameEndLastLineDelay: 3
+  _gameEndLastLineDelay: 0.5
 --- !u!1 &1023237941
 GameObject:
   m_ObjectHideFlags: 0
@@ -21594,6 +21594,7 @@ MonoBehaviour:
   _nextTurnText: {fileID: 684462313}
   _endTurnButton: {fileID: 0}
   _deductionButton: {fileID: 0}
+  _deadlinePanel: {fileID: 0}
 --- !u!4 &2015320552
 Transform:
   m_ObjectHideFlags: 0

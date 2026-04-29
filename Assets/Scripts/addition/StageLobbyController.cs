@@ -150,7 +150,10 @@ public class StageLobbyController : MonoBehaviour
     {
         if (_fadeImage == null) yield break;
 
-        _fadeImage.raycastTarget = true; // 페이드 시작 시 클릭 즉시 차단
+        // 페이드용 이미지가 비활성화되어 있을 수 있으므로 강제로 활성화
+        _fadeImage.gameObject.SetActive(true);
+        _fadeImage.raycastTarget = true; // 클릭 즉시 차단
+
         yield return _fadeImage.DOFade(1f, _fadeInDuration)
             .SetEase(Ease.InOutQuad)
             .WaitForCompletion();

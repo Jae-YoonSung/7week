@@ -923,7 +923,7 @@ MonoBehaviour:
   _openHint: {fileID: 0}
   _bookAnimator: {fileID: 2089628069}
   _charDelay: 0.05
-  _inputDelay: 0.7
+  _inputDelay: 0.1
   _cursorBlink: 0.5
   _cursorChar: '|'
 --- !u!1 &148171550
@@ -1771,7 +1771,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &348894413
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9879,6 +9879,7 @@ MonoBehaviour:
       duration: 2
       delay: 0
       ease: 15
+  _autoOpen: 0
 --- !u!4 &2089628070 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3189294979330270099, guid: e60b8ab2ba0f56543be9e9f1f089e24e, type: 3}

@@ -53,6 +53,10 @@ public class TitleBookAnimator : MonoBehaviour
     [Header("페이지 넘김 회전 (챕터 전환 순서대로)")]
     [SerializeField] private TurnPageSet[] _turnPageSets;
 
+    [Header("자동화")]
+    [Tooltip("체크하면 씬 시작 시 입력 없이도 자동으로 책을 엽니다.")]
+    [SerializeField] private bool _autoOpen = false;
+
     private LobbyUIManager _uiManager;
     private LobbyUI        _lobbyUI;
     private bool           _opened;
@@ -65,6 +69,15 @@ public class TitleBookAnimator : MonoBehaviour
     {
         _uiManager = FindObjectOfType<LobbyUIManager>();
         _lobbyUI   = FindObjectOfType<LobbyUI>();
+    }
+
+    private void Start()
+    {
+        if (_autoOpen)
+        {
+            // _inputReady가 false이더라도 강제 실행을 원할 수 있으므로 ForceOpen 호출
+            ForceOpen();
+        }
     }
 
     /// <summary>LobbyDialogueManager가 다이얼로그 완료 후 true로 설정해 책 열기를 허용합니다.</summary>
