@@ -105,9 +105,9 @@ public class GameState : IGameState
     /// </summary>
     public void ConfirmDeaths()
     {
-        // 주인공 면역: 사망 확정 전 마크 제거 (발동 순서 무관)
+        // 주인공 면역: 봉인된 구역에 있으면 면역 무효
         var protagonistStatus = GetCharacterByRole(RoleType.Protagonist);
-        if (protagonistStatus != null)
+        if (protagonistStatus != null && !IsAbilityDisabledInZone(GetZone(protagonistStatus.CharacterId)))
             ClearDeathMark(protagonistStatus.CharacterId);
 
         // 대리자 ID 캐시 (살아있고 자신이 사망 마크되지 않은 경우에만 유효)
@@ -425,8 +425,10 @@ public class GameState : IGameState
         {
             var role = GetRole(c.CharacterId);
             if (!c.IsAlive || c.CurrentZone != zoneId) continue;
-            // ZonePhantom: 슬롯 비점유 + 타겟 불가 / Decoy: 슬롯 점유 + 타겟 불가
-            if (role == RoleType.ZonePhantom || role == RoleType.Decoy) continue;
+            // ZonePhantom: 타겟 불가 (봉인 면역)
+            if (role == RoleType.ZonePhantom) continue;
+            // Decoy: 봉인되지 않은 구역에서만 타겟 불가
+            if (role == RoleType.Decoy && !IsAbilityDisabledInZone(zoneId)) continue;
             result.Add(c);
         }
         return result;
