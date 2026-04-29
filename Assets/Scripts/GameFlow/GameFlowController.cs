@@ -48,6 +48,9 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     /// <summary>씬 시작 시 전달받은 원본 로비 씬 이름 백업</summary>
     public string CachedLobbySceneName { get; private set; }
 
+    /// <summary>이 챕터 시작 시 플레이어에게 공개된 역할 목록입니다.</summary>
+    public RoleType[] RevealedRoles { get; private set; } = new RoleType[0];
+
     /// <summary>이번 게임에서 실제 사용된 시드입니다. StartGame() 이후 유효합니다.</summary>
     public int CurrentSeed => _setupConfig != null ? _setupConfig.Seed : 0;
 
@@ -114,6 +117,7 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
         IsEpilogue = NewGameConfig.IsEpilogue;
         CachedStageId = !string.IsNullOrEmpty(NewGameConfig.StageId) ? NewGameConfig.StageId : _stageId;
         CachedLobbySceneName = !string.IsNullOrEmpty(NewGameConfig.LobbySceneName) ? NewGameConfig.LobbySceneName : _lobbySceneName;
+        RevealedRoles = NewGameConfig.RevealedRoles;
         
         ValidateInspectorRefs();
         _loopSM = new LoopStateMachine(_orderConfig, _characterRegistry, _stageRoleConfig, _setupConfig);

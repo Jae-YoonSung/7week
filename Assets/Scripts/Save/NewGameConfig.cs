@@ -14,7 +14,9 @@ public static class NewGameConfig
     public static bool   IsTutorial { get; private set; }
     public static string StageId    { get; private set; }
     /// <summary>에필로그 모드로 시작할 때 true. GameFlowController.Awake()에서 읽고 StartGame() 전에 소비됩니다.</summary>
-    public static bool   IsEpilogue { get; private set; }
+    public static bool       IsEpilogue    { get; private set; }
+    /// <summary>이 챕터 시작 시 플레이어에게 공개된 역할 목록입니다. 없으면 빈 배열입니다.</summary>
+    public static RoleType[] RevealedRoles { get; private set; } = new RoleType[0];
 
     /// <summary>이 스테이지의 전용 로비 씬 이름. 스테이지 클리어 후 복귀할 씬입니다.</summary>
     public static string LobbySceneName { get; private set; }
@@ -23,6 +25,7 @@ public static class NewGameConfig
 
     public static void SetRandom(string stageId = null, bool isEpilogue = false) { IsSet = true; UseRandom = true; StageId = stageId; IsEpilogue = isEpilogue; }
     public static void SetSeed(int seed, string stageId = null, bool isEpilogue = false) { IsSet = true; UseRandom = false; Seed = seed; StageId = stageId; IsEpilogue = isEpilogue; }
+    public static void SetRevealedRoles(RoleType[] roles) { RevealedRoles = roles ?? new RoleType[0]; }
     public static void SetTutorial(int fixedSeed)
     {
         IsSet      = true;
@@ -51,6 +54,7 @@ public static class NewGameConfig
         IsEpilogue     = false;
         LobbySceneName = null;
         GameSceneName  = null;
+        RevealedRoles  = new RoleType[0];
     }
 }
 

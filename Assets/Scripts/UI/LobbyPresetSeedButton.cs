@@ -15,6 +15,10 @@ public class LobbyPresetSeedButton : MonoBehaviour
     [Tooltip("이 버튼이 에필로그 진입용이면 체크하세요.")]
     [SerializeField] private bool   _isEpilogue;
 
+    [Header("다음 챕터 공개 역할")]
+    [Tooltip("이 챕터 시작 시 플레이어에게 미리 공개할 역할 목록입니다.")]
+    [SerializeField] private RoleType[] _revealedRoles = new RoleType[0];
+
     [Header("클리어 취소선")]
     [SerializeField] private TMP_Text _label;
 
@@ -39,6 +43,7 @@ public class LobbyPresetSeedButton : MonoBehaviour
     {
         TurnHistoryRepository.Instance.ClearAll();
         NewGameConfig.SetSeed(_seed, _stageId, _isEpilogue);
+        NewGameConfig.SetRevealedRoles(_revealedRoles);
         UnityEngine.SceneManagement.SceneManager.LoadScene(_gameSceneName);
     }
 

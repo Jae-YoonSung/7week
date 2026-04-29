@@ -394,6 +394,7 @@ MonoBehaviour:
   _stageId: 1_1
   _gameSceneName: Stage_1
   _isEpilogue: 0
+  _revealedRoles: 00000000
   _label: {fileID: 0}
 --- !u!1 &81974535
 GameObject:
@@ -6262,6 +6263,7 @@ MonoBehaviour:
   _stageId: 0
   _gameSceneName: Tutorial
   _isEpilogue: 0
+  _revealedRoles: 
   _label: {fileID: 0}
 --- !u!114 &1400545859
 MonoBehaviour:
@@ -6483,6 +6485,7 @@ MonoBehaviour:
   _stageId: 1_3
   _gameSceneName: Stage_1
   _isEpilogue: 1
+  _revealedRoles: 
   _label: {fileID: 0}
 --- !u!1 &1445180794
 GameObject:
@@ -7777,6 +7780,7 @@ MonoBehaviour:
   _stageId: 1_2
   _gameSceneName: Stage_1
   _isEpilogue: 1
+  _revealedRoles: 
   _label: {fileID: 0}
 --- !u!1 &1684630340
 GameObject:
