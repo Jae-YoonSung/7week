@@ -4756,8 +4756,8 @@ MonoBehaviour:
   - {fileID: 296833122}
   - {fileID: 64927046}
   - {fileID: 1359503290}
-  _revealedSprite: {fileID: 0}
-  _wrongCharacterSprite: {fileID: 0}
+  _revealedSprite: {fileID: 21300000, guid: 7c2f641dffe5de346b21b7a6178cab8b, type: 3}
+  _wrongCharacterSprite: {fileID: 21300000, guid: 91e0791d7f6e2704e838f3e9b66cee3c, type: 3}
 --- !u!1 &296833119
 GameObject:
   m_ObjectHideFlags: 0

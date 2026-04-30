@@ -1639,7 +1639,7 @@ MonoBehaviour:
   _stageId: 4_1
   _gameSceneName: Stage_4
   _isEpilogue: 0
-  _revealedRoles: 
+  _revealedRoles: 02000000
   _label: {fileID: 0}
 --- !u!114 &161764077
 MonoBehaviour:

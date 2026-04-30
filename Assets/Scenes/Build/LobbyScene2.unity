@@ -257,7 +257,7 @@ MonoBehaviour:
   _stageId: 2_1
   _gameSceneName: Stage_2
   _isEpilogue: 0
-  _revealedRoles: 
+  _revealedRoles: 02000000
   _label: {fileID: 0}
 --- !u!1 &81974535
 GameObject:
