@@ -143,6 +143,12 @@ public class DialogueManager : MonoBehaviour
                 if (!string.IsNullOrEmpty(line))
                     _lines.Add(line);
 
+        if (!isWin)
+        {
+            int wrong = GameFlowController.Instance != null ? GameFlowController.Instance.LastWrongCount : 0;
+            _lines.Add($"[{wrong}]개의 역할이 모순을 일으키고 있습니다.");
+        }
+
         if (_lines.Count == 0)
         {
             GameFlowController.Instance.NotifyGameEndDialogueComplete(isWin);

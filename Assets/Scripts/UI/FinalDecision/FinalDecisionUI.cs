@@ -172,6 +172,7 @@ public class FinalDecisionUI : MonoBehaviour
 
         // 정답 여부에 상관없이 바로 제출 로직 진행 (정답 표시 생략)
         bool isCorrect = wrongSlots.Count == 0;
+        gfc.SetLastWrongCount(wrongSlots.Count);
         if (_preDialogueObject != null) _preDialogueObject.SetActive(true);
         gfc.SubmitFinalDecision(isCorrect);
     }
