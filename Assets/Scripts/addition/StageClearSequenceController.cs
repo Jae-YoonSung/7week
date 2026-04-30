@@ -181,6 +181,7 @@ public class StageClearSequenceController : MonoBehaviour
 
     [Header("Scene")]
     [SerializeField] private string _lobbySceneName = "LobbyScene";
+    [SerializeField] private string _titleSceneName = "TitleScene";
     [SerializeField] private bool _recordStageClear = true;
     [SerializeField] private bool _triggerLobbyEndingDialogue;
     [SerializeField] private string _stageIdOverride;
@@ -384,6 +385,22 @@ public class StageClearSequenceController : MonoBehaviour
             // 폴백 (혹시 GameFlowController가 없는 씬에서 단독 실행될 경우)
             if (_recordStageClear && !string.IsNullOrEmpty(_stageIdOverride))
                 StageClearRepository.Instance.RecordClear(_stageIdOverride);
+        }
+
+        string currentStageId = GameFlowController.Instance != null && !string.IsNullOrEmpty(GameFlowController.Instance.StageId)
+            ? GameFlowController.Instance.StageId
+            : _stageIdOverride;
+
+        if (!string.IsNullOrEmpty(currentStageId) && currentStageId.EndsWith("_1"))
+        {
+            string[] parts = currentStageId.Split('_');
+            if (parts.Length >= 2 && int.TryParse(parts[0], out int chapterNum))
+            {
+                PlayerPrefs.SetInt("UnlockedChapterNum", chapterNum);
+                PlayerPrefs.Save();
+            }
+            SceneManager.LoadScene(_titleSceneName);
+            yield break;
         }
 
         LobbyDialogueManager.PendingEndingDialogue = _triggerLobbyEndingDialogue;

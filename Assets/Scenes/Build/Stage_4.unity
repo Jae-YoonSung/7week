@@ -616,8 +616,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.00056541344, y: 0.0022518928, z: 0.0020473264}
-  m_Center: {x: -0.00013970998, y: 0.0016382667, z: -0.0009194136}
+  m_Size: {x: 0.0005654133, y: 0.0030281935, z: 0.002617352}
+  m_Center: {x: -0.00013971546, y: 0.0012501136, z: -0.00063440605}
 --- !u!114 &26829727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4101,7 +4101,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: _lobbySceneName
-      value: LobbyScene4
+      value: TitleScene
       objectReference: {fileID: 0}
     - target: {fileID: 5387173648979198391, guid: 561539ef991e22743bcb1559249237e6, type: 3}
       propertyPath: _targetBookshelfBook
