@@ -427,11 +427,22 @@ public class GameState : IGameState
             if (!c.IsAlive || c.CurrentZone != zoneId) continue;
             // ZonePhantom: 타겟 불가 (봉인 면역)
             if (role == RoleType.ZonePhantom) continue;
-            // Decoy: 봉인되지 않은 구역에서만 타겟 불가
-            if (role == RoleType.Decoy && !IsAbilityDisabledInZone(zoneId)) continue;
+            // Decoy: 봉인되지 않은 구역에서, 같은 구역에 다른 살아있는 캐릭터가 있을 때만 타겟 불가
+            if (role == RoleType.Decoy && !IsAbilityDisabledInZone(zoneId) && HasOtherAliveInZone(c.CharacterId, zoneId)) continue;
             result.Add(c);
         }
         return result;
+    }
+
+    private bool HasOtherAliveInZone(int excludeId, int zoneId)
+    {
+        foreach (var c in _characters)
+        {
+            if (c.CharacterId == excludeId || !c.IsAlive || c.CurrentZone != zoneId) continue;
+            if (GetRole(c.CharacterId) == RoleType.ZonePhantom) continue;
+            return true;
+        }
+        return false;
     }
 
     public int GetZone(int characterId)
