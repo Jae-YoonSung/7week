@@ -257,6 +257,7 @@ MonoBehaviour:
   _stageId: 2_1
   _gameSceneName: Stage_2
   _isEpilogue: 0
+  _revealedRoles: 
   _label: {fileID: 0}
 --- !u!1 &81974535
 GameObject:
@@ -4458,9 +4459,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyUnlockManager
   _entries:
-  - buttonObject: {fileID: 1675106410}
-    requiredClearStageId: 2_1
-    playUnlockAnim: 0
   - buttonObject: {fileID: 849954039}
     requiredClearStageId: 2_1
     playUnlockAnim: 1
@@ -4474,7 +4472,7 @@ MonoBehaviour:
     requiredClearStageId: 2_1
     playUnlockAnim: 0
   - buttonObject: {fileID: 1401699217}
-    requiredClearStageId: 2_2
+    requiredClearStageId: 2_1
     playUnlockAnim: 0
   - buttonObject: {fileID: 639239403}
     requiredClearStageId: 2_3
@@ -6737,6 +6735,7 @@ MonoBehaviour:
   _stageId: 0
   _gameSceneName: Tutorial
   _isEpilogue: 0
+  _revealedRoles: 
   _label: {fileID: 0}
 --- !u!114 &1400545859
 MonoBehaviour:
@@ -6857,7 +6856,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 140.19992, y: -200}
+  m_AnchoredPosition: {x: 140.19992, y: -156}
   m_SizeDelta: {x: 180, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1401699219
@@ -6958,6 +6957,7 @@ MonoBehaviour:
   _stageId: 2_3
   _gameSceneName: Stage_2
   _isEpilogue: 1
+  _revealedRoles: 
   _label: {fileID: 0}
 --- !u!1 &1445180794
 GameObject:
@@ -7999,7 +7999,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1675106411
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8059,7 +8059,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1675106413}
   m_OnClick:
     m_PersistentCalls:
@@ -8118,6 +8118,7 @@ MonoBehaviour:
   _stageId: 2_2
   _gameSceneName: Stage_2
   _isEpilogue: 1
+  _revealedRoles: 
   _label: {fileID: 0}
 --- !u!1 &1677187734
 GameObject:
@@ -8391,7 +8392,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: What if 2.
+  m_text: What if.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}

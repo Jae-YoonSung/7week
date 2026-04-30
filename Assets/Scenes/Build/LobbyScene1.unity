@@ -4366,9 +4366,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyUnlockManager
   _entries:
-  - buttonObject: {fileID: 1675106410}
-    requiredClearStageId: 1_1
-    playUnlockAnim: 0
   - buttonObject: {fileID: 849954039}
     requiredClearStageId: 1_1
     playUnlockAnim: 1
@@ -4382,7 +4379,7 @@ MonoBehaviour:
     requiredClearStageId: 1_1
     playUnlockAnim: 0
   - buttonObject: {fileID: 1401699217}
-    requiredClearStageId: 1_2
+    requiredClearStageId: 1_1
     playUnlockAnim: 0
   - buttonObject: {fileID: 639239403}
     requiredClearStageId: 1_3
@@ -6384,7 +6381,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 140.19992, y: -200}
+  m_AnchoredPosition: {x: 140.19992, y: -156}
   m_SizeDelta: {x: 180, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1401699219
@@ -7661,7 +7658,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1675106411
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8054,7 +8051,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: What if 2.
+  m_text: What if.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}

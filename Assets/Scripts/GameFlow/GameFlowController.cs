@@ -295,6 +295,21 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
             ? _epilogueVisualConfig
             : _stageVisualConfig;
         _characterViews = _characterSpawner.SpawnAll(gameState, visualConfig);
+
+        // 에필로그 모드가 아닐 때 RevealedRoles에 해당하는 캐릭터에만 에필로그 외형 적용
+        if (!IsEpilogue && _epilogueVisualConfig != null && RevealedRoles != null && RevealedRoles.Length > 0)
+        {
+            foreach (var roleType in RevealedRoles)
+            {
+                var status = gameState.GetCharacterByRole(roleType);
+                if (status == null) continue;
+                if (!_characterViews.TryGetValue(status.CharacterId, out var view)) continue;
+                var entry = _epilogueVisualConfig.GetEntry(status.CharacterId);
+                if (entry != null)
+                    view.OverrideVisuals(entry.aliveModelPrefab, entry.deadModelPrefab);
+            }
+        }
+
         _characterSpawner.ApplyZoneRulesToGameState(gameState);
     }
 
