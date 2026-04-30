@@ -55,6 +55,10 @@ public class TutorialUIManager : MonoBehaviour
 
     // 보조 바운스 (주 바운스와 독립적으로 동작)
     private Tween     _secondaryTween;
+    private Tween     _arrowTween;
+    private RectTransform _currentActiveArrow; // 현재 켜져있는 화살표
+    private float     _activeArrowStartX;      // 트윈 시작 X좌표 기록
+    private float     _activeArrowStartY;      // 트윈 시작 Y좌표 기록
     private Transform _secondaryTarget;
     private Vector3   _secondaryOriginalScale;
 
@@ -72,8 +76,8 @@ public class TutorialUIManager : MonoBehaviour
     private void Awake()
     {
         SetGuideVisible(false);
-        if (_highlightFrame != null)   _highlightFrame.gameObject.SetActive(false);
-        if (_worldHighlightFx != null) _worldHighlightFx.SetActive(false);
+        if (_highlightFrame != null)    _highlightFrame.gameObject.SetActive(false);
+        if (_worldHighlightFx != null)  _worldHighlightFx.SetActive(false);
     }
 
     private void Update()
@@ -111,6 +115,7 @@ public class TutorialUIManager : MonoBehaviour
     {
         _bounceTween?.Kill();
         _secondaryTween?.Kill();
+        _arrowTween?.Kill();
     }
 
     // ── 가이드 텍스트 API ────────────────────────────────────────────────────
@@ -139,7 +144,9 @@ public class TutorialUIManager : MonoBehaviour
 
     // ── UI 하이라이트 API ────────────────────────────────────────────────────
 
-    public void SetUIHighlight(RectTransform target, float padding = 20f)
+    public enum ArrowBounceDirection { Horizontal, Vertical }
+
+    public void SetUIHighlight(RectTransform target, RectTransform specificArrow = null, float padding = 20f, ArrowBounceDirection bounceDir = ArrowBounceDirection.Horizontal)
     {
         if (target == null) return;
 
@@ -150,6 +157,41 @@ public class TutorialUIManager : MonoBehaviour
             _highlightFrame.gameObject.SetActive(true);
         }
 
+        if (specificArrow != null)
+        {
+            _arrowTween?.Kill();
+            
+            // 기존 켜져있던 화살표가 다르면 끄고 위치 리셋
+            if (_currentActiveArrow != null && _currentActiveArrow != specificArrow)
+            {
+                _currentActiveArrow.anchoredPosition = new Vector2(_activeArrowStartX, _activeArrowStartY);
+                _currentActiveArrow.gameObject.SetActive(false);
+            }
+
+            _currentActiveArrow = specificArrow;
+            _currentActiveArrow.gameObject.SetActive(true);
+
+            // DOAnchorPosX/Y 애니메이션 시작 전 현재 좌표 기준점 확보
+            _activeArrowStartX = _currentActiveArrow.anchoredPosition.x;
+            _activeArrowStartY = _currentActiveArrow.anchoredPosition.y;
+            
+            // 화살표 바운스 애니메이션
+            if (bounceDir == ArrowBounceDirection.Horizontal)
+            {
+                _arrowTween = _currentActiveArrow.DOAnchorPosX(_activeArrowStartX - 15f, 0.5f)
+                    .SetEase(Ease.InOutQuad)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetLink(_currentActiveArrow.gameObject);
+            }
+            else
+            {
+                _arrowTween = _currentActiveArrow.DOAnchorPosY(_activeArrowStartY + 15f, 0.5f)
+                    .SetEase(Ease.InOutQuad)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetLink(_currentActiveArrow.gameObject);
+            }
+        }
+
         PlayBounce(target);
     }
 
@@ -157,6 +199,15 @@ public class TutorialUIManager : MonoBehaviour
     {
         if (_highlightFrame != null)
             _highlightFrame.gameObject.SetActive(false);
+
+        if (_currentActiveArrow != null)
+        {
+            _arrowTween?.Kill();
+            _currentActiveArrow.anchoredPosition = new Vector2(_activeArrowStartX, _activeArrowStartY);
+            _currentActiveArrow.gameObject.SetActive(false);
+            _currentActiveArrow = null;
+        }
+
         StopBounce();
     }
 
