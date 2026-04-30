@@ -280,8 +280,9 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
     private void SpawnToken(int characterId, bool moved, bool diedThisTurn, bool alreadyDead,
                             Vector2 centerPos, int slotIndex, int totalInZone)
     {
-        if (characterId < 0 || characterId >= _characterTokenPrefabs.Length) return;
-        var entry = _characterTokenPrefabs[characterId];
+        if (characterId < 0 || _characterTokenPrefabs.Length == 0) return;
+        int prefabIndex = Mathf.Min(characterId, _characterTokenPrefabs.Length - 1);
+        var entry = _characterTokenPrefabs[prefabIndex];
         if (entry.Prefab == null) return;
 
         var token = Instantiate(entry.Prefab, _tokenContainer);
