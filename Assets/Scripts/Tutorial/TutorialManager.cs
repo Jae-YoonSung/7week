@@ -71,10 +71,15 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
 
     [Header("하이라이트 대상 RectTransform 참조 (UI 요소)")]
     [SerializeField] private RectTransform _roleDocHighlightRect;
+    [SerializeField] private RectTransform _roleDocArrowAnchor;
     [SerializeField] private RectTransform _narrativeOrderHighlightRect;
+    [SerializeField] private RectTransform _narrativeOrderArrowAnchor;
     [SerializeField] private RectTransform _memoBookHighlightRect;
+    [SerializeField] private RectTransform _memoBookArrowAnchor;
     [SerializeField] private RectTransform _eventRecordHighlightRect;
+    [SerializeField] private RectTransform _eventRecordArrowAnchor;
     [SerializeField] private RectTransform _dateUIHighlightRect;
+    [SerializeField] private RectTransform _dateUIArrowAnchor;
     [Tooltip("강제 퇴고 조건 UI RectTransform")]
     [SerializeField] private RectTransform _forceLoopConditionRect;
 
@@ -160,9 +165,21 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
         if (_playerAction != null)
             _playerAction.OnActionConfirmed += HandleActionConfirmed;
 
-        if (_roleDocDrawer != null)        _roleDocDrawer.OnShown        += HandleRoleDocShown;
-        if (_narrativeOrderDrawer != null) _narrativeOrderDrawer.OnShown += HandleNarrativeOrderShown;
-        if (_memoBookDrawer != null)       _memoBookDrawer.OnShown       += HandleMemoBookShown;
+        if (_roleDocDrawer != null)
+        {
+            _roleDocDrawer.OnShowStarted += HandleRoleDocShowStarted;
+            _roleDocDrawer.OnHidden      += HandleRoleDocHidden;
+        }
+        if (_narrativeOrderDrawer != null)
+        {
+            _narrativeOrderDrawer.OnShowStarted += HandleNarrativeOrderShowStarted;
+            _narrativeOrderDrawer.OnHidden      += HandleNarrativeOrderHidden;
+        }
+        if (_memoBookDrawer != null)
+        {
+            _memoBookDrawer.OnShowStarted += HandleMemoBookShowStarted;
+            _memoBookDrawer.OnShown       += HandleMemoBookShown;
+        }
 
         if (_historyController != null)
             _historyController.OnAnyPanelHeaderClicked += HandleEventRecordClicked;
@@ -191,9 +208,21 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
         if (_playerAction != null)
             _playerAction.OnActionConfirmed -= HandleActionConfirmed;
 
-        if (_roleDocDrawer != null)        _roleDocDrawer.OnShown        -= HandleRoleDocShown;
-        if (_narrativeOrderDrawer != null) _narrativeOrderDrawer.OnShown -= HandleNarrativeOrderShown;
-        if (_memoBookDrawer != null)       _memoBookDrawer.OnShown       -= HandleMemoBookShown;
+        if (_roleDocDrawer != null)
+        {
+            _roleDocDrawer.OnShowStarted -= HandleRoleDocShowStarted;
+            _roleDocDrawer.OnHidden      -= HandleRoleDocHidden;
+        }
+        if (_narrativeOrderDrawer != null)
+        {
+            _narrativeOrderDrawer.OnShowStarted -= HandleNarrativeOrderShowStarted;
+            _narrativeOrderDrawer.OnHidden      -= HandleNarrativeOrderHidden;
+        }
+        if (_memoBookDrawer != null)
+        {
+            _memoBookDrawer.OnShowStarted -= HandleMemoBookShowStarted;
+            _memoBookDrawer.OnShown       -= HandleMemoBookShown;
+        }
 
         if (_historyController != null)
             _historyController.OnAnyPanelHeaderClicked -= HandleEventRecordClicked;
@@ -252,7 +281,7 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
                 SetDrawerInteractable(_roleDocGroup, true);
                 _uiManager?.SetClickAdvance(false);
                 if (_roleDocHighlightRect != null)
-                    _uiManager?.SetUIHighlight(_roleDocHighlightRect);
+                    _uiManager?.SetUIHighlight(_roleDocHighlightRect, _roleDocArrowAnchor);
                 ShowPhaseGuide(phase);
                 break;
 
@@ -262,7 +291,7 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
                 _uiManager?.SetClickAdvance(false);
                 _uiManager?.ClearUIHighlight();
                 if (_narrativeOrderHighlightRect != null)
-                    _uiManager?.SetUIHighlight(_narrativeOrderHighlightRect);
+                    _uiManager?.SetUIHighlight(_narrativeOrderHighlightRect, _narrativeOrderArrowAnchor);
                 ShowPhaseGuide(phase);
                 break;
 
@@ -276,7 +305,7 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
                 _uiManager?.SetClickAdvance(false);
                 _uiManager?.ClearUIHighlight();
                 if (_memoBookHighlightRect != null)
-                    _uiManager?.SetUIHighlight(_memoBookHighlightRect);
+                    _uiManager?.SetUIHighlight(_memoBookHighlightRect, _memoBookArrowAnchor);
                 ShowPhaseGuide(phase);
                 break;
 
@@ -301,7 +330,7 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
                 _uiManager?.SetClickAdvance(false);
                 _uiManager?.ClearUIHighlight();
                 if (_eventRecordHighlightRect != null)
-                    _uiManager?.SetUIHighlight(_eventRecordHighlightRect);
+                    _uiManager?.SetUIHighlight(_eventRecordHighlightRect, _eventRecordArrowAnchor, 20f, TutorialUIManager.ArrowBounceDirection.Vertical);
                 ShowPhaseGuide(phase);
                 break;
 
@@ -323,7 +352,7 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
                 _uiManager?.SetClickAdvance(true);
                 _uiManager?.ClearWorldHighlight();
                 if (_dateUIHighlightRect != null)
-                    _uiManager?.SetUIHighlight(_dateUIHighlightRect);
+                    _uiManager?.SetUIHighlight(_dateUIHighlightRect, _dateUIArrowAnchor);
                 ShowPhaseGuide(phase);
                 break;
 
@@ -409,16 +438,34 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
             EnterPhase(TutorialPhase.RoleDocGuide);
     }
 
-    private void HandleRoleDocShown()
+    private void HandleRoleDocShowStarted()
+    {
+        if (_currentPhase != TutorialPhase.RoleDocGuide) return;
+        _uiManager?.ClearUIHighlight(); // 클릭 즉시 화살표 끄기
+    }
+
+    private void HandleRoleDocHidden()
     {
         if (_currentPhase != TutorialPhase.RoleDocGuide) return;
         EnterPhase(TutorialPhase.NarrativeOrderGuide);
     }
 
-    private void HandleNarrativeOrderShown()
+    private void HandleNarrativeOrderShowStarted()
+    {
+        if (_currentPhase != TutorialPhase.NarrativeOrderGuide) return;
+        _uiManager?.ClearUIHighlight(); // 클릭 즉시 화살표 끄기
+    }
+
+    private void HandleNarrativeOrderHidden()
     {
         if (_currentPhase != TutorialPhase.NarrativeOrderGuide) return;
         EnterPhase(TutorialPhase.MemoBookGuide);
+    }
+
+    private void HandleMemoBookShowStarted()
+    {
+        if (_currentPhase != TutorialPhase.MemoBookGuide) return;
+        _uiManager?.ClearUIHighlight(); // 클릭 즉시 화살표 끄기
     }
 
     private void HandleMemoBookShown()

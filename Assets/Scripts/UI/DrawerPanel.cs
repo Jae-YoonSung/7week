@@ -34,6 +34,9 @@ public class DrawerPanel : MonoBehaviour, IPointerClickHandler
 
     // ── 이벤트 ───────────────────────────────────────────────────────────────
 
+    /// <summary>Show 애니메이션이 시작될 때 발생합니다.</summary>
+    public event Action OnShowStarted;
+
     /// <summary>Show 애니메이션이 완전히 끝났을 때 발생합니다.</summary>
     public event Action OnShown;
 
@@ -95,6 +98,8 @@ public class DrawerPanel : MonoBehaviour, IPointerClickHandler
     private void TransitionTo(bool isShowing, bool instant)
     {
         IsShown = isShowing;
+        
+        if (isShowing) OnShowStarted?.Invoke();
 
         float      targetX   = isShowing ? _shownAnchoredX      : _hiddenAnchoredX;
         Quaternion targetRot = isShowing ? ShownLocalRotation    : _hiddenLocalRotation;
