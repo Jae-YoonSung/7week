@@ -50,6 +50,9 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
 
         if (_hintModeText != null)
             _hintModeText.SetActive(false);
+
+        if (_buttonText != null)
+            _buttonText.color = _normalColor;
     }
 
     private void OnDestroy()

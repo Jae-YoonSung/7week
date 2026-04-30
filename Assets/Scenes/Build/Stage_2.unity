@@ -4756,6 +4756,8 @@ MonoBehaviour:
   - {fileID: 296833122}
   - {fileID: 64927046}
   - {fileID: 1359503290}
+  _revealedSprite: {fileID: 0}
+  _wrongCharacterSprite: {fileID: 0}
 --- !u!1 &296833119
 GameObject:
   m_ObjectHideFlags: 0
@@ -16628,8 +16630,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HintModeManager
   _hintButton: {fileID: 1646774105}
   _hintModeText: {fileID: 1865332525}
-  _normalColor: {r: 1, g: 1, b: 1, a: 1}
-  _activeModeColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _normalColor: {r: 1, g: 0.9215687, b: 0.015686275, a: 1}
+  _activeModeColor: {r: 0.83137256, g: 0, b: 1, a: 1}
   _usedColor: {r: 0.5921569, g: 0.5294118, b: 0.49411768, a: 1}
   _oSprite: {fileID: 21300000, guid: 7c2f641dffe5de346b21b7a6178cab8b, type: 3}
   _xSprite: {fileID: 21300000, guid: 91e0791d7f6e2704e838f3e9b66cee3c, type: 3}
