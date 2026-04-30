@@ -61,6 +61,8 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
     [SerializeField] private RectTransform _tokenContainer;
     [Tooltip("캐릭터 0~6 순서로 설정 (CharacterId 기준).\n각 항목에 이동 프리팹(Moved)과 정지 프리팹(Static)을 연결하세요.")]
     [SerializeField] private CharacterTokenPrefabs[] _characterTokenPrefabs = new CharacterTokenPrefabs[7];
+    [Tooltip("구역 배경으로 사용할 토큰의 CharacterId. 항상 구역 중앙에 스폰되고 맨 뒤에 깔립니다. -1이면 비활성.")]
+    [SerializeField] private int _backgroundTokenId = -1;
     [Tooltip("같은 구역 내 토큰 간 수평 간격 (px)")]
     [SerializeField] private float _tokenSpacing = 30f;
     [Tooltip("이 X 너비(px)를 초과하면 토큰을 두 줄로 표시합니다. 0이면 한 줄 고정.")]
@@ -243,15 +245,18 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         var byZone = GroupByZone(snapshots);
         foreach (var kv in byZone)
         {
-            Vector2 center = GetAnchorLocalPos(anchors, kv.Key);
+            Vector2 center    = GetAnchorLocalPos(anchors, kv.Key);
+            int     charTotal = CharTokenCount(kv.Value);
+            int     charSlot  = 0;
             for (int i = 0; i < kv.Value.Count; i++)
             {
                 int  id             = kv.Value[i].CharacterId;
                 bool alreadyDead    = !aliveAtStart.Contains(id);
                 bool moved          = !alreadyDead && HasMoved(record, id);
                 bool diedThisTurnId = isAfterAction && !alreadyDead && diedThisTurn.Contains(id);
+                bool isBg           = _backgroundTokenId >= 0 && id == _backgroundTokenId;
 
-                SpawnToken(id, moved, diedThisTurnId, alreadyDead, center, i, kv.Value.Count);
+                SpawnToken(id, moved, diedThisTurnId, alreadyDead, center, isBg ? 0 : charSlot++, charTotal);
             }
         }
     }
@@ -265,16 +270,28 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         var byZone = GroupByZone(snapshots);
         foreach (var kv in byZone)
         {
-            Vector2 center = GetAnchorLocalPos(anchors, kv.Key);
+            Vector2 center    = GetAnchorLocalPos(anchors, kv.Key);
+            int     charTotal = CharTokenCount(kv.Value);
+            int     charSlot  = 0;
             for (int i = 0; i < kv.Value.Count; i++)
             {
                 int  id          = kv.Value[i].CharacterId;
                 bool alreadyDead = !aliveAtStart.Contains(id);
                 bool moved       = !alreadyDead && HasMoved(record, id);
+                bool isBg        = _backgroundTokenId >= 0 && id == _backgroundTokenId;
 
-                SpawnToken(id, moved, diedThisTurn: false, alreadyDead, center, i, kv.Value.Count);
+                SpawnToken(id, moved, diedThisTurn: false, alreadyDead, center, isBg ? 0 : charSlot++, charTotal);
             }
         }
+    }
+
+    private int CharTokenCount(List<CharacterPositionSnapshot> list)
+    {
+        if (_backgroundTokenId < 0) return list.Count;
+        int count = 0;
+        foreach (var s in list)
+            if (s.CharacterId != _backgroundTokenId) count++;
+        return count;
     }
 
     private void SpawnToken(int characterId, bool moved, bool diedThisTurn, bool alreadyDead,
@@ -287,9 +304,9 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
 
         var token = Instantiate(entry.Prefab, _tokenContainer);
         token.Setup(moved, diedThisTurn, alreadyDead);
-            bool isLast = slotIndex == totalInZone - 1;
-        token.Rect.anchoredPosition = isLast ? centerPos : centerPos + SlotOffset(slotIndex, totalInZone - 1);
-        if (isLast)
+        bool isBackground = _backgroundTokenId >= 0 && characterId == _backgroundTokenId;
+        token.Rect.anchoredPosition = isBackground ? centerPos : centerPos + SlotOffset(slotIndex, totalInZone);
+        if (isBackground)
             token.transform.SetAsFirstSibling();
         _activeTokens.Add(token);
     }
