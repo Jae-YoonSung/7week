@@ -35,10 +35,14 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
     [SerializeField] private float _staggerDelay   = 0.15f;
     [SerializeField] private float _tierThreshold  = 60f;   // 같은 링으로 묶을 거리 허용치 (픽셀)
 
+    [Header("대기 중 깜빡임")]
+    [SerializeField] private float _blinkInterval  = 0.5f;
+
     public bool IsHintMode { get; private set; }
 
     private bool _hintUsed;
     private TextMeshProUGUI _buttonText;
+    private Coroutine _blinkCoroutine;
 
     private void Start()
     {
@@ -53,12 +57,17 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
 
         if (_buttonText != null)
             _buttonText.color = _normalColor;
+
+        _blinkCoroutine = StartCoroutine(BlinkIdleColor());
     }
 
     private void OnDestroy()
     {
         if (_hintButton != null)
             _hintButton.onClick.RemoveListener(ToggleHintMode);
+
+        if (_blinkCoroutine != null)
+            StopCoroutine(_blinkCoroutine);
     }
 
     private void ToggleHintMode()
@@ -66,6 +75,16 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
         if (_hintUsed) return;
 
         IsHintMode = !IsHintMode;
+
+        if (IsHintMode)
+        {
+            if (_blinkCoroutine != null) { StopCoroutine(_blinkCoroutine); _blinkCoroutine = null; }
+        }
+        else
+        {
+            _blinkCoroutine = StartCoroutine(BlinkIdleColor());
+        }
+
         UpdateButtonColor();
     }
 
@@ -75,6 +94,7 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
     /// </summary>
     public void EvaluateAndShow(SequentialImageToggle source)
     {
+        if (_blinkCoroutine != null) { StopCoroutine(_blinkCoroutine); _blinkCoroutine = null; }
         IsHintMode = false;
         _hintUsed = true;
         if (_hintButton != null) _hintButton.interactable = false;
@@ -137,5 +157,16 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
 
         if (_hintModeText != null)
             _hintModeText.SetActive(IsHintMode);
+    }
+
+    private IEnumerator BlinkIdleColor()
+    {
+        bool toggle = false;
+        while (true)
+        {
+            _buttonText.color = toggle ? _normalColor : _usedColor;
+            toggle = !toggle;
+            yield return new WaitForSeconds(_blinkInterval);
+        }
     }
 }
