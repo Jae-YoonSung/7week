@@ -87,10 +87,26 @@ public class TitleSceneController : MonoBehaviour
     [Tooltip("게임 시작 시 보이고, 책 클릭 시 사라질 타이틀 텍스트 오브젝트 (선택)")]
     [SerializeField] private GameObject _titleTextObject;
 
+    [Tooltip("챕터 개방 안내 UI 오브젝트 (n_1 스테이지 클리어 후 노출)")]
+    [SerializeField] private GameObject _chapterUnlockUI;
+
+    [Tooltip("챕터 개방 안내 텍스트 컴포넌트")]
+    [SerializeField] private TMPro.TextMeshProUGUI _chapterUnlockText;
+
+    [Tooltip("챕터 개방 안내 UI가 화면에 머무는 대기 시간 (초)")]
+    [SerializeField] private float _chapterUnlockDisplayDuration = 3f;
+
+    [Tooltip("챕터 개방 안내 UI가 슉 나타나고 사라지는 슬라이드 시간 (초)")]
+    [SerializeField] private float _chapterUnlockAnimDuration = 0.8f;
+
+    [Tooltip("숨겨져 있을 때 원래 위치로부터 떨어진 상대적 거리 (예: X에 1000을 넣으면 우측 밖에서 튀어나옴)")]
+    [SerializeField] private Vector2 _chapterUnlockHiddenOffset = new Vector2(1000f, 0f);
+
     // 런타임 상태
     private bool _sequencePlaying = false;
     private string _currentTargetSceneName;
     private bool _isInputReady = false; // 대사 완료 전까지 책 클릭 방지
+    private Vector2 _chapterUnlockOriginalPos;
     
     /// <summary>타이틀 씬의 페이드 및 대사가 완료되어 상호작용 가능한 상태인지 반환합니다.</summary>
     public bool IsInputReady => _isInputReady;
@@ -125,6 +141,21 @@ public class TitleSceneController : MonoBehaviour
             else _titleTextObject.SetActive(false); // 없으면 즉시 비활성화
         }
 
+        if (_chapterUnlockUI != null && _chapterUnlockUI.activeSelf)
+        {
+            var rect = _chapterUnlockUI.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.DOAnchorPos(_chapterUnlockOriginalPos + _chapterUnlockHiddenOffset, 0.5f).SetEase(Ease.InBack);
+            }
+            else
+            {
+                var cg = _chapterUnlockUI.GetComponent<CanvasGroup>();
+                if (cg != null) cg.DOFade(0f, 0.5f);
+                else _chapterUnlockUI.SetActive(false);
+            }
+        }
+
         _currentTargetSceneName = string.IsNullOrEmpty(targetSceneName) ? _defaultLobbySceneName : targetSceneName;
 
         // 책을 씬 루트로 분리해 독립적으로 이동
@@ -135,7 +166,68 @@ public class TitleSceneController : MonoBehaviour
 
     private void Start()
     {
+        if (PlayerPrefs.HasKey("UnlockedChapterNum"))
+        {
+            int chapterNum = PlayerPrefs.GetInt("UnlockedChapterNum");
+            PlayerPrefs.DeleteKey("UnlockedChapterNum");
+            
+            if (_chapterUnlockUI != null && _chapterUnlockText != null)
+            {
+                var rect = _chapterUnlockUI.GetComponent<RectTransform>();
+                if (rect != null)
+                {
+                    // 원래 씬에 배치된 위치를 저장
+                    _chapterUnlockOriginalPos = rect.anchoredPosition;
+                    // 처음에는 화면 밖으로 밀어냄
+                    rect.anchoredPosition = _chapterUnlockOriginalPos + _chapterUnlockHiddenOffset;
+                }
+
+                _chapterUnlockUI.SetActive(true);
+                
+                // 캔버스 그룹이 있다면 알파값을 1로 초기화 (페이드가 아니므로 확실하게 보이게)
+                var cg = _chapterUnlockUI.GetComponent<CanvasGroup>();
+                if (cg != null) cg.alpha = 1f;
+
+                _chapterUnlockText.text = $"Chapter {chapterNum}의 뒷편이 개방되었습니다.";
+
+                // 슉 하고 화면 안으로 들어오기
+                if (rect != null)
+                {
+                    rect.DOAnchorPos(_chapterUnlockOriginalPos, _chapterUnlockAnimDuration).SetEase(Ease.OutBack);
+                }
+
+                // 일정 시간 후 다시 화면 밖으로 나가기
+                StartCoroutine(HideChapterUnlockUIAfterDelay(rect));
+            }
+        }
+        else
+        {
+            if (_chapterUnlockUI != null)
+                _chapterUnlockUI.SetActive(false);
+        }
+
         StartCoroutine(TitleStartSequence());
+    }
+
+    private IEnumerator HideChapterUnlockUIAfterDelay(RectTransform rect)
+    {
+        yield return new WaitForSeconds(_chapterUnlockDisplayDuration);
+
+        if (_chapterUnlockUI != null && rect != null)
+        {
+            yield return rect.DOAnchorPos(_chapterUnlockOriginalPos + _chapterUnlockHiddenOffset, _chapterUnlockAnimDuration)
+                .SetEase(Ease.InBack)
+                .WaitForCompletion();
+                
+            _chapterUnlockUI.SetActive(false);
+        }
+        else if (_chapterUnlockUI != null)
+        {
+            var cg = _chapterUnlockUI.GetComponent<CanvasGroup>();
+            if (cg != null) yield return cg.DOFade(0f, _chapterUnlockAnimDuration).WaitForCompletion();
+            
+            _chapterUnlockUI.SetActive(false);
+        }
     }
 
     private IEnumerator TitleStartSequence()
