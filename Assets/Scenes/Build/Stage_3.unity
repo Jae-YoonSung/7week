@@ -3181,8 +3181,8 @@ MonoBehaviour:
   _disableAbilities: 0
   _zoneEffect: {fileID: 0}
   _blockEntry: 1
-  _blockEntryFromTurn: 2
-  _blockEntryUntilTurn: 2
+  _blockEntryFromTurn: 3
+  _blockEntryUntilTurn: 0
   _blockEntryIndicator: {fileID: 1853715438}
   _dropIndicator: {fileID: 1126716519}
   _phantomColorIndicator: {fileID: 0}
@@ -28276,6 +28276,7 @@ MonoBehaviour:
   _xSprite: {fileID: 21300000, guid: 91e0791d7f6e2704e838f3e9b66cee3c, type: 3}
   _staggerDelay: 0.15
   _tierThreshold: 25
+  _blinkInterval: 0.5
 --- !u!1 &1940743912
 GameObject:
   m_ObjectHideFlags: 0
