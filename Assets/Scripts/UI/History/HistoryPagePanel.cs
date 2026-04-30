@@ -287,7 +287,10 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
 
         var token = Instantiate(entry.Prefab, _tokenContainer);
         token.Setup(moved, diedThisTurn, alreadyDead);
-        token.Rect.anchoredPosition = centerPos + SlotOffset(slotIndex, totalInZone);
+            bool isLast = slotIndex == totalInZone - 1;
+        token.Rect.anchoredPosition = isLast ? centerPos : centerPos + SlotOffset(slotIndex, totalInZone - 1);
+        if (isLast)
+            token.transform.SetAsFirstSibling();
         _activeTokens.Add(token);
     }
 
