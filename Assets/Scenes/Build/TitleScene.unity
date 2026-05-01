@@ -7833,6 +7833,10 @@ PrefabInstance:
       propertyPath: _controller
       value: 
       objectReference: {fileID: 1497351473}
+    - target: {fileID: 5682565775949536666, guid: 5db937f551c61464690fd2975c7536f2, type: 3}
+      propertyPath: _lobbySceneName
+      value: TitleScene
+      objectReference: {fileID: 0}
     - target: {fileID: 5929301501293028562, guid: 5db937f551c61464690fd2975c7536f2, type: 3}
       propertyPath: _controller
       value: 
