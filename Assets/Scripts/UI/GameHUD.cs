@@ -101,7 +101,7 @@ public class GameHUD : MonoBehaviour
         SetEndTurnButton(true);
     }
 
-    private void HandleTurnEndEntered(System.Collections.Generic.IReadOnlyList<string> _, bool __)
+    private void HandleTurnEndEntered(System.Collections.Generic.IReadOnlyList<string> _, bool __, bool ___)
     {
         // 다이어로그 재생 중에는 행동 버튼 비활성화
         SetDeductionButton(false);

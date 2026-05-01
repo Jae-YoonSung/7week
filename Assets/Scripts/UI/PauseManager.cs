@@ -76,6 +76,7 @@ public class PauseManager : MonoBehaviour
             seed,
             gfc != null ? gfc.CachedStageId        : null,
             gfc != null && gfc.IsEpilogue);
+        NewGameConfig.SetRevealedRoles(gfc != null ? gfc.RevealedRoles : null);
 
         string lobbyScene = gfc != null ? gfc.CachedLobbySceneName : _lobbySceneName;
         string gameScene  = SceneManager.GetActiveScene().name;

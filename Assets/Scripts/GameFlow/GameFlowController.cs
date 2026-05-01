@@ -54,6 +54,10 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
     /// <summary>이번 게임에서 실제 사용된 시드입니다. StartGame() 이후 유효합니다.</summary>
     public int CurrentSeed => _setupConfig != null ? _setupConfig.Seed : 0;
 
+    /// <summary>최종 결정 제출 시 틀린 캐릭터 수입니다. FinalDecisionUI에서 기록합니다.</summary>
+    public int LastWrongCount { get; private set; }
+    public void SetLastWrongCount(int count) => LastWrongCount = count;
+
     /// <summary>characterId → CharacterView. SpawnAll 이후 유효합니다.</summary>
     public IReadOnlyDictionary<int, CharacterView> CharacterViews => _characterViews;
 
@@ -134,7 +138,7 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
         var turnSM = GetTurnSM();
         if (turnSM != null)
         {
-            turnSM.OnTurnEndEntered    += (_, __) => RefreshAllCharacterViews();
+            turnSM.OnTurnEndEntered    += (_, __, ___) => RefreshAllCharacterViews();
             // 파도 구역 효과가 PlayerActionState.Enter()에서 적용된 뒤 뷰를 재동기화합니다.
             turnSM.OnPlayerActionStarted += SyncViewsAfterZoneEffects;
         }

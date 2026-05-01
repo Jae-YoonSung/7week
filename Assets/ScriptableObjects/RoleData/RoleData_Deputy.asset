@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RoleData_Deputy
   m_EditorClassIdentifier: Assembly-CSharp::RoleData
   roleType: 1
-  roleName: Deputy
+  roleName: "\uD76C\uC0DD\uC591"
   description: 
   roleIcon: {fileID: 0}
   abilityConfig: {fileID: 11400000, guid: 90b953847e6726a41bc8af25e3213b08, type: 2}

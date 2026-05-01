@@ -21,6 +21,9 @@ public class TurnEndDialogueConfig : ScriptableObject
     [Header("루프 강제 종료 조건 달성 시")]
     public DialogueSO[] loopResetDialogues;
 
+    [Header("3턴 후 일반 루프 반복 시")]
+    public DialogueSO[] loopRepeatDialogues;
+
     [Header("최종 결정 — 승리 시")]
     public DialogueSO[] winDialogues;
 
@@ -30,6 +33,7 @@ public class TurnEndDialogueConfig : ScriptableObject
     public DialogueSO SelectGameStart()              => PickRandom(gameStartDialogues);
     public DialogueSO SelectWin()                    => PickRandom(winDialogues);
     public DialogueSO SelectLose()                   => PickRandom(loseDialogues);
+    public DialogueSO SelectLoopRepeat()             => PickRandom(loopRepeatDialogues) ?? PickRandom(normalDialogues);
     public DialogueSO Select(bool isLoopReset, bool hasDeath)
     {
         if (isLoopReset) return PickRandom(loopResetDialogues) ?? PickRandom(normalDialogues);

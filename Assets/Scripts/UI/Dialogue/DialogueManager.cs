@@ -19,7 +19,8 @@ using UnityEngine;
 public class DialogueManager : MonoBehaviour
 {
     [Header("설정 에셋")]
-    [SerializeField] private TurnEndDialogueConfig _config;
+    [SerializeField] private TurnEndDialogueConfig     _config;
+    [SerializeField] private RoleActivationOrderConfig _orderConfig;
 
     [Header("검은 배경 패널")]
     [SerializeField] private GameObject _dialoguePanel;
@@ -120,14 +121,46 @@ public class DialogueManager : MonoBehaviour
                 if (!string.IsNullOrEmpty(line))
                     _lines.Add(line);
 
+        AppendRevealedRoleLines();
+
         if (_lines.Count == 0) return;
         BeginPlay(onComplete: null);
     }
 
-    private void HandleTurnEndEntered(IReadOnlyList<string> eventLog, bool isLoopCondition)
+    private void AppendRevealedRoleLines()
+    {
+        var gfc = GameFlowController.Instance;
+        if (gfc == null) return;
+
+        var revealed = gfc.RevealedRoles;
+        if (revealed == null || revealed.Length == 0) return;
+
+        var gameState = gfc.GameState;
+        if (gameState == null) return;
+
+        foreach (var roleType in revealed)
+        {
+            var character = gameState.GetCharacterByRole(roleType);
+            if (character == null) continue;
+
+            string roleName = GetRoleName(roleType);
+            _lines.Add($"{character.CharacterName} — {roleName}");
+        }
+    }
+
+    private string GetRoleName(RoleType roleType)
+    {
+        if (_orderConfig != null)
+            foreach (var roleData in _orderConfig.ExecutionOrder)
+                if (roleData != null && roleData.RoleType == roleType)
+                    return roleData.RoleName;
+        return roleType.ToString();
+    }
+
+    private void HandleTurnEndEntered(IReadOnlyList<string> eventLog, bool isLoopCondition, bool isLastTurn)
     {
         _isGameEndDialogue = false;
-        BuildLines(eventLog, isLoopCondition);
+        BuildLines(eventLog, isLoopCondition, isLastTurn);
         BeginPlay(() => GameFlowController.Instance.FinishTurnEnd());
     }
 
@@ -142,6 +175,12 @@ public class DialogueManager : MonoBehaviour
             foreach (var line in so.lines)
                 if (!string.IsNullOrEmpty(line))
                     _lines.Add(line);
+
+        if (!isWin)
+        {
+            int wrong = GameFlowController.Instance != null ? GameFlowController.Instance.LastWrongCount : 0;
+            _lines.Add($"[{wrong}]개의 역할이 모순을 일으키고 있습니다.");
+        }
 
         if (_lines.Count == 0)
         {
@@ -166,23 +205,40 @@ public class DialogueManager : MonoBehaviour
 
     // ── 라인 구성 ──────────────────────────────────────────────────────────
 
-    private void BuildLines(IReadOnlyList<string> eventLog, bool isLoopCondition)
+    private void BuildLines(IReadOnlyList<string> eventLog, bool isLoopCondition, bool isLastTurn)
     {
         _lines.Clear();
 
         bool hasDeath = !isLoopCondition && HasDeathEntry(eventLog);
-        var so = _config != null ? _config.Select(isLoopCondition, hasDeath) : null;
-
-        if (so != null)
-            foreach (var line in so.lines)
-                if (!string.IsNullOrEmpty(line))
-                    _lines.Add(line);
 
         if (isLoopCondition)
         {
-            _lines.Add("퇴고를 시작합니다.");
+            var so = _config != null ? _config.Select(true, false) : null;
+            if (so != null)
+                foreach (var line in so.lines)
+                    if (!string.IsNullOrEmpty(line))
+                        _lines.Add(line);
+            _lines.Add("강제 퇴고를 시작합니다.");
             return;
         }
+
+        if (isLastTurn)
+        {
+            // 사망자 먼저, 그 다음 루프 반복 다이얼로그
+            AppendEventLogLines(eventLog);
+            var so = _config != null ? _config.SelectLoopRepeat() : null;
+            if (so != null)
+                foreach (var line in so.lines)
+                    if (!string.IsNullOrEmpty(line))
+                        _lines.Add(line);
+            return;
+        }
+
+        var normalSo = _config != null ? _config.Select(false, hasDeath) : null;
+        if (normalSo != null)
+            foreach (var line in normalSo.lines)
+                if (!string.IsNullOrEmpty(line))
+                    _lines.Add(line);
 
         AppendEventLogLines(eventLog);
     }

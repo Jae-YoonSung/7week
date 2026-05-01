@@ -465,7 +465,7 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
         EnterPhase(TutorialPhase.QuillPenUnlocked);
     }
 
-    private void HandleTurnEndEntered(System.Collections.Generic.IReadOnlyList<string> _, bool __)
+    private void HandleTurnEndEntered(System.Collections.Generic.IReadOnlyList<string> _, bool __, bool ___)
     {
         if (_currentPhase == TutorialPhase.QuillPenUnlocked
             || _currentPhase == TutorialPhase.WaitingForTurnEnd)

@@ -78,7 +78,7 @@ public class RoleActivationState : IState
         var processor = new RoleAbilityProcessor(_orderConfig);
         processor.ProcessExcept(gameState, RoleType.Martyr);
 
-        // 심약자 패시브: 전 루프에 자신이 죽은 턴과 동일한 턴에 자살
+        // 심약자 패시브: 3번째 턴 종료 시 자동 사망
         ApplyTimidEffect(gameState);
 
         // 순교자: 심약자 자살 마크 포함 모든 마크 확인 후 구출
@@ -93,11 +93,12 @@ public class RoleActivationState : IState
 
         // ── 단계 N+2~N+3: 루프 종료 조건 확인 후 커밋 ──────────────────────
         bool isLoopCondition = CheckLoopEndCondition(gameState);
+        bool isLastTurn      = !isLoopCondition && _getTurnIndex() == LoopStateMachine.TurnsPerLoop - 1;
         var  record          = BuildRecord(gameState, beforeAction, afterAction);
         record.IsLoopConditionTurn = isLoopCondition;
         _historyRepo.Commit(record, isLoopCondition, finalStates);
 
-        _turnSM.EnterTurnEnd(isLoopCondition ? null : gameState.GetEventLog(), isLoopCondition);
+        _turnSM.EnterTurnEnd(isLoopCondition ? null : gameState.GetEventLog(), isLoopCondition, isLastTurn);
     }
 
     public void Tick() { }
@@ -174,28 +175,17 @@ public class RoleActivationState : IState
         return condition.ShouldLoop(gameState);
     }
 
-    // 심약자: 전 루프에 자신이 죽은 턴과 동일한 턴에 자살
+    // 심약자: 3번째 턴(turnIndex == 2) 종료 시 자동 사망
     private void ApplyTimidEffect(GameState gameState)
     {
         var timid = gameState.GetCharacterByRole(RoleType.Timid);
         if (timid == null) return;
 
-        int loopIndex = _getLoopIndex();
-        if (loopIndex == 0) return;
+        int turnIndex = _getTurnIndex();
+        if (turnIndex != 2) return;
 
-        int turnIndex  = _getTurnIndex();
-        var prevRecord = _historyRepo.GetRecord(loopIndex - 1, turnIndex);
-        if (prevRecord == null) return;
-
-        foreach (var death in prevRecord.Deaths)
-        {
-            if (death.CharacterId == timid.CharacterId)
-            {
-                gameState.MarkForDeath(timid.CharacterId, RoleType.Timid, timid.CharacterId);
-                Debug.Log($"[심약자] 전 루프 {turnIndex}턴에 자신이 사망 — 자살");
-                return;
-            }
-        }
+        gameState.MarkForDeath(timid.CharacterId, RoleType.Timid, timid.CharacterId);
+        Debug.Log("[심약자] 3번째 턴 종료 — 자동 사망");
     }
 
     private void LogTurnSummary(GameState gameState) { }

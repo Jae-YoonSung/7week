@@ -11,6 +11,7 @@ public class TurnEndState : IState
 
     private IReadOnlyList<string> _eventLog;
     private bool                  _isLoopCondition;
+    private bool                  _isLastTurn;
 
     public TurnEndState(TurnStateMachine turnSM)
     {
@@ -18,17 +19,18 @@ public class TurnEndState : IState
     }
 
     /// <summary>RoleActivationState가 상태 전환 직전에 컨텍스트를 주입합니다.</summary>
-    public void SetContext(IReadOnlyList<string> eventLog, bool isLoopCondition)
+    public void SetContext(IReadOnlyList<string> eventLog, bool isLoopCondition, bool isLastTurn = false)
     {
         _eventLog        = eventLog;
         _isLoopCondition = isLoopCondition;
+        _isLastTurn      = isLastTurn;
     }
 
     public void Enter()
     {
         // DialogueManager가 이 이벤트를 받아 다이어로그를 재생합니다.
         // 재생이 끝나면 GameFlowController.FinishTurnEnd() → Finish()가 호출됩니다.
-        _turnSM.FireTurnEndEntered(_eventLog, _isLoopCondition);
+        _turnSM.FireTurnEndEntered(_eventLog, _isLoopCondition, _isLastTurn);
     }
 
     /// <summary>

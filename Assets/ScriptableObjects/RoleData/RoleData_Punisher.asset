@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RoleData_Punisher
   m_EditorClassIdentifier: Assembly-CSharp::RoleData
   roleType: 11
-  roleName: Punisher
+  roleName: "\uC751\uC9D5\uC790"
   description: 
   roleIcon: {fileID: 0}
   abilityConfig: {fileID: 11400000, guid: 63b4f3923c493a5418aa995b98368de9, type: 2}
