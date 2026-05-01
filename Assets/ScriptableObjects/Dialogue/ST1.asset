@@ -20,6 +20,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fbbf04c057f01c04895dc01233722015, type: 2}
   loopResetDialogues:
   - {fileID: 11400000, guid: ff9771bcad6b04c4597d5f4073d6009c, type: 2}
+  loopRepeatDialogues:
+  - {fileID: 11400000, guid: 438813ff293798340b43a37aab39f5bc, type: 2}
   winDialogues:
   - {fileID: 11400000, guid: 9b52821de9ae2ec4999c6ca67fce0a6c, type: 2}
   loseDialogues:

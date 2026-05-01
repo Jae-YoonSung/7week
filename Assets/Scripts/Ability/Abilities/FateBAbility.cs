@@ -14,6 +14,10 @@ public class FateBAbility : AbilityConfig
         if (fateA == null || gameState.GetZone(fateA.CharacterId) != myZone)
             return;
 
+        // 폭탄마 등 앞선 능력에 의해 운명A가 이미 사망 마크된 경우 동반자살 발동 안 함
+        if (gameState.IsMarkedForDeath(fateA.CharacterId))
+            return;
+
         gameState.MarkForDeath(fateA.CharacterId, RoleType.FateB, ownerId);
         gameState.MarkForDeath(ownerId, RoleType.FateB, ownerId);
     }

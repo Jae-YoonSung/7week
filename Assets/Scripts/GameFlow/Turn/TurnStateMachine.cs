@@ -19,7 +19,7 @@ public class TurnStateMachine : StateMachine
     public event Action                                    OnTurnCompleted;
     public event Action                                    OnDeductionDeclared;
     public event Action                                    OnPlayerActionStarted;
-    public event Action<IReadOnlyList<string>, bool>       OnTurnEndEntered;
+    public event Action<IReadOnlyList<string>, bool, bool>  OnTurnEndEntered;
 
     /// <summary>
     /// 루프 종료 조건이 달성됐을 때 발생합니다.
@@ -94,10 +94,11 @@ public class TurnStateMachine : StateMachine
     /// </summary>
     /// <param name="eventLog">이번 턴 결과 로그. 다이어로그 마지막에 표시됩니다.</param>
     /// <param name="isLoopCondition">루프 강제 종료 조건 달성 여부.</param>
-    public void EnterTurnEnd(IReadOnlyList<string> eventLog = null, bool isLoopCondition = false)
+    /// <param name="isLastTurn">루프의 마지막 턴 여부 (3턴 후 일반 루프 반복).</param>
+    public void EnterTurnEnd(IReadOnlyList<string> eventLog = null, bool isLoopCondition = false, bool isLastTurn = false)
     {
         CurrentState = TurnStateType.TurnEnd;
-        _turnEnd.SetContext(eventLog, isLoopCondition);
+        _turnEnd.SetContext(eventLog, isLoopCondition, isLastTurn);
         ChangeState(_turnEnd);
     }
 
@@ -114,8 +115,8 @@ public class TurnStateMachine : StateMachine
     public void TriggerLoopCondition() => OnLoopConditionTriggered?.Invoke();
 
     /// <summary>TurnEndState에서 OnTurnEndEntered 이벤트를 발생시킵니다.</summary>
-    internal void FireTurnEndEntered(IReadOnlyList<string> log, bool isLoopCondition)
-        => OnTurnEndEntered?.Invoke(log, isLoopCondition);
+    internal void FireTurnEndEntered(IReadOnlyList<string> log, bool isLoopCondition, bool isLastTurn)
+        => OnTurnEndEntered?.Invoke(log, isLoopCondition, isLastTurn);
 
     /// <summary>
     /// 추리를 선언합니다. PlayerAction 단계에서만 유효하며, 다른 단계의 호출은 무시됩니다.

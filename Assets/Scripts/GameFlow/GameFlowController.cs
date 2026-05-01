@@ -138,7 +138,7 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
         var turnSM = GetTurnSM();
         if (turnSM != null)
         {
-            turnSM.OnTurnEndEntered    += (_, __) => RefreshAllCharacterViews();
+            turnSM.OnTurnEndEntered    += (_, __, ___) => RefreshAllCharacterViews();
             // 파도 구역 효과가 PlayerActionState.Enter()에서 적용된 뒤 뷰를 재동기화합니다.
             turnSM.OnPlayerActionStarted += SyncViewsAfterZoneEffects;
         }

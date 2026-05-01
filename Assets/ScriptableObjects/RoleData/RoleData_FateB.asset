@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RoleData_FateB
   m_EditorClassIdentifier: Assembly-CSharp::RoleData
   roleType: 17
-  roleName: Fate B
+  roleName: "\uC6B4\uBA85 B"
   description: 
   roleIcon: {fileID: 0}
   abilityConfig: {fileID: 11400000, guid: 81857c2dc9fda6d4290d554220e00d54, type: 2}

@@ -141,7 +141,7 @@ public class GameEventLogger : MonoBehaviour
     }
 
     // 턴 종료 상태 진입 시 소요 시간과 함께 기록한다.
-    private void HandleTurnEndEntered(IReadOnlyList<string> eventLog, bool isLoopCondition)
+    private void HandleTurnEndEntered(IReadOnlyList<string> eventLog, bool isLoopCondition, bool _)
     {
         TimeSpan duration = DateTime.Now - _turnStart;
         GameEventDispatcher.Raise(new TurnEndEvent(_gfc.LoopCount, _gfc.TurnCount, duration));

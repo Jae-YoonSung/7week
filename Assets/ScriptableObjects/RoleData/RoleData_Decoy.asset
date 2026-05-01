@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RoleData_Decoy
   m_EditorClassIdentifier: Assembly-CSharp::RoleData
   roleType: 14
-  roleName: Decoy
+  roleName: "\uD63C\uB839\uCCB4"
   description: 
   roleIcon: {fileID: 0}
   abilityConfig: {fileID: 11400000, guid: 287b371c56bef5144b8c0492e79a88fa, type: 2}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RoleData_Bomber
   m_EditorClassIdentifier: Assembly-CSharp::RoleData
   roleType: 19
-  roleName: Bomber
+  roleName: "\uD3ED\uD0C4\uB9C8"
   description: 
   roleIcon: {fileID: 0}
   abilityConfig: {fileID: 11400000, guid: 2ac51b55fbee4c94dacf2cef04abeb4b, type: 2}

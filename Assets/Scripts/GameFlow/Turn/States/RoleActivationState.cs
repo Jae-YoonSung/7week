@@ -93,11 +93,12 @@ public class RoleActivationState : IState
 
         // ── 단계 N+2~N+3: 루프 종료 조건 확인 후 커밋 ──────────────────────
         bool isLoopCondition = CheckLoopEndCondition(gameState);
+        bool isLastTurn      = !isLoopCondition && _getTurnIndex() == LoopStateMachine.TurnsPerLoop - 1;
         var  record          = BuildRecord(gameState, beforeAction, afterAction);
         record.IsLoopConditionTurn = isLoopCondition;
         _historyRepo.Commit(record, isLoopCondition, finalStates);
 
-        _turnSM.EnterTurnEnd(isLoopCondition ? null : gameState.GetEventLog(), isLoopCondition);
+        _turnSM.EnterTurnEnd(isLoopCondition ? null : gameState.GetEventLog(), isLoopCondition, isLastTurn);
     }
 
     public void Tick() { }

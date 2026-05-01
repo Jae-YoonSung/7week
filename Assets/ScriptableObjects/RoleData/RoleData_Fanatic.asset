@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RoleData_Fanatic
   m_EditorClassIdentifier: Assembly-CSharp::RoleData
   roleType: 2
-  roleName: Fanatic
+  roleName: "\uBC30\uD68C\uC790"
   description: 
   roleIcon: {fileID: 0}
   abilityConfig: {fileID: 11400000, guid: ba9eebfc1f13c7140b035e8605b1c907, type: 2}

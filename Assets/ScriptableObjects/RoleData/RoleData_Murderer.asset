@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RoleData_Murderer
   m_EditorClassIdentifier: Assembly-CSharp::RoleData
   roleType: 0
-  roleName: Murderer
+  roleName: "\uC0B4\uC778\uC790"
   description: 
   roleIcon: {fileID: 0}
   abilityConfig: {fileID: 11400000, guid: 777c89046cd9fc24c816bbd8cbc15fb8, type: 2}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RoleData_Water Ghost
   m_EditorClassIdentifier: Assembly-CSharp::RoleData
   roleType: 7
-  roleName: Water Ghost
+  roleName: "\uBB3C\uADC0\uC2E0"
   description: 
   roleIcon: {fileID: 0}
   abilityConfig: {fileID: 11400000, guid: 6177aab8bb4fc544b85c879e337b293b, type: 2}

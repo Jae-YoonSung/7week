@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RoleData_Variable
   m_EditorClassIdentifier: Assembly-CSharp::RoleData
   roleType: 6
-  roleName: Variable
+  roleName: "\uBCF5\uC218\uC790"
   description: 
   roleIcon: {fileID: 0}
   abilityConfig: {fileID: 11400000, guid: 5acd67ae5e90f5e41ac7d5d3bde99d04, type: 2}

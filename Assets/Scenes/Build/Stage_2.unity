@@ -16923,6 +16923,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
   _config: {fileID: 11400000, guid: 5cf9e87d25042e849815fdcfed0f4fd9, type: 2}
+  _orderConfig: {fileID: 11400000, guid: 13df6fedc92d9fa49b7281ca57ae1580, type: 2}
   _dialoguePanel: {fileID: 1737952075}
   _textPrefab: {fileID: 4830413914332474687, guid: 7f90c51b6ba7e854ca7ad54ab2b7241e, type: 3}
   _textRoot: {fileID: 612096867}
