@@ -1332,7 +1332,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 7
-  _role: 19
+  _role: 2
   _targetImage: {fileID: 1123755160}
   _toggleButton: {fileID: 64927045}
 --- !u!114 &64927047
@@ -10984,7 +10984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 698736e7c60b45e478039878cbee5d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoleCard
-  _roleType: 19
+  _roleType: 2
 --- !u!225 &733354057
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -13994,7 +13994,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 3
-  _role: 19
+  _role: 2
   _targetImage: {fileID: 356974597}
   _toggleButton: {fileID: 931151776}
 --- !u!114 &931151778
@@ -17494,7 +17494,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD3ED\uD0C4\uB9C8"
+  m_text: "\uBC30\uD68C\uC790"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 45461fa7f3c562f458fc696e4c6c4008, type: 2}
@@ -18101,7 +18101,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 5
-  _role: 19
+  _role: 2
   _targetImage: {fileID: 291111261}
   _toggleButton: {fileID: 1227021986}
 --- !u!114 &1227021988
@@ -20045,7 +20045,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 6
-  _role: 19
+  _role: 2
   _targetImage: {fileID: 1618999443}
   _toggleButton: {fileID: 1324835704}
 --- !u!114 &1324835706
@@ -22431,7 +22431,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 4
-  _role: 19
+  _role: 2
   _targetImage: {fileID: 646274072}
   _toggleButton: {fileID: 1482818093}
 --- !u!114 &1482818095
@@ -26687,7 +26687,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 1
-  _role: 19
+  _role: 2
   _targetImage: {fileID: 872264538}
   _toggleButton: {fileID: 1786828753}
 --- !u!114 &1786828751
@@ -27303,7 +27303,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 2
-  _role: 19
+  _role: 2
   _targetImage: {fileID: 1658762320}
   _toggleButton: {fileID: 1837031603}
 --- !u!114 &1837031605
