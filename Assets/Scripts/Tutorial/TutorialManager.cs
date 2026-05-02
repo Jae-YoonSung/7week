@@ -47,6 +47,8 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
     [Tooltip("튜토리얼 클리어 후 이동할 씬 이름")]
     [SerializeField] private string _clearSceneName = "TitleScene";
 
+    public string ClearSceneName => _clearSceneName;
+
     [Header("DrawerPanel CanvasGroup 참조 (각 패널 루트에 CanvasGroup 추가 필요)")]
     [SerializeField] private CanvasGroup _roleDocGroup;
     [SerializeField] private CanvasGroup _narrativeOrderGroup;

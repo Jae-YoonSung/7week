@@ -405,9 +405,18 @@ public class StageClearSequenceController : MonoBehaviour
 
         LobbyDialogueManager.PendingEndingDialogue = _triggerLobbyEndingDialogue;
 
-        string lobbyScene = GameFlowController.Instance != null && !string.IsNullOrEmpty(GameFlowController.Instance.CachedLobbySceneName)
-            ? GameFlowController.Instance.CachedLobbySceneName
-            : _lobbySceneName;
+        string lobbyScene;
+        
+        if (TutorialManager.IsActive)
+        {
+            lobbyScene = TutorialManager.Instance.ClearSceneName;
+        }
+        else
+        {
+            lobbyScene = GameFlowController.Instance != null && !string.IsNullOrEmpty(GameFlowController.Instance.CachedLobbySceneName)
+                ? GameFlowController.Instance.CachedLobbySceneName
+                : _lobbySceneName;
+        }
             
         SceneManager.LoadScene(lobbyScene);
     }
