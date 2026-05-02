@@ -42,8 +42,10 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
     [SerializeField] private int _restrictedTargetZoneId = 2;
 
     [Header("씬 이름")]
-    [Tooltip("튜토리얼 실패 시 돌아갈 로비 씬 이름")]
+    [Tooltip("튜토리얼 실패 시 돌아갈 씬 이름")]
     [SerializeField] private string _lobbySceneName = "LobbyScene";
+    [Tooltip("튜토리얼 클리어 후 이동할 씬 이름")]
+    [SerializeField] private string _clearSceneName = "TitleScene";
 
     [Header("DrawerPanel CanvasGroup 참조 (각 패널 루트에 CanvasGroup 추가 필요)")]
     [SerializeField] private CanvasGroup _roleDocGroup;
@@ -58,6 +60,8 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
     [Header("History / 메모 참조")]
     [SerializeField] private HistoryPageController _historyController;
     [SerializeField] private NotepadToggleManager   _notepadToggleManager;
+    [Tooltip("사건 기록 DrawerPanel - 닫힌 후 RetirementUI 가이드로 전환")]
+    [SerializeField] private DrawerPanel _eventRecordDrawer;
 
     [Header("하이라이트 대상 Transform 참조")]
     [Tooltip("이동 목표 구역 오브젝트 Transform")]
@@ -78,8 +82,14 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
     [SerializeField] private RectTransform _memoBookArrowAnchor;
     [SerializeField] private RectTransform _eventRecordHighlightRect;
     [SerializeField] private RectTransform _eventRecordArrowAnchor;
+    [SerializeField] private RectTransform _hintUIHighlightRect;
+    [SerializeField] private RectTransform _hintUIArrowAnchor;
+    [SerializeField] private RectTransform _retirementUIHighlightRect;
+    [SerializeField] private RectTransform _retirementUIArrowAnchor;
     [SerializeField] private RectTransform _dateUIHighlightRect;
     [SerializeField] private RectTransform _dateUIArrowAnchor;
+    [Tooltip("강제 퇴고 UI를 보여준 뒤 자동으로 다음 단계로 넘어가는 대기 시간 (초)")]
+    [SerializeField] private float _retirementUIAutoAdvanceDelay = 5f;
     [Tooltip("강제 퇴고 조건 UI RectTransform")]
     [SerializeField] private RectTransform _forceLoopConditionRect;
 
@@ -181,6 +191,12 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
             _memoBookDrawer.OnShown       += HandleMemoBookShown;
         }
 
+        if (_eventRecordDrawer != null)
+        {
+            _eventRecordDrawer.OnShowStarted += HandleEventRecordShowStarted;
+            _eventRecordDrawer.OnHidden      += HandleEventRecordHidden;
+        }
+
         if (_historyController != null)
             _historyController.OnAnyPanelHeaderClicked += HandleEventRecordClicked;
 
@@ -222,6 +238,12 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
         {
             _memoBookDrawer.OnShowStarted -= HandleMemoBookShowStarted;
             _memoBookDrawer.OnShown       -= HandleMemoBookShown;
+        }
+
+        if (_eventRecordDrawer != null)
+        {
+            _eventRecordDrawer.OnShowStarted -= HandleEventRecordShowStarted;
+            _eventRecordDrawer.OnHidden      -= HandleEventRecordHidden;
         }
 
         if (_historyController != null)
@@ -309,6 +331,19 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
                 ShowPhaseGuide(phase);
                 break;
 
+            case TutorialPhase.HintUIGuide:
+                SetInputPermission(TutorialInputPermission.RoleDocUI
+                                 | TutorialInputPermission.NarrativeOrderUI
+                                 | TutorialInputPermission.MemoOpen
+                                 | TutorialInputPermission.MemoWrite
+                                 | TutorialInputPermission.HintUI);
+                _uiManager?.SetClickAdvance(false);
+                _uiManager?.ClearUIHighlight();
+                if (_hintUIHighlightRect != null)
+                    _uiManager?.SetUIHighlight(_hintUIHighlightRect, _hintUIArrowAnchor, 20f, TutorialUIManager.ArrowBounceDirection.Vertical);
+                ShowPhaseGuide(phase);
+                break;
+
             case TutorialPhase.MemoWriteGuide:
                 SetInputPermission(TutorialInputPermission.RoleDocUI
                                  | TutorialInputPermission.NarrativeOrderUI
@@ -332,6 +367,21 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
                 if (_eventRecordHighlightRect != null)
                     _uiManager?.SetUIHighlight(_eventRecordHighlightRect, _eventRecordArrowAnchor, 20f, TutorialUIManager.ArrowBounceDirection.Vertical);
                 ShowPhaseGuide(phase);
+                break;
+
+            case TutorialPhase.RetirementUIGuide:
+                SetInputPermission(TutorialInputPermission.RoleDocUI
+                                 | TutorialInputPermission.NarrativeOrderUI
+                                 | TutorialInputPermission.MemoOpen
+                                 | TutorialInputPermission.MemoWrite
+                                 | TutorialInputPermission.EventRecord
+                                 | TutorialInputPermission.RetirementUI);
+                _uiManager?.SetClickAdvance(false);
+                _uiManager?.ClearUIHighlight();
+                if (_retirementUIHighlightRect != null)
+                    _uiManager?.SetUIHighlight(_retirementUIHighlightRect, _retirementUIArrowAnchor);
+                ShowPhaseGuide(phase);
+                StartCoroutine(AutoAdvanceRetirementUI());
                 break;
 
             case TutorialPhase.FinalDecisionBookGuide:
@@ -397,6 +447,7 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
         if (isWin)
         {
             TutorialProgressRepository.Instance.MarkCleared();
+            StartCoroutine(LoadClearSceneAfterDelay(2f));
             return;
         }
         ShowEventGuide(TutorialEventType.GameFail);
@@ -471,13 +522,59 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
     private void HandleMemoBookShown()
     {
         if (_currentPhase != TutorialPhase.MemoBookGuide) return;
-        EnterPhase(TutorialPhase.MemoWriteGuide);
+        EnterPhase(TutorialPhase.MemoWriteGuide); // MemoBook이 열리면 메모 작성 안내로
+    }
+
+    /// <summary>
+    /// 힌트 버튼을 클릭했을 때 HintModeManager에서 호출합니다.
+    /// 파이즈와 무관하게 동작하며, HintUIGuide 중일 때만 화살표를 끝니다.
+    /// </summary>
+    public void HandleHintUIClicked()
+    {
+        if (_currentPhase != TutorialPhase.HintUIGuide) return;
+        _uiManager?.ClearUIHighlight(); // 버튼 클릭 즉시 화살표 끄기
+    }
+
+    /// <summary>
+    /// 힌트가 SequentialImageToggle에 실제 사용됐을 때 HintModeManager에서 호출합니다.
+    /// </summary>
+    public void NotifyHintUsed()
+    {
+        if (_currentPhase != TutorialPhase.HintUIGuide) return;
+        EnterPhase(TutorialPhase.EventRecordGuide);
+    }
+
+    private void HandleEventRecordShowStarted()
+    {
+        if (_currentPhase != TutorialPhase.EventRecordGuide) return;
+        _uiManager?.ClearUIHighlight(); // 열리면 즉시 화살표 끄기
+    }
+
+    private void HandleEventRecordHidden()
+    {
+        if (_currentPhase != TutorialPhase.EventRecordGuide) return;
+        EnterPhase(TutorialPhase.RetirementUIGuide); // 닫으면 Retirement 안내로
+    }
+
+    /// <summary>Retirement UI를 클릭했을 때 외부에서 호용합니다.</summary>
+    public void HandleRetirementUIClicked()
+    {
+        if (_currentPhase != TutorialPhase.RetirementUIGuide) return;
+        _uiManager?.ClearUIHighlight();
+        EnterPhase(TutorialPhase.FinalDecisionBookGuide);
     }
 
     private void HandleEventRecordClicked()
     {
+        // 이제 EventRecord는 DrawerPanel OnShowStarted/OnHidden로 제어됨
+        // 이 핸들러는 하위호환성을 위해 남겨둔 (EventRecord가 DrawerPanel이 아닼 경우 폴백)
         if (_currentPhase != TutorialPhase.EventRecordGuide) return;
-        EnterPhase(TutorialPhase.FinalDecisionBookGuide);
+        if (_eventRecordDrawer == null)
+        {
+            // DrawerPanel이 없으면 클릭 즉시 다음 단계로
+            _uiManager?.ClearUIHighlight();
+            EnterPhase(TutorialPhase.RetirementUIGuide);
+        }
     }
 
     private void HandleMemoWriteToggled()
@@ -485,7 +582,7 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
         if (_currentPhase != TutorialPhase.MemoWriteGuide) return;
         if (_notepadToggleManager != null)
             _notepadToggleManager.OnAnyToggleChanged -= HandleMemoWriteToggled;
-        EnterPhase(TutorialPhase.EventRecordGuide);
+        EnterPhase(TutorialPhase.HintUIGuide); // 메모 토글 후 HintUI 안내로
     }
 
     /// <summary>
@@ -545,6 +642,15 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
 
     // ── Private 유틸 ──────────────────────────────────────────────────────────
 
+    private IEnumerator AutoAdvanceRetirementUI()
+    {
+        yield return new WaitForSeconds(_retirementUIAutoAdvanceDelay);
+
+        // 아직 같은 단계에 있을 때만 진행 (중간에 다른 단계로 바뀌었으면 무시)
+        if (_currentPhase == TutorialPhase.RetirementUIGuide)
+            EnterPhase(TutorialPhase.FinalDecisionBookGuide);
+    }
+
     private void SetInputPermission(TutorialInputPermission permission)
     {
         _allowedInputs = permission;
@@ -586,7 +692,16 @@ public class TutorialManager : SingletonMonobehaviour<TutorialManager>
         if (!string.IsNullOrEmpty(_lobbySceneName))
             SceneManager.LoadScene(_lobbySceneName);
         else
-            Debug.LogWarning("[TutorialManager] 로비 씬 이름이 설정되지 않았습니다.");
+            Debug.LogWarning("[TutorialManager] 실패 씬 이름이 설정되지 않았습니다.");
+    }
+
+    private IEnumerator LoadClearSceneAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (!string.IsNullOrEmpty(_clearSceneName))
+            SceneManager.LoadScene(_clearSceneName);
+        else
+            Debug.LogWarning("[TutorialManager] 클리어 씬 이름이 설정되지 않았습니다.");
     }
 
     // ── DrawerPanel 초기 잠금 설정 ──────────────────────────────────────────

@@ -645,12 +645,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1200}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -5855,8 +5855,8 @@ MonoBehaviour:
   _chapterUnlockUI: {fileID: 598544692}
   _chapterUnlockText: {fileID: 929011813}
   _chapterUnlockDisplayDuration: 5
-  _chapterUnlockAnimDuration: 0.8
-  _chapterUnlockHiddenOffset: {x: 500, y: 0}
+  _chapterUnlockAnimDuration: 1
+  _chapterUnlockHiddenOffset: {x: 700, y: 0}
 --- !u!4 &1497351474
 Transform:
   m_ObjectHideFlags: 0
@@ -6737,12 +6737,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1200}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -7569,9 +7569,9 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ReferenceResolution: {x: 1920, y: 1200}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -7833,6 +7833,10 @@ PrefabInstance:
       propertyPath: _controller
       value: 
       objectReference: {fileID: 1497351473}
+    - target: {fileID: 5682565775949536666, guid: 5db937f551c61464690fd2975c7536f2, type: 3}
+      propertyPath: _lobbySceneName
+      value: LobbyScene0
+      objectReference: {fileID: 0}
     - target: {fileID: 5929301501293028562, guid: 5db937f551c61464690fd2975c7536f2, type: 3}
       propertyPath: _controller
       value: 

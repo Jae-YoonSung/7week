@@ -1,35 +1,39 @@
+using System.Collections;
+using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using TMPro;
-using DG.Tweening;
 
 /// <summary>
 /// 인게임 메모장 UI를 관리합니다.
-/// DrawerPanel처럼 클릭 시 화면 밖에서 부드럽게 슬라이드되어 나타나고 들어갑니다.
+/// 클릭 시 펼쳐지고 닫히며, 입력 중 Enter는 줄바꿈으로 동작합니다.
 /// </summary>
 [RequireComponent(typeof(RectTransform))]
 public class InGameNotepad : MonoBehaviour, IPointerClickHandler
 {
-    [Header("위치 설정 (Drawer 연출)")]
-    [Tooltip("완전히 꺼낸 상태의 anchoredPosition (숨김 위치는 시작 시 현재 위치로 자동 캡처)")]
+    [Header("위치 설정")]
+    [Tooltip("메모장이 펼쳐졌을 때의 anchored position")]
     [SerializeField] private Vector2 _shownAnchoredPos = Vector2.zero;
 
     [Header("DOTween 설정")]
     [SerializeField] private float _animDuration = 0.4f;
-    [SerializeField] private Ease  _showEase     = Ease.OutCubic;
-    [SerializeField] private Ease  _hideEase     = Ease.InCubic;
+    [SerializeField] private Ease _showEase = Ease.OutCubic;
+    [SerializeField] private Ease _hideEase = Ease.InCubic;
 
     [Header("메모장 UI")]
-    [Tooltip("사용자가 글씨를 입력할 InputField (TextMeshPro)")]
+    [Tooltip("사용자가 메모를 입력할 TextMeshPro InputField")]
     [SerializeField] private TMP_InputField _inputField;
 
     private RectTransform _rect;
-    private Vector2       _hiddenAnchoredPos;
-    private bool          _isShown = false;
-    private Tweener       _moveTween;
+    private Vector2 _hiddenAnchoredPos;
+    private bool _isShown;
+    private Tweener _moveTween;
+    private Coroutine _focusCoroutine;
+    private Color _selectionColor;
 
-    private int  _lastCaretPosition  = 0;
-    private bool _clickedOutside     = false; // 이번 프레임에 바깥 클릭으로 닫혔는지
+    private int _lastCaretPosition;
+    private bool _clickedOutside;
+    private bool _suppressEndEdit;
 
     private void Awake()
     {
@@ -39,12 +43,12 @@ public class InGameNotepad : MonoBehaviour, IPointerClickHandler
 
     private void Start()
     {
-        if (_inputField != null)
-        {
-            _inputField.text     = "";
-            _inputField.lineType = TMP_InputField.LineType.MultiLineSubmit;
-            _inputField.onEndEdit.AddListener(OnInputEndEdit);
-        }
+        if (_inputField == null) return;
+
+        _inputField.text = string.Empty;
+        _inputField.lineType = TMP_InputField.LineType.MultiLineSubmit;
+        _selectionColor = _inputField.selectionColor;
+        _inputField.onEndEdit.AddListener(OnInputEndEdit);
     }
 
     private void Update()
@@ -54,41 +58,49 @@ public class InGameNotepad : MonoBehaviour, IPointerClickHandler
         if (_inputField != null && _inputField.isFocused)
             _lastCaretPosition = _inputField.caretPosition;
 
-        if (_isShown && Input.GetMouseButtonDown(0))
-        {
-            Canvas canvas = GetComponentInParent<Canvas>();
-            Camera cam = null;
-            if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
-                cam = canvas.worldCamera;
+        if (!_isShown || !Input.GetMouseButtonDown(0))
+            return;
 
-            if (!RectTransformUtility.RectangleContainsScreenPoint(_rect, Input.mousePosition, cam))
-            {
-                _clickedOutside = true;
-                Hide();
-            }
-        }
+        Canvas canvas = GetComponentInParent<Canvas>();
+        Camera cam = null;
+        if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+            cam = canvas.worldCamera;
+
+        if (RectTransformUtility.RectangleContainsScreenPoint(_rect, Input.mousePosition, cam))
+            return;
+
+        _clickedOutside = true;
+        Hide();
     }
 
     /// <summary>
-    /// onEndEdit 발생 원인:
-    ///   - Escape        → wasCanceled = true  → 무시
-    ///   - 바깥 클릭     → _clickedOutside = true → 무시
-    ///   - Enter(Submit) → 위 두 경우가 아님 → 줄바꿈 삽입 후 재활성화
+    /// Enter 입력은 줄바꿈으로 유지하고, 닫힘이나 바깥 클릭으로 발생한 EndEdit는 무시합니다.
     /// </summary>
     private void OnInputEndEdit(string text)
     {
+        if (_inputField == null) return;
+
+        if (_suppressEndEdit)
+        {
+            _suppressEndEdit = false;
+            return;
+        }
+
+        if (!_isShown) return;
         if (_inputField.wasCanceled) return;
         if (_clickedOutside) return;
 
-        _inputField.text = text.Insert(_lastCaretPosition, "\n");
+        string safeText = text ?? string.Empty;
+        int insertIndex = Mathf.Clamp(_lastCaretPosition, 0, safeText.Length);
+        _inputField.text = safeText.Insert(insertIndex, "\n");
         _inputField.ActivateInputField();
-        int next = _lastCaretPosition + 1;
-        _inputField.caretPosition           = next;
+
+        int next = insertIndex + 1;
+        _inputField.caretPosition = next;
         _inputField.selectionAnchorPosition = next;
-        _inputField.selectionFocusPosition  = next;
+        _inputField.selectionFocusPosition = next;
     }
 
-    // ── 패널 클릭 시 열기/닫기 ───────────────────────────────────────────
     public void OnPointerClick(PointerEventData eventData)
     {
         if (_isShown) Hide();
@@ -105,9 +117,19 @@ public class InGameNotepad : MonoBehaviour, IPointerClickHandler
         Ease ease = show ? _showEase : _hideEase;
 
         _moveTween?.Kill();
+        StopFocusRoutine();
 
         if (show && _inputField != null)
-            StartCoroutine(FocusWithoutFlash());
+        {
+            _focusCoroutine = StartCoroutine(FocusWithoutFlash());
+        }
+        else if (!show && _inputField != null)
+        {
+            _suppressEndEdit = true;
+            _inputField.selectionColor = _selectionColor;
+            _inputField.DeactivateInputField();
+            EventSystem.current?.SetSelectedGameObject(null);
+        }
 
         if (instant)
             _rect.anchoredPosition = targetPos;
@@ -115,24 +137,44 @@ public class InGameNotepad : MonoBehaviour, IPointerClickHandler
             _moveTween = _rect.DOAnchorPos(targetPos, _animDuration).SetEase(ease);
     }
 
-    private System.Collections.IEnumerator FocusWithoutFlash()
+    private IEnumerator FocusWithoutFlash()
     {
-        Color originalSelectionColor = _inputField.selectionColor;
-        _inputField.selectionColor = new Color(0, 0, 0, 0);
+        _inputField.selectionColor = new Color(0f, 0f, 0f, 0f);
         _inputField.ActivateInputField();
         yield return null;
 
+        if (!_isShown || _inputField == null)
+        {
+            if (_inputField != null)
+                _inputField.selectionColor = _selectionColor;
+            _focusCoroutine = null;
+            yield break;
+        }
+
         int textLength = _inputField.text.Length;
-        _inputField.caretPosition           = textLength;
+        _inputField.caretPosition = textLength;
         _inputField.selectionAnchorPosition = textLength;
-        _inputField.selectionFocusPosition  = textLength;
-        _inputField.selectionColor          = originalSelectionColor;
+        _inputField.selectionFocusPosition = textLength;
+        _inputField.selectionColor = _selectionColor;
+        _focusCoroutine = null;
+    }
+
+    private void StopFocusRoutine()
+    {
+        if (_focusCoroutine == null) return;
+
+        StopCoroutine(_focusCoroutine);
+        if (_inputField != null)
+            _inputField.selectionColor = _selectionColor;
+        _focusCoroutine = null;
     }
 
     private void OnDestroy()
     {
         if (_inputField != null)
             _inputField.onEndEdit.RemoveListener(OnInputEndEdit);
+
+        StopFocusRoutine();
         _moveTween?.Kill();
     }
 }

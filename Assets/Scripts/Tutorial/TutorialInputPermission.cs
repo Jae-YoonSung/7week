@@ -16,5 +16,7 @@ public enum TutorialInputPermission
     MemoOpen           = 1 << 5,  // 메모 수첩 DrawerPanel 열기/닫기
     EventRecord        = 1 << 6,  // 사건 기록 포스트잇 클릭
     MemoWrite          = 1 << 7,  // 메모 수첩 O/△/X 토글 (SequentialImageToggle)
+    HintUI             = 1 << 8,  // 힌트 UI 클릭
+    RetirementUI       = 1 << 9,  // 강제 퇴고 UI 클릭
     All                = ~0
 }

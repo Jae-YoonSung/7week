@@ -79,12 +79,14 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
         if (IsHintMode)
         {
             if (_blinkCoroutine != null) { StopCoroutine(_blinkCoroutine); _blinkCoroutine = null; }
+
+            // 튜토리얼 중이면 힌트 버튼 클릭 즐시 화살표 끄기
+            TutorialManager.Instance?.HandleHintUIClicked();
         }
         else
         {
             _blinkCoroutine = StartCoroutine(BlinkIdleColor());
         }
-
         UpdateButtonColor();
     }
 
@@ -104,6 +106,9 @@ public class HintModeManager : SingletonMonobehaviour<HintModeManager>
         bool isCorrect = actualRole == source.Role;
 
         StartCoroutine(SpreadResults(source, isCorrect));
+
+        // 튜토리얼에 힌트 사용 완료 알림
+        TutorialManager.Instance?.NotifyHintUsed();
     }
 
     private IEnumerator SpreadResults(SequentialImageToggle source, bool isCorrect)

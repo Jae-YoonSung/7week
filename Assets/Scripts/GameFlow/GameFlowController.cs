@@ -257,6 +257,9 @@ public class GameFlowController : SingletonMonobehaviour<GameFlowController>
                 LobbyDialogueManager.PendingEndingDialogue = true;
         }
 
+        // 튜토리얼 진행 중에는 씬 전환을 TutorialManager에 위임
+        if (TutorialManager.IsActive) return;
+
         SceneManager.LoadScene(CachedLobbySceneName);
     }
 
