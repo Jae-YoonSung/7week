@@ -38,6 +38,10 @@ public class SequentialImageToggle : MonoBehaviour
     private int _currentIndex;
     private bool _locked;
 
+    // 드래그 페인팅 기능을 위한 전역 상태
+    private static bool _isPainting;
+    private static int _paintIndex;
+
     /// <summary>인덱스가 변경될 때 발생합니다. 인수는 새 인덱스 값입니다.</summary>
     public event Action<int> OnIndexChanged;
 
@@ -61,13 +65,29 @@ public class SequentialImageToggle : MonoBehaviour
     {
         if (_toggleButton != null)
         {
-            _toggleButton.onClick.AddListener(OnLeftClick);
+            // 기존 Button의 onClick 콜백 제거 (PointerDown으로 통합)
+            _toggleButton.onClick.RemoveAllListeners();
 
             var trigger = _toggleButton.gameObject.GetComponent<EventTrigger>()
                        ?? _toggleButton.gameObject.AddComponent<EventTrigger>();
-            var entry = new EventTrigger.Entry { eventID = EventTriggerType.PointerClick };
-            entry.callback.AddListener(OnPointerClick);
-            trigger.triggers.Add(entry);
+            
+            // 기존 트리거 초기화
+            trigger.triggers.Clear();
+
+            // 1. Pointer Down
+            var entryDown = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
+            entryDown.callback.AddListener(OnPointerDown);
+            trigger.triggers.Add(entryDown);
+
+            // 2. Pointer Enter (드래그 진입)
+            var entryEnter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+            entryEnter.callback.AddListener(OnPointerEnter);
+            trigger.triggers.Add(entryEnter);
+
+            // 3. Pointer Up
+            var entryUp = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
+            entryUp.callback.AddListener(OnPointerUp);
+            trigger.triggers.Add(entryUp);
         }
 
         ApplySprite(_currentIndex);
@@ -75,8 +95,7 @@ public class SequentialImageToggle : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (_toggleButton != null)
-            _toggleButton.onClick.RemoveListener(OnLeftClick);
+        // EventTrigger가 컴포넌트와 함께 소멸되므로 추가 해제 불필요
     }
 
     // ── 공개 API ──────────────────────────────────────────────────────────────
@@ -99,23 +118,50 @@ public class SequentialImageToggle : MonoBehaviour
 
     // ── 버튼 콜백 ─────────────────────────────────────────────────────────────
 
-    private void OnLeftClick()
+    private void OnPointerDown(BaseEventData data)
     {
-        if (HintModeManager.Instance != null && HintModeManager.Instance.IsHintMode)
-        {
-            HintModeManager.Instance.EvaluateAndShow(this);
-            return;
-        }
-
         if (_locked) return;
-        Advance(1);
+        if (data is PointerEventData pointerData)
+        {
+            if (pointerData.button == PointerEventData.InputButton.Left)
+            {
+                if (HintModeManager.Instance != null && HintModeManager.Instance.IsHintMode)
+                {
+                    HintModeManager.Instance.EvaluateAndShow(this);
+                    return;
+                }
+                Advance(1);
+                _isPainting = true;
+                _paintIndex = _currentIndex;
+            }
+            else if (pointerData.button == PointerEventData.InputButton.Right)
+            {
+                if (HintModeManager.Instance != null && HintModeManager.Instance.IsHintMode) return;
+                Advance(-1);
+                _isPainting = true;
+                _paintIndex = _currentIndex;
+            }
+        }
     }
 
-    private void OnPointerClick(BaseEventData data)
+    private void OnPointerEnter(BaseEventData data)
     {
         if (_locked) return;
-        if (data is PointerEventData pointerData && pointerData.button == PointerEventData.InputButton.Right)
-            Advance(-1);
+        if (_isPainting)
+        {
+            // 안전장치: 마우스를 뗀 상태면 페인팅 취소
+            if (!Input.GetMouseButton(0) && !Input.GetMouseButton(1))
+            {
+                _isPainting = false;
+                return;
+            }
+            SetIndexWithEvent(_paintIndex);
+        }
+    }
+
+    private void OnPointerUp(BaseEventData data)
+    {
+        _isPainting = false;
     }
 
     // ── Private ──────────────────────────────────────────────────────────────
@@ -123,6 +169,15 @@ public class SequentialImageToggle : MonoBehaviour
     private void Advance(int direction)
     {
         _currentIndex = (_currentIndex + direction + _sprites.Length) % _sprites.Length;
+        ApplySprite(_currentIndex);
+        OnIndexChanged?.Invoke(_currentIndex);
+    }
+
+    private void SetIndexWithEvent(int index)
+    {
+        if (_currentIndex == index) return;
+        if (_sprites == null || _sprites.Length == 0) return;
+        _currentIndex = Mathf.Clamp(index, 0, _sprites.Length - 1);
         ApplySprite(_currentIndex);
         OnIndexChanged?.Invoke(_currentIndex);
     }

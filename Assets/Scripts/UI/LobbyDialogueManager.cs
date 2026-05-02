@@ -224,9 +224,22 @@ public class LobbyDialogueManager : MonoBehaviour
         yield return new WaitForSeconds(_inputDelay);
         _inputEnabled = true;
 
-        for (int i = 1; i <= _currentFullLine.Length; i++)
+        _currentDisplay = "";
+        for (int i = 0; i < _currentFullLine.Length; i++)
         {
-            _currentDisplay = _currentFullLine.Substring(0, i);
+            if (_currentFullLine[i] == '<')
+            {
+                int closeIndex = _currentFullLine.IndexOf('>', i);
+                if (closeIndex != -1)
+                {
+                    int tagLength = closeIndex - i + 1;
+                    _currentDisplay += _currentFullLine.Substring(i, tagLength);
+                    i = closeIndex;
+                    continue; // 태그는 즉시 추가하고 타이핑 딜레이를 주지 않음
+                }
+            }
+
+            _currentDisplay += _currentFullLine[i];
             RefreshDisplay();
             yield return new WaitForSeconds(_charDelay);
         }
