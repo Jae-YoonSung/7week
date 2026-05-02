@@ -158,7 +158,8 @@ public class GameState : IGameState
             if (!deputySubstituted && deputyId != -1 && record.TargetCharacterId != deputyId && isDeputyEligibleCause)
             {
                 var deputy = GetCharacterInternal(deputyId);
-                if (deputy != null && deputy.IsAlive && deputy.CurrentZone == character.CurrentZone)
+                if (deputy != null && deputy.IsAlive && deputy.CurrentZone == character.CurrentZone
+                && !IsAbilityDisabledInZone(deputy.CurrentZone))
                 {
                     deputySubstituted = true;
                     chainDeaths.Add((deputy, record.CauseRole, record.SourceCharacterId));
@@ -173,8 +174,8 @@ public class GameState : IGameState
 
             RoleType role = GetRole(record.TargetCharacterId);
 
-            // 친구A 사망 시 친구B를 연쇄 대상으로 수집
-            if (role == RoleType.FriendA)
+            // 친구A 사망 시 친구B를 연쇄 대상으로 수집 (봉인 구역이면 연쇄 없음)
+            if (role == RoleType.FriendA && !IsAbilityDisabledInZone(GetZone(record.TargetCharacterId)))
             {
                 var friendBStatus = GetCharacterByRole(RoleType.FriendB);
                 if (friendBStatus != null)
