@@ -1127,7 +1127,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 5
-  _role: 6
+  _role: 11
   _targetImage: {fileID: 275749337}
   _toggleButton: {fileID: 58056699}
 --- !u!114 &58056701
@@ -2392,7 +2392,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 4
-  _role: 6
+  _role: 11
   _targetImage: {fileID: 662601075}
   _toggleButton: {fileID: 152954309}
 --- !u!114 &152954311
@@ -6214,7 +6214,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 5
-  _role: 1
+  _role: 8
   _targetImage: {fileID: 1238980268}
   _toggleButton: {fileID: 382818033}
 --- !u!114 &382818035
@@ -13134,7 +13134,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 4
-  _role: 1
+  _role: 8
   _targetImage: {fileID: 1713320639}
   _toggleButton: {fileID: 774113041}
 --- !u!114 &774113043
@@ -15545,7 +15545,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 6
-  _role: 1
+  _role: 8
   _targetImage: {fileID: 1294645874}
   _toggleButton: {fileID: 942902386}
 --- !u!114 &942902388
@@ -17510,7 +17510,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 3
-  _role: 1
+  _role: 8
   _targetImage: {fileID: 2002762739}
   _toggleButton: {fileID: 1091896909}
 --- !u!114 &1091896911
@@ -17820,7 +17820,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 1
-  _role: 6
+  _role: 11
   _targetImage: {fileID: 482283259}
   _toggleButton: {fileID: 1123285770}
 --- !u!114 &1123285768
@@ -18572,7 +18572,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 3
-  _role: 6
+  _role: 11
   _targetImage: {fileID: 2027643573}
   _toggleButton: {fileID: 1159816946}
 --- !u!114 &1159816948
@@ -20288,7 +20288,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 6
-  _role: 6
+  _role: 11
   _targetImage: {fileID: 2041899412}
   _toggleButton: {fileID: 1273048968}
 --- !u!114 &1273048970
@@ -21900,7 +21900,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 7
-  _role: 6
+  _role: 11
   _targetImage: {fileID: 586448788}
   _toggleButton: {fileID: 1359503289}
 --- !u!114 &1359503291
@@ -23592,7 +23592,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 2
-  _role: 1
+  _role: 8
   _targetImage: {fileID: 1281831359}
   _toggleButton: {fileID: 1443249130}
 --- !u!114 &1443249132
@@ -25528,7 +25528,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 1
-  _role: 1
+  _role: 8
   _targetImage: {fileID: 224601058}
   _toggleButton: {fileID: 1630645052}
 --- !u!114 &1630645050
@@ -26971,7 +26971,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 2
-  _role: 6
+  _role: 11
   _targetImage: {fileID: 786985992}
   _toggleButton: {fileID: 1735888768}
 --- !u!114 &1735888770
@@ -31225,7 +31225,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 47ff1a40ecebd2d4bb005262af02542c, type: 3}
   - {fileID: 21300000, guid: bae1e94f941a0894b8b98d6b4d459c3a, type: 3}
   _characterId: 7
-  _role: 1
+  _role: 8
   _targetImage: {fileID: 175442285}
   _toggleButton: {fileID: 2096611789}
 --- !u!114 &2096611791

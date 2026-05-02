@@ -9,10 +9,13 @@ using UnityEngine;
 ///   0. 이전 턴 지연 사망 마킹 (연인D 사망으로 등록된 연인C 등)
 ///   1. 스냅샷 캡처 (BeforeAction = PreviousZone, AfterAction = CurrentZone)
 ///   2. 이번 턴 사망 마크 · 로그 초기화
-///   3~N. 직업 능력 발동 (RoleActivationOrderConfig 순서)
-///   N+1. 사망 확정 (응징자·연인C/D 패시브 포함)
-///   N+2. TurnRecord 커밋
-///   N+3. 루프 종료 조건 확인 (스테이지별 LoopConditionConfig 위임)
+///   3~N. 직업 능력 발동 (RoleActivationOrderConfig 순서, 순교자 제외)
+///          ※ 마킹 시점에 순교자가 즉시 가로채므로 순서 무관하게 구출 가능
+///   N+1. 심약자 패시브 (3턴 자동 사망 마크, 순교자 가로채기 대상)
+///   N+2. 순교자 발동 (미처리 마크 잔여 시 최후 처리)
+///   N+3. 사망 확정 (응징자·연인C/D 패시브 포함)
+///   N+4. TurnRecord 커밋
+///   N+5. 루프 종료 조건 확인 (스테이지별 LoopConditionConfig 위임)
 /// </summary>
 public class RoleActivationState : IState
 {
@@ -78,10 +81,10 @@ public class RoleActivationState : IState
         var processor = new RoleAbilityProcessor(_orderConfig);
         processor.ProcessExcept(gameState, RoleType.Martyr);
 
-        // 심약자 패시브: 3번째 턴 종료 시 자동 사망
+        // 심약자 패시브: 3번째 턴 종료 시 자동 사망 (순교자 가로채기 대상)
         ApplyTimidEffect(gameState);
 
-        // 순교자: 심약자 자살 마크 포함 모든 마크 확인 후 구출
+        // 순교자: 반응형 가로채기로 대부분 처리되나, 잔여 마크 대비 최후 발동
         processor.ProcessSingle(gameState, RoleType.Martyr);
 
         // ── 단계 N+1: 사망 확정 (응징자·연인C/D 패시브 포함) ────────────────

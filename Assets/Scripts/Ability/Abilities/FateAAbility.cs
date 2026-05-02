@@ -11,7 +11,10 @@ public class FateAAbility : AbilityConfig
         int myZone = gameState.GetZone(ownerId);
 
         var fateB = gameState.GetCharacterByRole(RoleType.FateB);
-        if (fateB != null && gameState.GetZone(fateB.CharacterId) == myZone)
+        // FateB가 같은 칸에 있고 마킹되지 않았으면 발동 안 함
+        // FateB가 마킹된 상태라면 순교자가 없었다는 의미 → FateA 능력 발동
+        if (fateB != null && gameState.GetZone(fateB.CharacterId) == myZone
+            && !gameState.IsMarkedForDeath(fateB.CharacterId))
             return;
 
         var targets = gameState.GetCharactersInZone(myZone);
@@ -19,6 +22,7 @@ public class FateAAbility : AbilityConfig
         foreach (var c in targets)
         {
             if (c.CharacterId == ownerId) continue;
+            if (gameState.IsMarkedForDeath(c.CharacterId)) continue;
             if (lowestTarget == null || c.CharacterId < lowestTarget.CharacterId)
                 lowestTarget = c;
         }

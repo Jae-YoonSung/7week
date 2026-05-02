@@ -119,8 +119,10 @@ public class GameState : IGameState
         bool deputySubstituted = false;
 
         // 응징자 패시브: 자신을 타겟팅한 캐릭터 전원 반격 마킹 후 자신의 사망 마크 제거 (응징자 생존)
+        // 봉인된 구역에서는 패시브 무효
         var punisherStatus = GetCharacterByRole(RoleType.Punisher);
-        if (punisherStatus != null && IsMarkedForDeath(punisherStatus.CharacterId))
+        if (punisherStatus != null && IsMarkedForDeath(punisherStatus.CharacterId)
+            && !IsAbilityDisabledInZone(GetZone(punisherStatus.CharacterId)))
         {
             int punisherId = punisherStatus.CharacterId;
             var snapshot = new List<DeathRecord>(_deathMarks);
@@ -260,7 +262,10 @@ public class GameState : IGameState
         var martyr = GetCharacterInternal(martyrStatus.CharacterId);
         if (martyr == null || !martyr.IsAlive) return false;
         if (martyr.CharacterId == target.CharacterId) return false;
-        if (martyr.CurrentZone != target.CurrentZone) return false;
+
+        int martyrZone = martyr.CurrentZone;
+        if (martyrZone != target.CurrentZone) return false;
+        if (IsAbilityDisabledInZone(martyrZone)) return false;
 
         martyrId = martyr.CharacterId;
         return true;
@@ -467,11 +472,39 @@ public class GameState : IGameState
     /// <summary>
     /// 사망 마크를 추가합니다.
     /// 이미 마크된 캐릭터에 대한 중복 마크는 무시됩니다 (첫 번째 원인 유지).
+    /// 순교자가 같은 칸에 있고 아직 희생하지 않았으면 즉시 가로채 순교자가 대신 마킹됩니다.
     /// </summary>
     public void MarkForDeath(int characterId, RoleType causeRole, int sourceCharacterId)
     {
         if (IsMarkedForDeath(characterId)) return;
+
+        if (TryMartyrIntercept(characterId, out int martyrId))
+        {
+            _deathMarks.Add(new DeathRecord(martyrId, RoleType.Martyr, martyrId));
+            return;
+        }
+
         _deathMarks.Add(new DeathRecord(characterId, causeRole, sourceCharacterId));
+    }
+
+    /// <summary>
+    /// 대상과 같은 칸에 살아있는 미사용 순교자가 있으면 순교자 ID를 반환합니다.
+    /// </summary>
+    private bool TryMartyrIntercept(int targetId, out int martyrId)
+    {
+        martyrId = -1;
+        var martyrStatus = GetCharacterByRole(RoleType.Martyr);
+        if (martyrStatus == null) return false;
+
+        martyrId = martyrStatus.CharacterId;
+        if (martyrId == targetId) return false;
+        if (IsMarkedForDeath(martyrId)) return false;
+
+        int martyrZone = GetZone(martyrId);
+        if (martyrZone != GetZone(targetId)) return false;
+        if (IsAbilityDisabledInZone(martyrZone)) return false;
+
+        return true;
     }
 
     public void ClearDeathMark(int characterId)

@@ -22,9 +22,9 @@ public class FanaticAbility : AbilityConfig
             .OrderByDescending(c => c.CharacterName) // 알파벳 역순 → 마지막 알파벳이 가장 앞
             .ToList();
 
-        if (candidates.Count == 0) return;
+        var target = candidates.FirstOrDefault(c => !gameState.IsMarkedForDeath(c.CharacterId));
+        if (target == null) return;
 
-        var target = candidates[0];
         gameState.MarkForDeath(target.CharacterId, RoleType.Fanatic, ownerId);
     }
 }

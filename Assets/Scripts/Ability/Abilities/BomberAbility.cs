@@ -26,7 +26,8 @@ public class BomberAbility : AbilityConfig
 
         targets.Sort((a, b) => b.CharacterId.CompareTo(a.CharacterId));
 
-        if (targets.Count > 0)
-            gameState.MarkForDeath(targets[0].CharacterId, RoleType.Bomber, ownerId);
+        var target = targets.Find(t => !gameState.IsMarkedForDeath(t.CharacterId));
+        if (target != null)
+            gameState.MarkForDeath(target.CharacterId, RoleType.Bomber, ownerId);
     }
 }
