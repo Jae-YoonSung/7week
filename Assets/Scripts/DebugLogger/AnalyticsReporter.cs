@@ -80,10 +80,13 @@ public class AnalyticsReporter : MonoBehaviour
     private void HandleSessionStart(SessionStartEvent e)
     {
         if (!CanSend()) return;
+        // is_editor: 에디터에서 실행 시 1, 빌드 파일 실행 시 0
+        // Application.isEditor는 Unity 에디터 내 실행 여부를 반환한다.
         AnalyticsService.Instance.RecordEvent(new CustomEvent("session_start")
         {
-            { "date", e.Date.ToString("yyyy-MM-dd") },
-            { "time", e.Time.ToString("HH:mm:ss") }
+            { "date",      e.Date.ToString("yyyy-MM-dd") },
+            { "time",      e.Time.ToString("HH:mm:ss") },
+            { "is_editor", Application.isEditor ? 1 : 0 }
         });
     }
 
