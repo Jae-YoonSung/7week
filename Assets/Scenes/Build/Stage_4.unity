@@ -23567,7 +23567,7 @@ MonoBehaviour:
   - {fileID: 1533104547}
   - {fileID: 1656294734}
   - {fileID: 1506250465}
-  _disableAbilities: 1
+  _disableAbilities: 0
   _zoneEffect: {fileID: 0}
   _blockEntry: 0
   _blockEntryFromTurn: 1
