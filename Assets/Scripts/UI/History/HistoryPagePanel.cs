@@ -6,6 +6,225 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum DrawingTool { None, Pencil, Eraser }
+
+public class HistoryDrawingBoard : MonoBehaviour, IPointerDownHandler, IDragHandler
+{
+    public DrawingTool CurrentTool = DrawingTool.None;
+    public Color PencilColor = Color.red;
+    public int PencilRadius = 3;
+    public int EraserRadius = 15;
+
+    private RawImage _rawImage;
+    private Texture2D _texture;
+    private RectTransform _rect;
+    private Vector2 _lastPos;
+    private bool _hasLastPos;
+    private GameObject _blocker;
+    private RawImage _eraserCursor;
+
+    private void Awake()
+    {
+        _rawImage = gameObject.AddComponent<RawImage>();
+        _rect = GetComponent<RectTransform>();
+        _rawImage.raycastTarget = false;
+
+        // 텍스처 초기화 전 기본 흰색 사각형이 보이지 않도록 투명한 더미 텍스처 할당
+        Texture2D emptyTex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+        emptyTex.SetPixel(0, 0, Color.clear);
+        emptyTex.Apply();
+        _rawImage.texture = emptyTex;
+    }
+
+    public void InitCursor()
+    {
+        if (_eraserCursor != null) Destroy(_eraserCursor.gameObject);
+
+        GameObject cursorObj = new GameObject("EraserCursor");
+        cursorObj.transform.SetParent(this.transform, false);
+        cursorObj.transform.SetAsLastSibling();
+        var rect = cursorObj.AddComponent<RectTransform>();
+        
+        int size = EraserRadius * 2;
+        rect.sizeDelta = new Vector2(size, size);
+        
+        _eraserCursor = cursorObj.AddComponent<RawImage>();
+        _eraserCursor.raycastTarget = false;
+        
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        Color clear = new Color(0, 0, 0, 0);
+        Color outline = new Color(0, 0, 0, 1f);
+        float center = EraserRadius;
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                float dist = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(center, center));
+                if (Mathf.Abs(dist - EraserRadius) < 1.0f) tex.SetPixel(x, y, outline);
+                else tex.SetPixel(x, y, clear);
+            }
+        }
+        tex.Apply();
+        _eraserCursor.texture = tex;
+        cursorObj.SetActive(false);
+    }
+
+    private void Start()
+    {
+        // Start 시점에서 실제 크기에 맞게 텍스처 생성
+        if (_texture == null || _texture.width == 1)
+        {
+            InitTexture();
+        }
+    }
+
+    public void ActivateTool(DrawingTool tool)
+    {
+        CurrentTool = tool;
+        _rawImage.raycastTarget = (tool != DrawingTool.None);
+
+        if (tool != DrawingTool.None)
+        {
+            if (_blocker == null)
+            {
+                _blocker = new GameObject("DrawingBlocker");
+                _blocker.transform.SetParent(this.transform, false);
+                _blocker.transform.SetAsFirstSibling();
+                var rect = _blocker.AddComponent<RectTransform>();
+                rect.sizeDelta = new Vector2(20000, 20000);
+                var img = _blocker.AddComponent<Image>();
+                img.color = Color.clear;
+                img.raycastTarget = true;
+            }
+            _blocker.SetActive(true);
+        }
+        else
+        {
+            if (_blocker != null) _blocker.SetActive(false);
+        }
+    }
+
+    private void Update()
+    {
+        if (CurrentTool == DrawingTool.Eraser)
+        {
+            Canvas canvas = GetComponentInParent<Canvas>();
+            Camera cam = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
+
+            if (RectTransformUtility.RectangleContainsScreenPoint(_rect, Input.mousePosition, cam))
+            {
+                if (!_eraserCursor.gameObject.activeSelf) _eraserCursor.gameObject.SetActive(true);
+
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_rect, Input.mousePosition, cam, out Vector2 localPos))
+                {
+                    _eraserCursor.rectTransform.anchoredPosition = localPos;
+                }
+            }
+            else
+            {
+                if (_eraserCursor.gameObject.activeSelf) _eraserCursor.gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            if (_eraserCursor != null && _eraserCursor.gameObject.activeSelf) _eraserCursor.gameObject.SetActive(false);
+        }
+    }
+
+    private void InitTexture()
+    {
+        int w = Mathf.RoundToInt(_rect.rect.width);
+        int h = Mathf.RoundToInt(_rect.rect.height);
+        if (w <= 0 || h <= 0) { w = 1000; h = 1000; } // Fallback
+
+        _texture = new Texture2D(w, h, TextureFormat.RGBA32, false);
+        ClearTexture();
+        _rawImage.texture = _texture;
+    }
+
+    public void ClearTexture()
+    {
+        if (_texture == null) return;
+        Color[] colors = new Color[_texture.width * _texture.height];
+        for (int i = 0; i < colors.Length; i++) colors[i] = Color.clear;
+        _texture.SetPixels(colors);
+        _texture.Apply();
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (CurrentTool == DrawingTool.None) return;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_rect, eventData.position, eventData.pressEventCamera, out Vector2 localPos))
+        {
+            _hasLastPos = true;
+            _lastPos = localPos;
+            DrawAt(localPos);
+            _texture.Apply();
+        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (CurrentTool == DrawingTool.None) return;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(_rect, eventData.position, eventData.pressEventCamera, out Vector2 localPos))
+        {
+            if (_hasLastPos)
+            {
+                DrawLine(_lastPos, localPos);
+            }
+            else
+            {
+                DrawAt(localPos);
+            }
+            _lastPos = localPos;
+            _hasLastPos = true;
+            _texture.Apply();
+        }
+    }
+
+    private void DrawLine(Vector2 start, Vector2 end)
+    {
+        float dist = Vector2.Distance(start, end);
+        int radius = CurrentTool == DrawingTool.Pencil ? PencilRadius : EraserRadius;
+        int steps = Mathf.Max(1, Mathf.CeilToInt(dist / (radius * 0.5f)));
+        for (int i = 0; i <= steps; i++)
+        {
+            Vector2 p = Vector2.Lerp(start, end, (float)i / steps);
+            DrawAt(p);
+        }
+    }
+
+    private void DrawAt(Vector2 localPos)
+    {
+        int radius = CurrentTool == DrawingTool.Pencil ? PencilRadius : EraserRadius;
+        Color targetColor = CurrentTool == DrawingTool.Pencil ? PencilColor : Color.clear;
+
+        float nx = (localPos.x - _rect.rect.x) / _rect.rect.width;
+        float ny = (localPos.y - _rect.rect.y) / _rect.rect.height;
+
+        int cx = Mathf.RoundToInt(nx * _texture.width);
+        int cy = Mathf.RoundToInt(ny * _texture.height);
+
+        int sqrRadius = radius * radius;
+
+        for (int x = -radius; x <= radius; x++)
+        {
+            for (int y = -radius; y <= radius; y++)
+            {
+                if (x * x + y * y <= sqrRadius)
+                {
+                    int px = cx + x;
+                    int py = cy + y;
+                    if (px >= 0 && px < _texture.width && py >= 0 && py < _texture.height)
+                    {
+                        _texture.SetPixel(px, py, targetColor);
+                    }
+                }
+            }
+        }
+    }
+}
+
 [Serializable]
 public struct CharacterTokenPrefabs
 {
@@ -79,6 +298,13 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
     [SerializeField] private float _hoverDuration = 0.15f;
     [SerializeField] private Ease  _hoverEase     = Ease.OutCubic;
 
+    [Header("드로잉 툴 설정")]
+    [SerializeField] private Button _pencilButton;
+    [SerializeField] private Button _eraserButton;
+    [SerializeField] private Color _pencilColor = Color.red;
+    [SerializeField] private int _pencilRadius = 3;
+    [SerializeField] private int _eraserRadius = 15;
+
     // ── 공개 프로퍼티 ─────────────────────────────────────────────────────────
 
     public int  LoopIndex   { get; private set; }
@@ -111,6 +337,8 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
 
     private Tweener       _hoverTween;
 
+    private HistoryDrawingBoard _drawingBoard;
+
     private readonly List<HistoryCharacterToken> _activeTokens = new List<HistoryCharacterToken>();
 
     // ── Unity ─────────────────────────────────────────────────────────────────
@@ -124,6 +352,67 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         _selectButtonRect = _selectButton.GetComponent<RectTransform>();
         _buttonOriginY    = _selectButtonRect.anchoredPosition.y;
         RegisterHoverEvents();
+
+        if (_pencilButton != null) _pencilButton.onClick.AddListener(() => SetDrawingTool(DrawingTool.Pencil));
+        if (_eraserButton != null) _eraserButton.onClick.AddListener(() => SetDrawingTool(DrawingTool.Eraser));
+
+        InitDrawingBoard();
+    }
+
+    private void InitDrawingBoard()
+    {
+        var boardObj = new GameObject("DrawingBoard");
+        boardObj.transform.SetParent(this.transform, false);
+        boardObj.transform.SetAsLastSibling();
+        
+        var boardRect = boardObj.AddComponent<RectTransform>();
+        boardRect.anchorMin = Vector2.zero;
+        boardRect.anchorMax = Vector2.one;
+        boardRect.sizeDelta = Vector2.zero;
+        boardRect.anchoredPosition = Vector2.zero;
+
+        _drawingBoard = boardObj.AddComponent<HistoryDrawingBoard>();
+        _drawingBoard.PencilColor = _pencilColor;
+        _drawingBoard.PencilRadius = _pencilRadius;
+        _drawingBoard.EraserRadius = _eraserRadius;
+        _drawingBoard.InitCursor();
+
+        // 드로잉 보드가 버튼들의 터치를 가로채지 않도록, 버튼들을 렌더링 최상단으로 끌어올립니다.
+        BringToFront(_selectButton?.transform);
+        BringToFront(_pencilButton?.transform);
+        BringToFront(_eraserButton?.transform);
+
+        // 버튼 색상을 비활성 상태(검정색)로 초기화합니다.
+        UpdateToolButtons();
+    }
+
+    private void BringToFront(Transform target)
+    {
+        if (target == null) return;
+        Transform p = target;
+        while (p != null && p.parent != this.transform)
+        {
+            p = p.parent;
+        }
+        if (p != null && p.parent == this.transform)
+        {
+            p.SetAsLastSibling();
+        }
+    }
+
+    private void Update()
+    {
+        if (IsExpanded && Input.GetMouseButtonDown(0))
+        {
+            Canvas canvas = GetComponentInParent<Canvas>();
+            Camera cam = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? canvas.worldCamera : null;
+
+            if (!RectTransformUtility.RectangleContainsScreenPoint(_rect, Input.mousePosition, cam))
+            {
+                Collapse();
+                OnCollapseRequested?.Invoke(this);
+            }
+        }
     }
 
     // ── 초기화 ────────────────────────────────────────────────────────────────
@@ -178,6 +467,8 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
     {
         IsExpanded = false;
         AnimateTo(_originY, instant, isExpanding: false);
+
+        SetDrawingTool(DrawingTool.None);
     }
 
     /// <summary>
@@ -351,6 +642,8 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        // 도구가 활성화 되어 있으면 클릭으로 닫히지 않음 (드로잉 우선)
+        if (_drawingBoard != null && _drawingBoard.CurrentTool != DrawingTool.None) return;
         HandleSelectClicked();
     }
 
@@ -364,6 +657,44 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         else
         {
             OnHeaderClicked?.Invoke(this);
+        }
+    }
+
+    public void SetDrawingTool(DrawingTool tool)
+    {
+        if (_drawingBoard == null) return;
+
+        if (_drawingBoard.CurrentTool == tool)
+        {
+            _drawingBoard.ActivateTool(DrawingTool.None);
+        }
+        else
+        {
+            _drawingBoard.ActivateTool(tool);
+        }
+
+        UpdateToolButtons();
+    }
+
+    private void UpdateToolButtons()
+    {
+        if (_pencilButton != null)
+        {
+            var colors = _pencilButton.colors;
+            Color targetColor = _drawingBoard.CurrentTool == DrawingTool.Pencil ? Color.red : Color.black;
+            colors.normalColor = targetColor;
+            colors.highlightedColor = targetColor;
+            colors.selectedColor = targetColor;
+            _pencilButton.colors = colors;
+        }
+        if (_eraserButton != null)
+        {
+            var colors = _eraserButton.colors;
+            Color targetColor = _drawingBoard.CurrentTool == DrawingTool.Eraser ? Color.red : Color.black;
+            colors.normalColor = targetColor;
+            colors.highlightedColor = targetColor;
+            colors.selectedColor = targetColor;
+            _eraserButton.colors = colors;
         }
     }
 
@@ -482,5 +813,9 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         _hoverTween?.Kill();
         if (_selectButton != null)
             _selectButton.onClick.RemoveListener(HandleSelectClicked);
+        if (_pencilButton != null)
+            _pencilButton.onClick.RemoveAllListeners();
+        if (_eraserButton != null)
+            _eraserButton.onClick.RemoveAllListeners();
     }
 }
