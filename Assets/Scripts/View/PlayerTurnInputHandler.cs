@@ -115,6 +115,11 @@ public class PlayerTurnInputHandler : MonoBehaviour
 
     private void OnPress()
     {
+        if (HistoryPageController.Instance != null && HistoryPageController.Instance.IsAnyPanelExpanded)
+        {
+            return;
+        }
+
         _pressStartScreenPos = Mouse.current.position.ReadValue();
         _isPressing          = false;
         _isDragging          = false;

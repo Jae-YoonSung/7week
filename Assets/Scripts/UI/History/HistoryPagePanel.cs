@@ -20,7 +20,6 @@ public class HistoryDrawingBoard : MonoBehaviour, IPointerDownHandler, IDragHand
     private RectTransform _rect;
     private Vector2 _lastPos;
     private bool _hasLastPos;
-    private GameObject _blocker;
     private RawImage _eraserCursor;
 
     private void Awake()
@@ -82,26 +81,6 @@ public class HistoryDrawingBoard : MonoBehaviour, IPointerDownHandler, IDragHand
     {
         CurrentTool = tool;
         _rawImage.raycastTarget = (tool != DrawingTool.None);
-
-        if (tool != DrawingTool.None)
-        {
-            if (_blocker == null)
-            {
-                _blocker = new GameObject("DrawingBlocker");
-                _blocker.transform.SetParent(this.transform, false);
-                _blocker.transform.SetAsFirstSibling();
-                var rect = _blocker.AddComponent<RectTransform>();
-                rect.sizeDelta = new Vector2(20000, 20000);
-                var img = _blocker.AddComponent<Image>();
-                img.color = Color.clear;
-                img.raycastTarget = true;
-            }
-            _blocker.SetActive(true);
-        }
-        else
-        {
-            if (_blocker != null) _blocker.SetActive(false);
-        }
     }
 
     private void Update()
@@ -305,6 +284,17 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
     [SerializeField] private int _pencilRadius = 3;
     [SerializeField] private int _eraserRadius = 15;
 
+    [Header("색상 선택기")]
+    [Tooltip("색상 버튼들의 부모 컨테이너 (레이캐스트를 가리지 않게 가장 위로 올라옵니다)")]
+    [SerializeField] private RectTransform _colorPaletteContainer;
+    [Tooltip("버튼들이 처음에 모여있는(시작되는) 위치 (예: 연필 버튼을 드래그해 넣으세요)")]
+    [SerializeField] private RectTransform _paletteStartOrigin;
+    [Tooltip("색상 버튼들 (에디터 상에서 '펼쳐졌을 때의 최종 위치'대로 배치해두세요)")]
+    [SerializeField] private Button[] _colorButtons;
+    [SerializeField] private Color[] _paletteColors;
+    [SerializeField] private float _paletteAnimDuration = 0.3f;
+    [SerializeField] private Ease _paletteAnimEase = Ease.OutBack;
+
     // ── 공개 프로퍼티 ─────────────────────────────────────────────────────────
 
     public int  LoopIndex   { get; private set; }
@@ -336,6 +326,12 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
     private float         _buttonOriginY;
 
     private Tweener       _hoverTween;
+    
+    private bool          _isPaletteExpanded = false;
+    private CanvasGroup   _paletteCanvasGroup;
+    private Vector2[]     _colorButtonExpandedPos;
+    private Vector2[]     _colorButtonCollapsedPos;
+    private Tweener[]     _colorButtonTweens;
 
     private HistoryDrawingBoard _drawingBoard;
 
@@ -353,7 +349,7 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         _buttonOriginY    = _selectButtonRect.anchoredPosition.y;
         RegisterHoverEvents();
 
-        if (_pencilButton != null) _pencilButton.onClick.AddListener(() => SetDrawingTool(DrawingTool.Pencil));
+        if (_pencilButton != null) _pencilButton.onClick.AddListener(OnPencilButtonClicked);
         if (_eraserButton != null) _eraserButton.onClick.AddListener(() => SetDrawingTool(DrawingTool.Eraser));
 
         InitDrawingBoard();
@@ -377,10 +373,61 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         _drawingBoard.EraserRadius = _eraserRadius;
         _drawingBoard.InitCursor();
 
+        if (_colorPaletteContainer != null)
+        {
+            _paletteCanvasGroup = _colorPaletteContainer.GetComponent<CanvasGroup>();
+            if (_paletteCanvasGroup == null)
+                _paletteCanvasGroup = _colorPaletteContainer.gameObject.AddComponent<CanvasGroup>();
+        }
+
+        if (_colorButtons != null && _paletteColors != null)
+        {
+            _colorButtonExpandedPos = new Vector2[_colorButtons.Length];
+            _colorButtonCollapsedPos = new Vector2[_colorButtons.Length];
+            _colorButtonTweens = new Tweener[_colorButtons.Length];
+
+            for (int i = 0; i < Mathf.Min(_colorButtons.Length, _paletteColors.Length); i++)
+            {
+                int index = i;
+                if (_colorButtons[i] != null)
+                {
+                    _colorButtons[i].onClick.AddListener(() => SelectColor(index));
+                    var graphic = _colorButtons[i].targetGraphic;
+                    if (graphic != null) graphic.color = _paletteColors[i];
+
+                    RectTransform rect = _colorButtons[i].GetComponent<RectTransform>();
+                    
+                    // 1. 에디터에 배치된 현재 위치를 '펼쳐진 위치'로 저장
+                    _colorButtonExpandedPos[i] = rect.anchoredPosition;
+                    
+                    // 2. 시작 기준점으로 월드 위치를 맞춤
+                    if (_paletteStartOrigin != null)
+                    {
+                        rect.position = _paletteStartOrigin.position;
+                    }
+                    else
+                    {
+                        rect.anchoredPosition = Vector2.zero;
+                    }
+                    
+                    // 3. 앵커/피벗이 적용된 정확한 '접힌 위치'를 저장
+                    _colorButtonCollapsedPos[i] = rect.anchoredPosition;
+                }
+            }
+        }
+
+        if (_paletteCanvasGroup != null)
+        {
+            _paletteCanvasGroup.alpha = 0f;
+            _paletteCanvasGroup.interactable = false;
+            _paletteCanvasGroup.blocksRaycasts = false;
+        }
+
         // 드로잉 보드가 버튼들의 터치를 가로채지 않도록, 버튼들을 렌더링 최상단으로 끌어올립니다.
         BringToFront(_selectButton?.transform);
         BringToFront(_pencilButton?.transform);
         BringToFront(_eraserButton?.transform);
+        BringToFront(_colorPaletteContainer);
 
         // 버튼 색상을 비활성 상태(검정색)로 초기화합니다.
         UpdateToolButtons();
@@ -469,6 +516,7 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         AnimateTo(_originY, instant, isExpanding: false);
 
         SetDrawingTool(DrawingTool.None);
+        TogglePalette(false);
     }
 
     /// <summary>
@@ -660,9 +708,40 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    public void OnPencilButtonClicked()
+    {
+        if (_drawingBoard == null) return;
+
+        if (_drawingBoard.CurrentTool == DrawingTool.Pencil)
+        {
+            if (!_isPaletteExpanded)
+            {
+                TogglePalette(true);
+            }
+            else
+            {
+                _drawingBoard.ActivateTool(DrawingTool.None);
+                TogglePalette(false);
+                UpdateToolButtons();
+            }
+        }
+        else
+        {
+            _drawingBoard.ActivateTool(DrawingTool.Pencil);
+            TogglePalette(true);
+            UpdateToolButtons();
+        }
+    }
+
     public void SetDrawingTool(DrawingTool tool)
     {
         if (_drawingBoard == null) return;
+
+        if (tool == DrawingTool.Pencil) 
+        {
+            OnPencilButtonClicked();
+            return;
+        }
 
         if (_drawingBoard.CurrentTool == tool)
         {
@@ -673,6 +752,52 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
             _drawingBoard.ActivateTool(tool);
         }
 
+        if (_drawingBoard.CurrentTool != DrawingTool.Pencil)
+        {
+            TogglePalette(false);
+        }
+
+        UpdateToolButtons();
+    }
+
+    private void TogglePalette(bool expand)
+    {
+        if (_colorButtons == null || _colorButtons.Length == 0) return;
+        if (_isPaletteExpanded == expand) return;
+        _isPaletteExpanded = expand;
+
+        if (_paletteCanvasGroup != null)
+        {
+            _paletteCanvasGroup.interactable = expand;
+            _paletteCanvasGroup.blocksRaycasts = expand;
+            _paletteCanvasGroup.DOFade(expand ? 1f : 0f, _paletteAnimDuration * 0.5f);
+        }
+
+        for (int i = 0; i < _colorButtons.Length; i++)
+        {
+            if (_colorButtons[i] == null) continue;
+            RectTransform rect = _colorButtons[i].GetComponent<RectTransform>();
+
+            _colorButtonTweens[i]?.Kill();
+            
+            Vector2 targetPos = expand ? _colorButtonExpandedPos[i] : _colorButtonCollapsedPos[i];
+            
+            _colorButtonTweens[i] = rect.DOAnchorPos(targetPos, _paletteAnimDuration)
+                .SetEase(_paletteAnimEase)
+                .SetDelay(expand ? i * 0.05f : 0f); // 순차적으로 튀어나오는 연출
+        }
+    }
+
+    public void SelectColor(int index)
+    {
+        if (_paletteColors == null || index < 0 || index >= _paletteColors.Length) return;
+        
+        _pencilColor = _paletteColors[index];
+        if (_drawingBoard != null)
+        {
+            _drawingBoard.PencilColor = _pencilColor;
+        }
+        
         UpdateToolButtons();
     }
 
@@ -681,7 +806,7 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
         if (_pencilButton != null)
         {
             var colors = _pencilButton.colors;
-            Color targetColor = _drawingBoard.CurrentTool == DrawingTool.Pencil ? Color.red : Color.black;
+            Color targetColor = _drawingBoard.CurrentTool == DrawingTool.Pencil ? _pencilColor : Color.black;
             colors.normalColor = targetColor;
             colors.highlightedColor = targetColor;
             colors.selectedColor = targetColor;
@@ -811,6 +936,10 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
     {
         _currentTween?.Kill();
         _hoverTween?.Kill();
+        if (_colorButtonTweens != null)
+        {
+            foreach (var tween in _colorButtonTweens) tween?.Kill();
+        }
         if (_selectButton != null)
             _selectButton.onClick.RemoveListener(HandleSelectClicked);
         if (_pencilButton != null)

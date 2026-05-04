@@ -69,10 +69,14 @@ public class HistoryPageController : MonoBehaviour
     /// <summary>현재 펼쳐진 패널 (없으면 null)</summary>
     private HistoryPagePanel _expandedPanel;
 
+    public static HistoryPageController Instance { get; private set; }
+    public bool IsAnyPanelExpanded => _expandedPanel != null && _expandedPanel.IsExpanded;
+
     // ── Unity ─────────────────────────────────────────────────────────────────
 
     private void Awake()
     {
+        Instance = this;
         BuildPanelArray();
         InitAllPanels();
     }
