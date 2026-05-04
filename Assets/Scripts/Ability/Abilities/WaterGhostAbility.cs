@@ -14,7 +14,19 @@ public class WaterGhostAbility : AbilityConfig
         if (gameState.GetZone(ownerId) != gameState.GetPreviousZone(ownerId)) return;
 
         int zone = gameState.GetZone(ownerId);
-        foreach (var c in gameState.GetCharactersInZone(zone))
+        var characters = gameState.GetCharactersInZone(zone);
+
+        // 순교자를 먼저 마킹해 다른 캐릭터를 가로채지 못하게 막음
+        foreach (var c in characters)
+        {
+            if (gameState.GetRole(c.CharacterId) == RoleType.Martyr)
+            {
+                gameState.MarkForDeath(c.CharacterId, RoleType.WaterGhost, ownerId);
+                break;
+            }
+        }
+
+        foreach (var c in characters)
             gameState.MarkForDeath(c.CharacterId, RoleType.WaterGhost, ownerId);
     }
 }
