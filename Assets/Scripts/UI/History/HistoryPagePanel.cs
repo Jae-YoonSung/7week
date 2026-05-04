@@ -289,9 +289,8 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
     [SerializeField] private RectTransform _colorPaletteContainer;
     [Tooltip("버튼들이 처음에 모여있는(시작되는) 위치 (예: 연필 버튼을 드래그해 넣으세요)")]
     [SerializeField] private RectTransform _paletteStartOrigin;
-    [Tooltip("색상 버튼들 (에디터 상에서 '펼쳐졌을 때의 최종 위치'대로 배치해두세요)")]
+    [Tooltip("색상 버튼들 (반드시 3개의 버튼을 에디터에 배치하고 연결해주세요)")]
     [SerializeField] private Button[] _colorButtons;
-    [SerializeField] private Color[] _paletteColors;
     [SerializeField] private float _paletteAnimDuration = 0.3f;
     [SerializeField] private Ease _paletteAnimEase = Ease.OutBack;
 
@@ -332,6 +331,9 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
     private Vector2[]     _colorButtonExpandedPos;
     private Vector2[]     _colorButtonCollapsedPos;
     private Tweener[]     _colorButtonTweens;
+    
+    // 고정된 팔레트 색상: 1=빨강(FF0000), 2=파랑(0000FF), 3=검정(000000)
+    private readonly Color[] _paletteColors = new Color[] { Color.red, Color.blue, Color.black };
 
     private HistoryDrawingBoard _drawingBoard;
 
@@ -380,7 +382,7 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
                 _paletteCanvasGroup = _colorPaletteContainer.gameObject.AddComponent<CanvasGroup>();
         }
 
-        if (_colorButtons != null && _paletteColors != null)
+        if (_colorButtons != null)
         {
             _colorButtonExpandedPos = new Vector2[_colorButtons.Length];
             _colorButtonCollapsedPos = new Vector2[_colorButtons.Length];
@@ -790,7 +792,7 @@ public class HistoryPagePanel : MonoBehaviour, IPointerClickHandler
 
     public void SelectColor(int index)
     {
-        if (_paletteColors == null || index < 0 || index >= _paletteColors.Length) return;
+        if (index < 0 || index >= _paletteColors.Length) return;
         
         _pencilColor = _paletteColors[index];
         if (_drawingBoard != null)
