@@ -29582,7 +29582,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1732712650}
   m_LocalRotation: {x: -0.049198933, y: -0.813585, z: 0.5783714, w: 0.033846308}
-  m_LocalPosition: {x: 0, y: 0, z: -13.6}
+  m_LocalPosition: {x: 0, y: 0, z: -13.85}
   m_LocalScale: {x: 9.480827, y: 9, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -29591,7 +29591,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 110.31799, y: 18.813995, z: 200.078}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.57, y: -6.6}
+  m_AnchoredPosition: {x: 8.53, y: -6.6}
   m_SizeDelta: {x: 1.5946, y: 0.6549}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1732712652
@@ -29649,7 +29649,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB2A5\uB825\uC774 \uBC1C\uB3D9\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
+  m_text: "\uC774 \uAD6C\uC5ED \uC704\uC5D0\uC11C \uD134\uC744 \uC885\uB8CC\uD55C
+    \uCE90\uB9AD\uD130\uB294\n\uB2A5\uB825\uC774 \uBC1C\uB3D9\uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 506c185530260ac4f9db85e64d3b5193, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 506c185530260ac4f9db85e64d3b5193, type: 2}
@@ -29683,7 +29684,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 3
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -32265,7 +32266,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1909151240}
   m_LocalRotation: {x: -0.06266904, y: -0.81257486, z: 0.5770672, w: 0.05280407}
-  m_LocalPosition: {x: 0, y: 0, z: -14.44}
+  m_LocalPosition: {x: 0, y: 0, z: -15.17}
   m_LocalScale: {x: 9.480827, y: 9, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -32274,7 +32275,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 111.377, y: 25.712997, z: 206.526}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 4.42, y: -6.16}
+  m_AnchoredPosition: {x: 4.4, y: -6.16}
   m_SizeDelta: {x: 1.5946, y: 0.6549}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1909151242
@@ -32297,7 +32298,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB2A5\uB825 \uBB34\uD6A8\uD654 \uC9C0\uC5ED"
+  m_text: "\uB2A5\uB825 \uBB34\uD6A8\uD654 \uAD6C\uC5ED"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 506c185530260ac4f9db85e64d3b5193, type: 2}
   m_sharedMaterial: {fileID: 5040206823531127963, guid: 506c185530260ac4f9db85e64d3b5193, type: 2}
