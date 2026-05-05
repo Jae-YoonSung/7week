@@ -113,10 +113,18 @@ public class StageClearSequenceController : MonoBehaviour
     [SerializeField] private bool _autoPlayOnWin = true;
     [SerializeField] private CanvasGroup _fadeCanvasGroup;
 
+    [Header("Cutscene (클리어 연출 앞에 재생)")]
+    [Tooltip("null이면 컷씬을 건너뜁니다. StageClearCutsceneController를 씬에 배치하고 여기에 연결하세요.")]
+    [SerializeField] private StageClearCutsceneController _cutsceneController;
+
     [Header("Hide On Sequence Start")]
     [Tooltip("Result panel, result texts, continue hint, and any object that must disappear immediately.")]
     [SerializeField] private GameObject[] _objectsToHideOnSequenceStart;
     [SerializeField] private bool _hideRuntimeCharacterObjects = true;
+
+    [Header("Show On Sequence Start")]
+    [Tooltip("UI/캐릭터가 숨겨질 때 동시에 나타나야 할 오브젝트들입니다.")]
+    [SerializeField] private GameObject[] _objectsToShowOnSequenceStart;
 
     [Header("Hide During Covered Fade")]
     [Tooltip("Opened book on the desk and objects on top of it.")]
@@ -209,8 +217,41 @@ public class StageClearSequenceController : MonoBehaviour
     private int _cachedBridgeToShelfCameraPriority;
     private int _cachedLookAtShelfPriority;
     private int[] _cachedOtherCameraPriorities;
+    private bool _isPrepared;
 
     public bool CanHandleWinSequence => enabled && gameObject.activeInHierarchy;
+    
+    public bool HasCutscene => _cutsceneController != null && _cutsceneController.HasCutscene;
+
+    public void PlayCutscene(System.Action onComplete, System.Action onFadeOutComplete = null)
+    {
+        if (_cutsceneController != null)
+            _cutsceneController.PlayCutscene(onComplete, onFadeOutComplete);
+        else
+        {
+            onFadeOutComplete?.Invoke();
+            onComplete?.Invoke();
+        }
+    }
+
+    public void PrepareSequence()
+    {
+        if (_isPrepared) return;
+        _isPrepared = true;
+
+        SetObjectsActive(_objectsToHideOnSequenceStart, false);
+        SetObjectsActive(_objectsToShowOnSequenceStart, true);
+        HideRuntimeCharacterObjects();
+
+        if (_targetBookshelfBook != null)
+        {
+            _targetBookshelfBook.SetRenderersActive(false);
+            _targetBookshelfBook.SetFiguresActive(false);
+        }
+
+        SetObjectsActive(_deskObjectsToHide, false);
+        SpawnClosingBook();
+    }
 
     private void Awake()
     {
@@ -302,25 +343,39 @@ public class StageClearSequenceController : MonoBehaviour
     {
         Debug.Log("[StageClearSequence] 1. 연출 시작");
         _isPlaying = true;
-        SetObjectsActive(_objectsToHideOnSequenceStart, false);
-        HideRuntimeCharacterObjects();
 
-        // [핵심] 더미 책이 꽂힐 공간을 확보하고, 피규어들이 차례대로 등장하게 만들기 위해 해당 책과 피규어만 숨깁니다.
-        if (_targetBookshelfBook != null)
+        if (!_isPrepared)
         {
-            _targetBookshelfBook.SetRenderersActive(false);
-            _targetBookshelfBook.SetFiguresActive(false);
+            SetObjectsActive(_objectsToHideOnSequenceStart, false);
+            SetObjectsActive(_objectsToShowOnSequenceStart, true);
+            HideRuntimeCharacterObjects();
+
+            if (_targetBookshelfBook != null)
+            {
+                _targetBookshelfBook.SetRenderersActive(false);
+                _targetBookshelfBook.SetFiguresActive(false);
+            }
+
+            if (_timings.initialDelay > 0f)
+                yield return new WaitForSeconds(_timings.initialDelay);
+
+            if (_timings.hideDeskObjectsDelay > 0f)
+                yield return new WaitForSeconds(_timings.hideDeskObjectsDelay);
+
+            SetObjectsActive(_deskObjectsToHide, false);
+            SpawnClosingBook();
+        }
+        else
+        {
+            // 컷씬 등으로 이미 준비된 상태라면, 책이 닫히기 전 자연스러운 딜레이만 줍니다.
+            if (_timings.initialDelay > 0f)
+                yield return new WaitForSeconds(_timings.initialDelay);
+            
+            if (_timings.hideDeskObjectsDelay > 0f)
+                yield return new WaitForSeconds(_timings.hideDeskObjectsDelay);
         }
 
-        if (_timings.initialDelay > 0f)
-            yield return new WaitForSeconds(_timings.initialDelay);
-
-        if (_timings.hideDeskObjectsDelay > 0f)
-            yield return new WaitForSeconds(_timings.hideDeskObjectsDelay);
-
         Debug.Log("[StageClearSequence] 2. 책 소환 및 닫기 시작");
-        SetObjectsActive(_deskObjectsToHide, false);
-        SpawnClosingBook();
         yield return CloseSpawnedBook();
 
         Debug.Log("[StageClearSequence] 3. 책 닫기 완료, 대기 중");
