@@ -53,24 +53,22 @@ MonoBehaviour:
     \u2014 \uB0B4\uAC00 \uC601\uC6C5\uC774 \uB418\uB2C8\uAE4C."
   backgroundChanges:
   - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
-  - lineIndex: 0
-    backgroundImage: {fileID: 0}
+    backgroundImage: {fileID: 21300000, guid: c65b2646c5167f34380c2abe7afd6939, type: 3}
+  - lineIndex: 4
+    backgroundImage: {fileID: 21300000, guid: 446e8c0016155b4418ad1db9a7561276, type: 3}
+  - lineIndex: 5
+    backgroundImage: {fileID: 21300000, guid: c5ba574af62ea5c4682881abbaa0da55, type: 3}
+  - lineIndex: 9
+    backgroundImage: {fileID: 21300000, guid: 9b374122a9611104e9642e6772c32199, type: 3}
+  - lineIndex: 12
+    backgroundImage: {fileID: 21300000, guid: 8e8abd4497c34b845895d96f9433c2de, type: 3}
+  - lineIndex: 15
+    backgroundImage: {fileID: 21300000, guid: 9bc9e625389ea0543bd6a568c3e6cd23, type: 3}
+  - lineIndex: 18
+    backgroundImage: {fileID: 21300000, guid: 200692f1842b755429009790d305d7d9, type: 3}
+  - lineIndex: 19
+    backgroundImage: {fileID: 21300000, guid: f6c50935b57323148b60009504c62271, type: 3}
+  - lineIndex: 21
+    backgroundImage: {fileID: 21300000, guid: 7bc4dd25c2d57aa469aaa3b34a03ee4a, type: 3}
+  - lineIndex: 23
+    backgroundImage: {fileID: 21300000, guid: a0c8ce3185dc03c4ba878c2b4226f2be, type: 3}
