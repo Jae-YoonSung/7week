@@ -50,4 +50,16 @@ MonoBehaviour:
   - "\uD640\uB85C \uB0A8\uC740 \uB098\uC758 \uBE5B\uB9C8\uC800 \uC7AC\uAC00 \uB418\uC5B4
     \uD769\uC5B4\uC9C0\uB294 \uC9C0\uAE08\uC5D0\uC57C,"
   - "\uC0AC\uBB34\uCE58\uAC8C \uB530\uC2A4\uD55C \uC9C4\uC2E4\uC744 \uB9C8\uC8FC\uD55C\uB2E4."
-  backgroundChanges: []
+  backgroundChanges:
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 2
+    backgroundImage: {fileID: 0}
+  - lineIndex: 4
+    backgroundImage: {fileID: 0}
+  - lineIndex: 5
+    backgroundImage: {fileID: 0}
+  - lineIndex: 7
+    backgroundImage: {fileID: 0}
+  - lineIndex: 10
+    backgroundImage: {fileID: 0}
