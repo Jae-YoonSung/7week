@@ -38,6 +38,9 @@ public class DialogueManager : MonoBehaviour
     [Header("게임 종료 — 마지막 라인 최소 대기 시간 (초)")]
     [SerializeField] [Range(0f, 5f)] private float _gameEndLastLineDelay = 3f;
 
+    [Tooltip("승리 시 컷씬 이후에 나오는 기존 엔딩 대사를 생략할지 여부입니다.")]
+    [SerializeField] private bool _skipGameEndDialogueOnWin = true;
+
     // ── 런타임 상태 ───────────────────────────────────────────────────────
 
     private TextPool         _pool;
@@ -188,11 +191,32 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        BeginPlay(() =>
+        System.Action playDialogue = () =>
         {
-            _isGameEndDialogue = false;
-            GameFlowController.Instance.NotifyGameEndDialogueComplete(_pendingGameEndIsWin);
-        });
+            if (isWin && _skipGameEndDialogueOnWin)
+            {
+                _isGameEndDialogue = false;
+                GameFlowController.Instance.NotifyGameEndDialogueComplete(_pendingGameEndIsWin);
+            }
+            else
+            {
+                BeginPlay(() =>
+                {
+                    _isGameEndDialogue = false;
+                    GameFlowController.Instance.NotifyGameEndDialogueComplete(_pendingGameEndIsWin);
+                });
+            }
+        };
+
+        var sequenceCtrl = FindObjectOfType<StageClearSequenceController>();
+        if (isWin && sequenceCtrl != null && sequenceCtrl.HasCutscene)
+        {
+            sequenceCtrl.PlayCutscene(playDialogue, sequenceCtrl.PrepareSequence);
+        }
+        else
+        {
+            playDialogue();
+        }
     }
 
     private void BeginPlay(System.Action onComplete)
