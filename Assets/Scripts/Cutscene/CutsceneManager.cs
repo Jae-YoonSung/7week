@@ -6,21 +6,16 @@ using TMPro;
 /// <summary>
 /// 컷씬 재생 매니저.
 ///
-/// [씬 셋업]
-/// Canvas 구조 (권장):
+/// [Canvas 구조]
 ///   Canvas
-///   ├─ BackgroundLayer        ← BackgroundScroller 컴포넌트 부착
-///   ├─ CharacterImage         ← Image 컴포넌트 (characterImage 슬롯)
-///   ├─ CharacterImage2        ← Image 컴포넌트 (characterImage2 슬롯, 선택)
-///   ├─ DialoguePanel (Top)
-///   │   └─ DialogueText       ← TMP_Text 컴포넌트 (dialogueText 슬롯)
-///   └─ FadeOverlay            ← Image 컴포넌트, Color=(0,0,0,0) (fadeOverlay 슬롯)
+///   ├─ CutsceneImage   ← Image 컴포넌트 (cutsceneImage 슬롯)
+///   ├─ DialogueText    ← TMP_Text 컴포넌트 (dialogueText 슬롯)
+///   └─ FadeOverlay     ← Image 컴포넌트, Color=(0,0,0,0) (fadeOverlay 슬롯)
 ///
-/// [사용법]
-/// 1. CutsceneData ScriptableObject를 생성하고 엔트리를 채운다.
-/// 2. 이 컴포넌트의 cutsceneData 슬롯에 연결한다.
-/// 3. UI 슬롯(dialogueText, characterImage, fadeOverlay)을 연결한다.
-/// 4. BackgroundScroller가 있는 오브젝트를 backgroundScroller 슬롯에 연결한다.
+/// [이미지 교체 타이밍]
+///   CutsceneEntry.image 에 스프라이트를 지정한 엔트리에서만 이미지가 바뀝니다.
+///   비워두면 이전 이미지를 그대로 유지합니다.
+///   doFadeTransition 체크 시 페이드 아웃 → 이미지 교체 → 페이드 인 순으로 전환됩니다.
 /// </summary>
 public class CutsceneManager : MonoBehaviour
 {
@@ -28,40 +23,27 @@ public class CutsceneManager : MonoBehaviour
     public CutsceneData cutsceneData;
 
     [Header("UI 참조")]
+    public Image    cutsceneImage;
     public TMP_Text dialogueText;
-    public Image characterImage;
-    [Tooltip("두 번째 캐릭터 Image. 사용 안 하면 비워두세요.")]
-    public Image characterImage2;
 
     [Tooltip("전체 화면을 덮는 검은 Image. 시작 시 Alpha=0 이어야 합니다.")]
     public Image fadeOverlay;
 
-    [Header("배경 스크롤러")]
-    public BackgroundScroller backgroundScroller;
-
     [Header("컷씬 종료 시 비활성화할 루트 오브젝트 (Canvas 등)")]
     public GameObject cutsceneRoot;
 
-    [Header("캐릭터 둥실 효과")]
-    public float bobAmplitude = 8f;
-    public float bobFrequency = 1f;
-
     // ── 내부 상태 ──────────────────────────────────────────
-    private int entryIndex;
+    private int  entryIndex;
     private bool isTyping;
     private bool isWaiting;
-    private bool skipTyping;    // 클릭 → 타이핑 즉시 완료
-    private bool advanceNow;    // 클릭 → 대기 즉시 종료
-
-    private Vector2 _char1BasePos;
-    private Vector2 _char2BasePos;
+    private bool skipTyping;
+    private bool advanceNow;
     private bool _playCutscene;
 
     // ── Unity 생명주기 ──────────────────────────────────────
 
     void Awake()
     {
-        // NewGameConfig.Clear()가 Start()보다 먼저 불릴 수 있으므로 Awake에서 읽어둠
         _playCutscene = NewGameConfig.PlayCutscene;
     }
 
@@ -75,14 +57,12 @@ public class CutsceneManager : MonoBehaviour
 
         if (!_playCutscene)
         {
-            OnCutsceneComplete();
+            StartCoroutine(CompleteNextFrame());
             return;
         }
 
-        // FadeOverlay 초기화
         SetFadeAlpha(0f);
-        characterImage.enabled = false;
-        if (characterImage2 != null) characterImage2.enabled = false;
+        dialogueText.text = string.Empty;
 
         StartCoroutine(PlayAllEntries());
     }
@@ -91,12 +71,12 @@ public class CutsceneManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
             HandleClick();
+    }
 
-        float y = Mathf.Sin(Time.time * bobFrequency * Mathf.PI * 2f) * bobAmplitude;
-        if (characterImage.enabled)
-            characterImage.rectTransform.anchoredPosition = _char1BasePos + new Vector2(0f, y);
-        if (characterImage2 != null && characterImage2.enabled)
-            characterImage2.rectTransform.anchoredPosition = _char2BasePos + new Vector2(0f, -y);
+    IEnumerator CompleteNextFrame()
+    {
+        yield return null;
+        OnCutsceneComplete();
     }
 
     // ── 클릭 처리 ───────────────────────────────────────────
@@ -117,18 +97,18 @@ public class CutsceneManager : MonoBehaviour
         {
             var entry = cutsceneData.entries[entryIndex];
 
-            if (entry.doFadeTransition)
+            if (entry.image != null)
             {
-                // 페이드 아웃 → 캐릭터 교체 → 페이드 인
-                yield return StartCoroutine(FadeOut(entry.fadeDuration));
-                ApplyCharacter(entry);
-                yield return StartCoroutine(FadeIn(entry.fadeDuration));
-            }
-            else
-            {
-                // 첫 엔트리이거나 캐릭터 스프라이트가 지정된 경우 즉시 적용
-                if (entryIndex == 0 || entry.characterSprite != null)
-                    ApplyCharacter(entry);
+                if (entry.doFadeTransition)
+                {
+                    yield return StartCoroutine(FadeOut(entry.fadeDuration));
+                    ApplyImage(entry.image);
+                    yield return StartCoroutine(FadeIn(entry.fadeDuration));
+                }
+                else
+                {
+                    ApplyImage(entry.image);
+                }
             }
 
             yield return StartCoroutine(TypewriterEffect(entry));
@@ -138,48 +118,21 @@ public class CutsceneManager : MonoBehaviour
         OnCutsceneComplete();
     }
 
-    // ── 캐릭터 적용 ─────────────────────────────────────────
+    // ── 이미지 적용 ─────────────────────────────────────────
 
-    void ApplyCharacter(CutsceneEntry entry)
+    void ApplyImage(Sprite sprite)
     {
-        // 캐릭터 1
-        if (entry.characterSprite != null)
-        {
-            characterImage.sprite = entry.characterSprite;
-            characterImage.enabled = true;
-            _char1BasePos = entry.characterPosition;
-            characterImage.rectTransform.anchoredPosition = _char1BasePos;
-        }
-        else if (entryIndex == 0)
-        {
-            characterImage.enabled = false;
-        }
-
-        // 캐릭터 2
-        if (characterImage2 == null) return;
-
-        if (entry.characterSprite2 != null)
-        {
-            characterImage2.sprite = entry.characterSprite2;
-            characterImage2.enabled = true;
-            _char2BasePos = entry.characterPosition2;
-            characterImage2.rectTransform.anchoredPosition = _char2BasePos;
-        }
-        else if (entry.keepCharacter2)
-        {
-            // 이전 상태 그대로 유지
-        }
-        else
-        {
-            characterImage2.enabled = false;
-        }
+        if (cutsceneImage == null) return;
+        cutsceneImage.sprite  = sprite;
+        cutsceneImage.enabled = true;
+        cutsceneImage.SetNativeSize();
     }
 
     // ── 타이핑 효과 ─────────────────────────────────────────
 
     IEnumerator TypewriterEffect(CutsceneEntry entry)
     {
-        isTyping = true;
+        isTyping   = true;
         skipTyping = false;
         dialogueText.text = string.Empty;
 
@@ -203,7 +156,7 @@ public class CutsceneManager : MonoBehaviour
 
     IEnumerator WaitOrSkip(float delay)
     {
-        isWaiting = true;
+        isWaiting  = true;
         advanceNow = false;
         float elapsed = 0f;
 
@@ -252,7 +205,6 @@ public class CutsceneManager : MonoBehaviour
 
     // ── 컷씬 종료 ───────────────────────────────────────────
 
-    // DialogueManager 등 다른 시스템이 구독해서 컷씬 종료를 감지할 수 있습니다.
     public static event System.Action OnCutsceneFinished;
 
     protected virtual void OnCutsceneComplete()

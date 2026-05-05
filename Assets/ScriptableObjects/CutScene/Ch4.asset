@@ -13,123 +13,67 @@ MonoBehaviour:
   m_Name: Ch4
   m_EditorClassIdentifier: Assembly-CSharp::CutsceneData
   entries:
-  - dialogueText: "\u201C\uACE0\uD5A5\uC5D0 \uB3CC\uC544\uAC00\uACE0 \uC2F6\uC2B5\uB2C8\uB2E4.\u201D"
+  - image: {fileID: 21300000, guid: fc7179cdc249aa544883a989dbd1511d, type: 3}
+    dialogueText: "\u201C\uACE0\uD5A5\uC5D0 \uB3CC\uC544\uAC00\uACE0 \uC2F6\uC2B5\uB2C8\uB2E4.\u201D"
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: 93d33f53ef602e043af8b780baae155c, type: 3}
-    characterPosition: {x: 305, y: -368}
-    characterSprite2: {fileID: 21300000, guid: 4500e006cac64d44093223c5c102e8b0, type: 3}
-    characterPosition2: {x: 566, y: -368}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 0
-  - dialogueText: "\uACE0\uD5A5\uC5D0 \uAC00\uAE4C\uC6CC\uC9C0\uAE30 \uC704\uD574,
+  - image: {fileID: 0}
+    dialogueText: "\uACE0\uD5A5\uC5D0 \uAC00\uAE4C\uC6CC\uC9C0\uAE30 \uC704\uD574,
       \n\uC11C\uB85C\uC758 \uB9C8\uC74C\uC744 \uBC00\uC5B4\uB0B4\uC57C \uD558\uB294
       \uBC14\uB2E4\uC758 \uBC29\uB791\uC790\uB4E4."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -368}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -368}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 0
-  - dialogueText: "\uC608\uAE30\uCE58 \uBABB\uD55C \uD3ED\uD48D\uC6B0\uB294 \n\uC624\uB79C
+  - image: {fileID: 0}
+    dialogueText: "\uC608\uAE30\uCE58 \uBABB\uD55C \uD3ED\uD48D\uC6B0\uB294 \n\uC624\uB79C
       \uC138\uC6D4 \uADC0\uD5A5\uC744 \uAFC8\uAFB8\uB358 \uADF8\uB4E4\uC758 \uD76C\uB9DD\uC744
       \uBE7C\uC557\uC558\uB2E4."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -368}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -368}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 0
-  - dialogueText: 
-    typewriterInterval: 0.05
+  - image: {fileID: 21300000, guid: 8b168b2c07e038640b567e237e0e3198, type: 3}
+    dialogueText: 
+    typewriterInterval: 0
     autoAdvanceDelay: 0.01
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
-    doFadeTransition: 0
-    fadeDuration: 1
-  - dialogueText: "\uC904\uC5B4\uB4DC\uB294 \uC2DD\uB7C9\uACFC \uC2DD\uC5B4\uAC00\uB294
+    doFadeTransition: 1
+    fadeDuration: 0.5
+  - image: {fileID: 0}
+    dialogueText: "\uC904\uC5B4\uB4DC\uB294 \uC2DD\uB7C9\uACFC \uC2DD\uC5B4\uAC00\uB294
       \uB3D9\uB8CC\uC560."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: e18b26e3614754640879fe2425108885, type: 3}
-    characterPosition: {x: 305, y: -368}
-    characterSprite2: {fileID: 21300000, guid: 440378408a0103147a201cec53e54a13, type: 3}
-    characterPosition2: {x: 566, y: -368}
-    keepCharacter2: 1
-    doFadeTransition: 1
+    doFadeTransition: 0
     fadeDuration: 0.5
-  - dialogueText: "\uACE0\uC9C0\uB97C \uB208 \uC55E\uC5D0 \uB454 \uC778\uAC04\uC758
+  - image: {fileID: 0}
+    dialogueText: "\uACE0\uC9C0\uB97C \uB208 \uC55E\uC5D0 \uB454 \uC778\uAC04\uC758
       \uC88C\uC808\uC740 \n\uD0C0\uC778\uC744 \uD5A5\uD55C \uC6D0\uB9DD\uC73C\uB85C
       \uC774\uC5B4\uC84C\uB2E4."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -368}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -368}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 1
-  - dialogueText: 
-    typewriterInterval: 0.05
-    autoAdvanceDelay: 0.01
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
-    doFadeTransition: 0
-    fadeDuration: 1
-  - dialogueText: "\uBD80\uBAA8, \uC5F0\uC778, \uC790\uC2DD, \uCE5C\uAD6C. \uBC18\uB4DC\uC2DC
+  - image: {fileID: 0}
+    dialogueText: "\uBD80\uBAA8, \uC5F0\uC778, \uC790\uC2DD, \uCE5C\uAD6C. \uBC18\uB4DC\uC2DC
       \uB3CC\uC544\uAC00\uC57C\uB9CC \uD558\uB294 \uC774\uC720."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: 972efab32a706944796199503dbd8cb6, type: 3}
-    characterPosition: {x: 305, y: -368}
-    characterSprite2: {fileID: 21300000, guid: 13f78f20699cd1e48a71a4c70a9a36f2, type: 3}
-    characterPosition2: {x: 566, y: -368}
-    keepCharacter2: 1
-    doFadeTransition: 1
+    doFadeTransition: 0
     fadeDuration: 0.5
-  - dialogueText: "\uAC01\uC790\uC758 \uC11C\uC0AC\uB294 \uC11C\uB85C \uB2E4\uB978
+  - image: {fileID: 0}
+    dialogueText: "\uAC01\uC790\uC758 \uC11C\uC0AC\uB294 \uC11C\uB85C \uB2E4\uB978
       \uBA74\uC8C4\uBD80\uB97C \uB9CC\uB4E4\uC5B4\uB0B8\uB2E4."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -368}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -368}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 1
-  - dialogueText: 
-    typewriterInterval: 0.05
-    autoAdvanceDelay: 0.01
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
-    doFadeTransition: 0
-    fadeDuration: 1
-  - dialogueText: "\uACE0\uD5A5\uC73C\uB85C \uB3CC\uC544\uAC00\uB294 \uBA38\uB098\uBA3C
+  - image: {fileID: 0}
+    dialogueText: "\uACE0\uD5A5\uC73C\uB85C \uB3CC\uC544\uAC00\uB294 \uBA38\uB098\uBA3C
       \uAE38."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: 197818b0ffbe4cc4ea24695777061213, type: 3}
-    characterPosition: {x: 305, y: -368}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -368}
-    keepCharacter2: 0
-    doFadeTransition: 1
+    doFadeTransition: 0
     fadeDuration: 0.5

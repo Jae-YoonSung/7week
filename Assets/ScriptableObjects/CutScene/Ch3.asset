@@ -13,143 +13,79 @@ MonoBehaviour:
   m_Name: Ch3
   m_EditorClassIdentifier: Assembly-CSharp::CutsceneData
   entries:
-  - dialogueText: "\u201C\uC6B0\uB9AC\uC758 \uD0DC\uC591\uC744 \uB3CC\uB824\uC8FC\uC2ED\uC2DC\uC624\u201D"
+  - image: {fileID: 21300000, guid: acb0e748b3440324b90c729c31a40b45, type: 3}
+    dialogueText: "\u201C\uC6B0\uB9AC\uC758 \uD0DC\uC591\uC744 \uB3CC\uB824\uC8FC\uC2ED\uC2DC\uC624\u201D"
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: bc79f546a853bc349b18d7d68454524f, type: 3}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 21300000, guid: 2c6924fa4919f20438ce47c67ddac423, type: 3}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 0
-  - dialogueText: "\uC0AC\uB77C\uC9C4 \uC601\uC6C5\uC744 \uCC3E\uB294 \uC77C\uACF1
+  - image: {fileID: 0}
+    dialogueText: "\uC0AC\uB77C\uC9C4 \uC601\uC6C5\uC744 \uCC3E\uB294 \uC77C\uACF1
       \uB9DD\uB839\uB4E4."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -233}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -233}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 0
-  - dialogueText: "\uAD6C\uB801\uD145\uC774\uB294 \uC5B4\uBBF8 \uCC3E\uB294 \uC0C8\uB07C
+  - image: {fileID: 0}
+    dialogueText: "\uAD6C\uB801\uD145\uC774\uB294 \uC5B4\uBBF8 \uCC3E\uB294 \uC0C8\uB07C
       \uC81C\uBE44\uCC98\uB7FC \uADF8\uB4E4\uC744 \uBC18\uACA8\uC628\uB2E4."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 0
-  - dialogueText: 
-    typewriterInterval: 0.05
-    autoAdvanceDelay: 0.01
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
-    doFadeTransition: 0
-    fadeDuration: 1
-  - dialogueText: "\uADF8 \uB05D\uC774 \uB05D\uC5C6\uB294 \uD5C8\uBB34\uBFD0\uC774\uB77C\uB294
+  - image: {fileID: 0}
+    dialogueText: "\uADF8 \uB05D\uC774 \uB05D\uC5C6\uB294 \uD5C8\uBB34\uBFD0\uC774\uB77C\uB294
       \uAC78 \uC54C\uBA74\uC11C\uB3C4"
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: 98787fa698361504bb5d51ad4bd9cfc9, type: 3}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 21300000, guid: 26c97f21288602648a77f9b11ff47663, type: 3}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
-    doFadeTransition: 1
+    doFadeTransition: 0
     fadeDuration: 0.5
-  - dialogueText: "\uC774\uB4E4\uC740 \uAE30\uAEBC\uC774 \uC790\uC2E0\uC758 \uBAB8\uC744
+  - image: {fileID: 0}
+    dialogueText: "\uC774\uB4E4\uC740 \uAE30\uAEBC\uC774 \uC790\uC2E0\uC758 \uBAB8\uC744
       \uC81C\uBB3C\uB85C \uBC14\uCE5C\uB2E4."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: 98787fa698361504bb5d51ad4bd9cfc9, type: 3}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 21300000, guid: 26c97f21288602648a77f9b11ff47663, type: 3}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 1
-  - dialogueText: 
-    typewriterInterval: 0.05
+  - image: {fileID: 21300000, guid: 08b80bbc01916b746a087b5b03881019, type: 3}
+    dialogueText: 
+    typewriterInterval: 0
     autoAdvanceDelay: 0.01
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
-    doFadeTransition: 0
-    fadeDuration: 1
-  - dialogueText: "\uD5C8\uB098,"
-    typewriterInterval: 0.05
-    autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: 5ab5d572145c68a43ac19bdb42bc4611, type: 3}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 21300000, guid: 347f64ebcb84dcf45a825ffbbdaac406, type: 3}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
     doFadeTransition: 1
     fadeDuration: 0.5
-  - dialogueText: "\uC5B4\uB460\uC744 \uBC1D\uD600\uC8FC\uB358 \uCC2C\uB780\uD55C
+  - image: {fileID: 0}
+    dialogueText: "\uD5C8\uB098,"
+    typewriterInterval: 0.05
+    autoAdvanceDelay: 3
+    doFadeTransition: 0
+    fadeDuration: 0.5
+  - image: {fileID: 0}
+    dialogueText: "\uC5B4\uB460\uC744 \uBC1D\uD600\uC8FC\uB358 \uCC2C\uB780\uD55C
       \uBAA8\uC2B5, \n\uC628\uD654\uD55C \uBE5B\uC758 \uC190\uAE38, \uC11D\uC591\uC758
       \uC9D9\uC740 \uD5A5\uAE30"
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: 5ab5d572145c68a43ac19bdb42bc4611, type: 3}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 21300000, guid: 347f64ebcb84dcf45a825ffbbdaac406, type: 3}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 1
-  - dialogueText: "\uC5B4\uB460\uC18D\uC5D0\uC11C \uC544\uB978\uAC70\uB9AC\uB294
+  - image: {fileID: 0}
+    dialogueText: "\uC5B4\uB460\uC18D\uC5D0\uC11C \uC544\uB978\uAC70\uB9AC\uB294
       \uAE30\uC5B5\uC758 \uD30C\uD3B8\uB4E4\uC740 \n\uC774\uB4E4\uC744 \uAC08\uB77C\uB193\uAE30\uC5D0
       \uCDA9\uBD84\uD588\uB2E4."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: 5ab5d572145c68a43ac19bdb42bc4611, type: 3}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 21300000, guid: 347f64ebcb84dcf45a825ffbbdaac406, type: 3}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
     doFadeTransition: 0
     fadeDuration: 1
-  - dialogueText: 
-    typewriterInterval: 0.05
-    autoAdvanceDelay: 0.01
-    characterSprite: {fileID: 0}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 1
-    doFadeTransition: 0
-    fadeDuration: 1
-  - dialogueText: "\uC790\uC2E0\uC774 \uD1A0\uD574\uB0B8 \uC2E4\uB9C8\uC800 \uD54F\uBE5B\uC73C\uB85C
+  - image: {fileID: 0}
+    dialogueText: "\uC790\uC2E0\uC774 \uD1A0\uD574\uB0B8 \uC2E4\uB9C8\uC800 \uD54F\uBE5B\uC73C\uB85C
       \uBB3C\uB4E4\uC77C\uC9C0\uB77C\uB3C4,"
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: c32f602b008fb644cb3e84288318d124, type: 3}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 0
-    doFadeTransition: 1
+    doFadeTransition: 0
     fadeDuration: 0.5
-  - dialogueText: "\uB204\uC5D0\uB294 \uD55C \uC90C\uC758 \uC7AC\uB85C \uD0C0\uB4E4\uC5B4
+  - image: {fileID: 0}
+    dialogueText: "\uB204\uC5D0\uB294 \uD55C \uC90C\uC758 \uC7AC\uB85C \uD0C0\uB4E4\uC5B4
       \uAC08 \uBD88\uB098\uBC29\uC744 \uAFC8\uAFBC\uB2E4."
     typewriterInterval: 0.05
     autoAdvanceDelay: 3
-    characterSprite: {fileID: 21300000, guid: c32f602b008fb644cb3e84288318d124, type: 3}
-    characterPosition: {x: 305, y: -322}
-    characterSprite2: {fileID: 0}
-    characterPosition2: {x: 566, y: -322}
-    keepCharacter2: 0
     doFadeTransition: 0
     fadeDuration: 1

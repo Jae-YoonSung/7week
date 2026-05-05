@@ -105,6 +105,8 @@ public class DialogueManager : MonoBehaviour
         var gfc = GameFlowController.Instance;
         if (gfc != null)
             gfc.OnGameEndDialogueRequested -= HandleGameEndDialogueRequested;
+
+        CutsceneManager.OnCutsceneFinished -= HandleGameStarted;
     }
 
     private void Update()
