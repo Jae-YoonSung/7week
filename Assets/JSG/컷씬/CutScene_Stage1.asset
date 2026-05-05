@@ -51,3 +51,26 @@ MonoBehaviour:
     \uC640\uBC84\uB838\uB2E4."
   - "\uC6A9\uBCD1\uB2E8\uC5D0 \uB098\uB9CC \uB0A8\uC73C\uBA74, \uB098\uB9CC \uB0A8\uC73C\uBA74
     \u2014 \uB0B4\uAC00 \uC601\uC6C5\uC774 \uB418\uB2C8\uAE4C."
+  backgroundChanges:
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
+  - lineIndex: 0
+    backgroundImage: {fileID: 0}
