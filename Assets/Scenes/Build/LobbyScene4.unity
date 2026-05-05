@@ -7926,7 +7926,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyRandomSeedButton
   _stageId: 
-  _gameSceneName: Stage_3
+  _gameSceneName: Stage_4
   _isEpilogue: 1
 --- !u!114 &1793842480
 MonoBehaviour:
