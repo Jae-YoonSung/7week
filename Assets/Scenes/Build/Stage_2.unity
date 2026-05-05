@@ -34762,7 +34762,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 763e0c6f928ad4c4988c22dcae970a06, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a1099937c1eff64a9935a999a8a277b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -34795,7 +34795,7 @@ MonoBehaviour:
   _canvas: {fileID: 1953585282}
   _cursorImage: {fileID: 1628099628}
   _hotspot: {x: 0, y: 0}
-  _normalSprite: {fileID: 21300000, guid: 763e0c6f928ad4c4988c22dcae970a06, type: 3}
+  _normalSprite: {fileID: 21300000, guid: 9a1099937c1eff64a9935a999a8a277b, type: 3}
   _leftClickSprite: {fileID: 0}
   _rightClickSprite: {fileID: 0}
 --- !u!1 &1630645047

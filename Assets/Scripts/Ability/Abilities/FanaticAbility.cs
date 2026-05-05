@@ -22,7 +22,11 @@ public class FanaticAbility : AbilityConfig
             .OrderByDescending(c => c.CharacterName) // 알파벳 역순 → 마지막 알파벳이 가장 앞
             .ToList();
 
-        var target = candidates.FirstOrDefault(c => !gameState.IsMarkedForDeath(c.CharacterId));
+        var punisher = gameState.GetCharacterByRole(RoleType.Punisher);
+        // 응징자는 이미 마크돼도 공격 대상 포함 (반격 트리거를 위해)
+        var target = candidates.FirstOrDefault(c =>
+            !gameState.IsMarkedForDeath(c.CharacterId) ||
+            (punisher != null && c.CharacterId == punisher.CharacterId));
         if (target == null) return;
 
         gameState.MarkForDeath(target.CharacterId, RoleType.Fanatic, ownerId);

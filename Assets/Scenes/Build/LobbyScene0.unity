@@ -258,6 +258,7 @@ MonoBehaviour:
   _gameSceneName: Stage_1
   _isEpilogue: 0
   _revealedRoles: 
+  _playCutscene: 1
   _label: {fileID: 0}
 --- !u!1 &81974535
 GameObject:
@@ -981,7 +982,7 @@ MonoBehaviour:
   _canvas: {fileID: 984995405}
   _cursorImage: {fileID: 148171553}
   _hotspot: {x: 0, y: 0}
-  _normalSprite: {fileID: 21300000, guid: 763e0c6f928ad4c4988c22dcae970a06, type: 3}
+  _normalSprite: {fileID: 21300000, guid: 9a1099937c1eff64a9935a999a8a277b, type: 3}
   _leftClickSprite: {fileID: 0}
   _rightClickSprite: {fileID: 0}
 --- !u!114 &148171553
@@ -1004,7 +1005,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 763e0c6f928ad4c4988c22dcae970a06, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a1099937c1eff64a9935a999a8a277b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4271,6 +4272,7 @@ MonoBehaviour:
   _stageId: 
   _gameSceneName: Stage_1
   _isEpilogue: 1
+  _playCutscene: 1
 --- !u!1 &869289246
 GameObject:
   m_ObjectHideFlags: 0
@@ -4615,6 +4617,7 @@ MonoBehaviour:
   _gameSceneName: Stage_3
   _isEpilogue: 0
   _revealedRoles: 
+  _playCutscene: 1
   _label: {fileID: 0}
 --- !u!114 &974203998
 MonoBehaviour:
@@ -5292,6 +5295,7 @@ MonoBehaviour:
   _gameSceneName: Stage_3
   _isEpilogue: 1
   _revealedRoles: 
+  _playCutscene: 1
   _label: {fileID: 0}
 --- !u!114 &1129571362
 MonoBehaviour:
@@ -6380,6 +6384,7 @@ MonoBehaviour:
   _gameSceneName: Tutorial
   _isEpilogue: 0
   _revealedRoles: 
+  _playCutscene: 1
   _label: {fileID: 0}
 --- !u!114 &1400545859
 MonoBehaviour:
@@ -6602,6 +6607,7 @@ MonoBehaviour:
   _gameSceneName: Stage_1
   _isEpilogue: 1
   _revealedRoles: 
+  _playCutscene: 1
   _label: {fileID: 0}
 --- !u!1 &1404257371
 GameObject:
@@ -7550,6 +7556,7 @@ MonoBehaviour:
   _stageId: 
   _gameSceneName: Stage_3
   _isEpilogue: 1
+  _playCutscene: 1
 --- !u!1 &1588608291
 GameObject:
   m_ObjectHideFlags: 0
@@ -8310,6 +8317,7 @@ MonoBehaviour:
   _gameSceneName: Stage_1
   _isEpilogue: 1
   _revealedRoles: 
+  _playCutscene: 1
   _label: {fileID: 0}
 --- !u!1 &1703331683
 GameObject:
@@ -10269,6 +10277,6 @@ SceneRoots:
   - {fileID: 81974538}
   - {fileID: 1515824262}
   - {fileID: 1724971161}
+  - {fileID: 1651160863}
   - {fileID: 984995406}
   - {fileID: 1058108398}
-  - {fileID: 1651160863}

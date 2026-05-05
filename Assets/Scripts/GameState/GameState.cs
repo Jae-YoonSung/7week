@@ -476,7 +476,8 @@ public class GameState : IGameState
     /// </summary>
     public void MarkForDeath(int characterId, RoleType causeRole, int sourceCharacterId)
     {
-        if (IsMarkedForDeath(characterId)) return;
+        // 응징자는 반격 후 살아남으므로 복수의 공격자를 모두 기록
+        if (IsMarkedForDeath(characterId) && GetRole(characterId) != RoleType.Punisher) return;
 
         if (TryMartyrIntercept(characterId, out int martyrId))
         {
