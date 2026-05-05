@@ -176,6 +176,7 @@ MonoBehaviour:
   _gameSceneName: Stage_4
   _isEpilogue: 1
   _revealedRoles: 
+  _playCutscene: 0
   _label: {fileID: 0}
 --- !u!114 &10015030
 MonoBehaviour:
@@ -1778,6 +1779,7 @@ MonoBehaviour:
   _gameSceneName: Stage_4
   _isEpilogue: 0
   _revealedRoles: 02000000
+  _playCutscene: 1
   _label: {fileID: 0}
 --- !u!114 &161764077
 MonoBehaviour:
@@ -7928,6 +7930,7 @@ MonoBehaviour:
   _stageId: 
   _gameSceneName: Stage_4
   _isEpilogue: 1
+  _playCutscene: 0
 --- !u!114 &1793842480
 MonoBehaviour:
   m_ObjectHideFlags: 0
