@@ -13,6 +13,10 @@ public class LobbyRandomSeedButton : MonoBehaviour
     [Tooltip("이 버튼이 에필로그 진입용이면 체크하세요.")]
     [SerializeField] private bool   _isEpilogue;
 
+    [Header("컷씬")]
+    [Tooltip("체크 해제 시 스테이지 진입 컷씬을 건너뜁니다.")]
+    [SerializeField] private bool _playCutscene = true;
+
     private void Start()
     {
         GetComponent<Button>().onClick.AddListener(OnClicked);
@@ -22,6 +26,7 @@ public class LobbyRandomSeedButton : MonoBehaviour
     {
         TurnHistoryRepository.Instance.ClearAll();
         NewGameConfig.SetRandom(_stageId, _isEpilogue);
+        NewGameConfig.SetPlayCutscene(_playCutscene);
         UnityEngine.SceneManagement.SceneManager.LoadScene(_gameSceneName);
     }
 }

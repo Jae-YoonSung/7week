@@ -19,6 +19,10 @@ public class LobbyPresetSeedButton : MonoBehaviour
     [Tooltip("이 챕터 시작 시 플레이어에게 미리 공개할 역할 목록입니다.")]
     [SerializeField] private RoleType[] _revealedRoles = new RoleType[0];
 
+    [Header("컷씬")]
+    [Tooltip("체크 해제 시 스테이지 진입 컷씬을 건너뜁니다.")]
+    [SerializeField] private bool _playCutscene = true;
+
     [Header("클리어 취소선")]
     [SerializeField] private TMP_Text _label;
 
@@ -44,6 +48,7 @@ public class LobbyPresetSeedButton : MonoBehaviour
         TurnHistoryRepository.Instance.ClearAll();
         NewGameConfig.SetSeed(_seed, _stageId, _isEpilogue);
         NewGameConfig.SetRevealedRoles(_revealedRoles);
+        NewGameConfig.SetPlayCutscene(_playCutscene);
         UnityEngine.SceneManagement.SceneManager.LoadScene(_gameSceneName);
     }
 

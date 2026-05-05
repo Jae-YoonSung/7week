@@ -86,10 +86,12 @@ public class DialogueManager : MonoBehaviour
         _pool = new TextPool(_textPrefab, _textRoot);
         _dialoguePanel.SetActive(false);
 
-        // 씬 진입 시점에 게임 시작 다이얼로그 재생.
-        // OnGameStarted는 GameFlowController.Start()에서 동기 발생하므로
-        // DialogueManager.Start()가 실행될 시점엔 이미 지나간 상태입니다.
-        HandleGameStarted();
+        // 씬에 CutsceneManager가 있으면 컷씬이 끝난 뒤 게임 시작 대사를 재생합니다.
+        // 없으면 기존대로 바로 재생합니다.
+        if (FindAnyObjectByType<CutsceneManager>() != null)
+            CutsceneManager.OnCutsceneFinished += HandleGameStarted;
+        else
+            HandleGameStarted();
     }
 
     private void OnDestroy()
