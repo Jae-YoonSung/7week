@@ -19,4 +19,17 @@ public class StageClearCutsceneSO : ScriptableObject
     [Tooltip("위에서부터 순서대로 표시됩니다. 클릭으로 다음 대사로 넘어갑니다.")]
     [TextArea(2, 5)]
     public string[] lines;
+
+    [Header("배경 변경 목록")]
+    [Tooltip("특정 대사 인덱스(0부터 시작)에서 배경을 변경하고 싶을 때 추가하세요.")]
+    public CutsceneBackgroundChange[] backgroundChanges;
+}
+
+[System.Serializable]
+public struct CutsceneBackgroundChange
+{
+    [Tooltip("배경이 변경될 대사 인덱스 (0부터 시작)")]
+    public int lineIndex;
+    [Tooltip("변경할 배경 이미지")]
+    public Sprite backgroundImage;
 }

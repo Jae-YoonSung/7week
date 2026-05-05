@@ -88,7 +88,8 @@ public class StageClearCutsceneController : MonoBehaviour
                                && _cutscene.lines != null
                                && _cutscene.lines.Length > 0
                                && enabled
-                               && gameObject.activeInHierarchy;
+                               && gameObject.activeInHierarchy
+                               && !(GameFlowController.Instance != null && GameFlowController.Instance.IsEpilogue);
 
     /// <summary>
     /// 컷씬을 재생합니다. 컷씬이 끝나면 <paramref name="onComplete"/>를 호출합니다.
@@ -208,6 +209,19 @@ public class StageClearCutsceneController : MonoBehaviour
             // 모든 대사 완료 → PlayCoroutine의 WaitUntil 조건을 충족시킵니다.
             _isPlaying = false;
             return;
+        }
+
+        // 배경 변경 조건 확인
+        if (_backgroundImage != null && _cutscene.backgroundChanges != null)
+        {
+            foreach (var change in _cutscene.backgroundChanges)
+            {
+                if (change.lineIndex == _lineIndex && change.backgroundImage != null)
+                {
+                    _backgroundImage.sprite = change.backgroundImage;
+                    break;
+                }
+            }
         }
 
         if (_dialogueText != null) _dialogueText.text = "";
